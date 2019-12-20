@@ -29,6 +29,7 @@ use OC\Security\CSP\ContentSecurityPolicy;
 use OCA\Federation\TrustedServers;
 use OCA\Richdocuments\AppConfig;
 use OCA\Richdocuments\Capabilities;
+use OCA\Richdocuments\Hooks\WopiLockHooks;
 use OCA\Richdocuments\Preview\MSExcel;
 use OCA\Richdocuments\Preview\MSWord;
 use OCA\Richdocuments\Preview\OOXML;
@@ -114,6 +115,7 @@ class Application extends App {
 			return $container->query(Pdf::class);
 		});
 
+		$container->query(WopiLockHooks::class)->register();
 	}
 
 	public function updateCSP() {

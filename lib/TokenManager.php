@@ -207,7 +207,7 @@ class TokenManager {
 		try {
 
 			return [
-				$this->wopiParser->getUrlSrc($file->getMimeType())['urlsrc'], // url src might not be found ehre
+				$this->wopiParser->getUrlSrcForFile($file, $updatable)['urlsrc'], // url src might not be found ehre
 				$wopi->getToken(),
 				$wopi
 			];
@@ -266,7 +266,7 @@ class TokenManager {
 		}
 
 		return [
-			$this->wopiParser->getUrlSrc($templateFile->getMimeType())['urlsrc'],
+			$this->wopiParser->getUrlSrcForFile($targetFile, $updatable)['urlsrc'],
 			$wopi
 		];
 	}
