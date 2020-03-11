@@ -562,7 +562,7 @@ class WopiController extends Controller {
 
 		// Set the user to register the change under his name
 		$this->userScopeService->setUserScope($wopi->getEditorUid());
-		$this->userScopeService->setFilesystemScope($isPutRelative ? $wopi->getEditorUid() : $wopi->getUserForFileAccess());
+		$this->userScopeService->setFilesystemScope($wopi->getUserForFileAccess());
 
 		try {
 			if ($isPutRelative) {
@@ -723,6 +723,8 @@ class WopiController extends Controller {
 					// create a unique new file
 					$path = $this->rootFolder->getNonExistingName($path);
 					$file = $file->move($path);
+
+					return new JSONResponse(['Name' => pathinfo($path, PATHINFO_FILENAME)], Http::STATUS_OK);
 				} else {
 					$suggested = $this->request->getHeader('X-WOPI-SuggestedTarget');
 					$relative = $this->request->getHeader('X-WOPI-RelativeTarget');
