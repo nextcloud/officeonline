@@ -211,6 +211,8 @@ class WopiController extends Controller {
 			'UserCanRename' => !$isPublic,
 			'SupportsUpdate' => true,
 			'SupportsLocks' => true,
+			'CloseUrl' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $fileId]),
+			'ClosePostMessage' => true,
 		];
 
 		if ($wopi->isTemplateToken()) {
