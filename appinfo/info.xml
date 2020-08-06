@@ -3,42 +3,29 @@
 	<id>officeonline</id>
 	<name>Office Online integration</name>
 	<summary>Edit office documents directly in your browser.</summary>
-	<description>This application can connect to a Collabora Online (or other) server (WOPI-like Client). Nextcloud is the WOPI Host. Please read the documentation to learn more about that.</description>
-	<version>3.7.3</version>
+	<description>This application can connect to an Office Online server with Nextcloud.</description>
+	<version>1.0.0</version>
 	<licence>agpl</licence>
-	<author>Collabora Productivity based on work of Frank Karlitschek, Victor Dubiniuk</author>
+	<author>Julius Härtl</author>
 	<types>
 		<filesystem/>
 		<dav/>
 		<prevent_group_restriction/>
 	</types>
 	<documentation>
-		<user>https://nextcloud.com/collaboraonline/</user>
-		<admin>https://github.com/nextcloud/officeonline/wiki</admin>
+		<admin>https://github.com/nextcloud/officeonline</admin>
 	</documentation>
 	<category>office</category>
 	<category>integration</category>
 	<website>https://collaboraoffice.com/</website>
 	<bugs>https://github.com/nextcloud/officeonline/issues</bugs>
 	<repository type="git">https://github.com/nextcloud/officeonline.git</repository>
-	<screenshot small-thumbnail="https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-for-thumbnail.jpg">https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-1.png</screenshot>
 	<screenshot>https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-2.png</screenshot>
-	<screenshot>https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-3.png</screenshot>
-	<screenshot>https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-4.png</screenshot>
-	<screenshot>https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-5.png</screenshot>
 	<dependencies>
-		<nextcloud min-version="15" max-version="20" />
+		<nextcloud min-version="18" max-version="20" />
 	</dependencies>
-	<background-jobs>
-		<job>OCA\Officeonline\Backgroundjobs\ObtainCapabilities</job>
-	</background-jobs>
-	<commands>
-		<command>OCA\Officeonline\Command\UpdateEmptyTemplates</command>
-	</commands>
 	<settings>
 		<admin>OCA\Officeonline\Settings\Admin</admin>
 		<admin-section>OCA\Officeonline\Settings\Section</admin-section>
-		<personal>OCA\Officeonline\Settings\Personal</personal>
-		<personal-section>OCA\Officeonline\Settings\Section</personal-section>
 	</settings>
 </info>
