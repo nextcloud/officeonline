@@ -1,6 +1,6 @@
 import Office from './view/Office'
 
-const supportedMimes = 	OC.getCapabilities().richdocuments.mimetypes.concat(OC.getCapabilities().richdocuments.mimetypesNoDefaultOpen)
+const supportedMimes = 	OC.getCapabilities().officeonline.mimetypes.concat(OC.getCapabilities().officeonline.mimetypesNoDefaultOpen)
 
 document.addEventListener('DOMContentLoaded', function(event) {
 	// Only use it outside the files app for now
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 	if (OCA.Viewer) {
 		OCA.Viewer.registerHandler({
-			id: 'richdocuments',
+			id: 'officeonline',
 			group: null,
 			mimes: supportedMimes,
 			component: Office

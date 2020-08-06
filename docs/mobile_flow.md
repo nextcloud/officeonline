@@ -20,8 +20,8 @@ Be sure to have javascript enabled.
 
 ## 3. Interacting with the document
 
-The richdocuments app looks for a javscript handler that the client can
-register. This is: `RichDocumentsMobileInterface`
+The officeonline app looks for a javscript handler that the client can
+register. This is: `OfficeOnlineMobileInterface`
 
 It expects the following functions:
 
@@ -35,7 +35,7 @@ open a filepicker to select a file from your nextcloud.
 The file has to be submitted to the [asset api](./asset_api.md).
 
 Then the client has to call the function (on the webui):
-`OCA.RichDocuments.documentsMain.postAsset(filename, url)`
+`OCA.OfficeOnline.documentsMain.postAsset(filename, url)`
 
 This will make sure the assets is added to the document.
 

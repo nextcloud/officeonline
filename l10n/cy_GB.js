@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Saved" : "Wedi'u cadw",
     "Description" : "Disgrifiad",

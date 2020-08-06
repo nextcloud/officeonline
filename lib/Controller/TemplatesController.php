@@ -22,9 +22,9 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\Richdocuments\Controller;
+namespace OCA\Officeonline\Controller;
 
-use OCA\Richdocuments\TemplateManager;
+use OCA\Officeonline\TemplateManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;

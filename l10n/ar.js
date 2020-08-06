@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Saved" : "تم الحفظ",
     "File is too big" : "الملف كبير جدا",

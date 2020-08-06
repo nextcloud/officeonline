@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Collabora Online" : "онлайн Collabora ",
     "Can't create document" : "Документ үүсгэх боломжгүй байна",

@@ -40,9 +40,9 @@ class FeatureContext implements Context
 		$this->usingWebAsUser($user);
 
 		$client = new Client();
-		$result = $client->get($this->baseUrl . 'index.php/apps/richdocuments/index?fileId=' . $fileId, $this->getWebOptions());
+		$result = $client->get($this->baseUrl . 'index.php/apps/officeonline/index?fileId=' . $fileId, $this->getWebOptions());
 		$contents =$result->getBody()->getContents();
-		$re = '/var richdocuments_([A-z]+) = (.*);/m';
+		$re = '/var officeonline_([A-z]+) = (.*);/m';
 		preg_match_all($re, $contents, $matches, PREG_SET_ORDER, 0);
 		$result = [];
 		foreach ($matches as $match) {
@@ -68,9 +68,9 @@ class FeatureContext implements Context
 
 		// 	public function publicPage($shareToken, $fileName, $fileId) {
 		$client = new Client();
-		$result = $client->get($this->baseUrl . 'index.php/apps/richdocuments/public?shareToken=' . $token, $this->getWebOptions());
+		$result = $client->get($this->baseUrl . 'index.php/apps/officeonline/public?shareToken=' . $token, $this->getWebOptions());
 		$contents =$result->getBody()->getContents();
-		$re = '/var richdocuments_([A-z]+) = (.*);/m';
+		$re = '/var officeonline_([A-z]+) = (.*);/m';
 		preg_match_all($re, $contents, $matches, PREG_SET_ORDER, 0);
 		$result = [];
 		foreach ($matches as $match) {
@@ -99,11 +99,11 @@ class FeatureContext implements Context
 
 		// 	public function publicPage($shareToken, $fileName, $fileId) {
 		$client = new Client();
-		$result = $client->get($this->baseUrl . 'index.php/apps/richdocuments/public?shareToken=' . $token, array_merge($this->getWebOptions(), [
+		$result = $client->get($this->baseUrl . 'index.php/apps/officeonline/public?shareToken=' . $token, array_merge($this->getWebOptions(), [
 			'cookies' => $cookieJar
 		]));
 		$contents = $result->getBody()->getContents();
-		$re = '/var richdocuments_([A-z]+) = (.*);/m';
+		$re = '/var officeonline_([A-z]+) = (.*);/m';
 		preg_match_all($re, $contents, $matches, PREG_SET_ORDER, 0);
 		$result = [];
 		foreach ($matches as $match) {
@@ -120,7 +120,7 @@ class FeatureContext implements Context
 	public function collaboraFetchesCheckfileinfo() {
 		$client = new Client();
 		$options = [];
-		$result = $client->get($this->baseUrl . 'index.php/apps/richdocuments/wopi/files/' . $this->fileId . '?access_token=' . $this->wopiToken, $options);
+		$result = $client->get($this->baseUrl . 'index.php/apps/officeonline/wopi/files/' . $this->fileId . '?access_token=' . $this->wopiToken, $options);
 		$this->checkFileInfoResult = json_decode($result->getBody()->getContents(), true);
 	}
 
@@ -138,7 +138,7 @@ class FeatureContext implements Context
 			]
 		];
 		try {
-			$result = $client->post($this->baseUrl . 'index.php/apps/richdocuments/wopi/files/' . $this->fileId . '/contents?access_token=' . $this->wopiToken, $options);
+			$result = $client->post($this->baseUrl . 'index.php/apps/officeonline/wopi/files/' . $this->fileId . '/contents?access_token=' . $this->wopiToken, $options);
 			$this->checkFileInfoResult = json_decode($result->getBody()->getContents(), true);
 		} catch (\GuzzleHttp\Exception\ClientException $e) {
 			$this->response = $e->getResponse();

@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Collabora Online" : "همکاری آنلاین",
     "Can't create document" : "امکان ایجاد این سند وجود ندارد",

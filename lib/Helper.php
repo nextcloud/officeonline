@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - Richdocuments App
+ * ownCloud - Officeonline App
  *
  * @author Victor Dubiniuk
  * @copyright 2013 Victor Dubiniuk victor.dubiniuk@gmail.com
@@ -9,7 +9,7 @@
  * later.
  */
 
-namespace OCA\Richdocuments;
+namespace OCA\Officeonline;
 
 use \DateTime;
 use \DateTimeZone;

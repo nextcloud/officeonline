@@ -18,7 +18,7 @@ Note: This guide does NOT cover self-signed certificates. If you use a self-sign
 
 ### Setup using the built-in CODE server
 
-Install the [Collabora Online - Built-in CODE Server](https://apps.nextcloud.com/apps/richdocumentscode) app from your Nextclouds apps management. This app provides a built-in server with all of the document editing features of Collabora Online. Easy to install, for personal use or for small teams. It is a bit slower than a standalone server and without the advanced scalability features.
+Install the [Collabora Online - Built-in CODE Server](https://apps.nextcloud.com/apps/officeonlinecode) app from your Nextclouds apps management. This app provides a built-in server with all of the document editing features of Collabora Online. Easy to install, for personal use or for small teams. It is a bit slower than a standalone server and without the advanced scalability features.
 
 ### Setup using docker
 

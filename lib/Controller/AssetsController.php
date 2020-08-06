@@ -21,10 +21,10 @@
  *
  */
 
-namespace OCA\Richdocuments\Controller;
+namespace OCA\Officeonline\Controller;
 
-use OCA\Richdocuments\Db\AssetMapper;
-use OCA\Richdocuments\Service\UserScopeService;
+use OCA\Officeonline\Db\AssetMapper;
+use OCA\Officeonline\Service\UserScopeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -86,7 +86,7 @@ class AssetsController extends Controller {
 		$asset = $this->assetMapper->newAsset($this->userId, $node->getId());
 
 		return new JSONResponse([
-			'url' => $this->urlGenerator->linkToRouteAbsolute('richdocuments.assets.get', [
+			'url' => $this->urlGenerator->linkToRouteAbsolute('officeonline.assets.get', [
 				'token' => $asset->getToken(),
 			])
 		]);

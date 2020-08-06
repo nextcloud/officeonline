@@ -19,7 +19,7 @@
  *
  */
 
-namespace OCA\Richdocuments\WOPI;
+namespace OCA\Officeonline\WOPI;
 
 use OCP\Files\File;
 use OCP\IRequest;

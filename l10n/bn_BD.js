@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Can't create document" : "ডকুমেন্ট তৈরী করা যাবেনা",
     "Saved" : "সংরক্ষণ করা হলো",

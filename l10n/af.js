@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Saved" : "Bewaar",
     "File is too big" : "Lêer is te groot",

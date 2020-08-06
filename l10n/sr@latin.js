@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Description" : "Opis",
     "No results" : "Nema rezultata",

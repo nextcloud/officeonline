@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Saved" : "បាន​រក្សាទុក",
     "Description" : "ការ​អធិប្បាយ",

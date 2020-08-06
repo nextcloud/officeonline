@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - Richdocuments App
+ * ownCloud - Officeonline App
  *
  * @author Frank Karlitschek
  * @copyright 2013-2014 Frank Karlitschek karlitschek@kde.org
@@ -20,9 +20,9 @@
  *
  */
 
-namespace OCA\Richdocuments\AppInfo;
+namespace OCA\Officeonline\AppInfo;
 
-use OCA\Richdocuments\PermissionManager;
+use OCA\Officeonline\PermissionManager;
 
 $currentUser = \OC::$server->getUserSession()->getUser();
 if($currentUser !== null) {
@@ -37,13 +37,13 @@ $eventDispatcher = \OC::$server->getEventDispatcher();
 $eventDispatcher->addListener(
 	'OCA\Files::loadAdditionalScripts',
 	function() {
-		\OCP\Util::addScript('richdocuments', 'files');
+		\OCP\Util::addScript('officeonline', 'files');
 	}
 );
 $eventDispatcher->addListener(
 	'OCA\Files_Sharing::loadAdditionalScripts',
 	function() {
-		\OCP\Util::addScript('richdocuments', 'files');
+		\OCP\Util::addScript('officeonline', 'files');
 	}
 );
 

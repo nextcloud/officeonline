@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\Richdocuments\Service;
+namespace OCA\Officeonline\Service;
 
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
@@ -45,17 +45,17 @@ class CapabilitiesService {
 		$this->config = $config;
 		$this->clientService = $clientService;
 		try {
-			$this->appData = $appData->getFolder('richdocuments');
+			$this->appData = $appData->getFolder('officeonline');
 		} catch (NotFoundException $e) {
-			$this->appData = $appData->newFolder('richdocuments');
+			$this->appData = $appData->newFolder('officeonline');
 		}
 	}
 
 
 	public function getCapabilities() {
 		if ($this->capabilities) {
-            $isCODEInstalled = $this->getContainer()->getServer()->getAppManager()->isEnabledForUser('richdocumentscode');
-            $isCODEEnabled = strpos($this->config->getAppValue('richdocuments', 'wopi_url'), 'proxy.php?req=') !== false;
+            $isCODEInstalled = $this->getContainer()->getServer()->getAppManager()->isEnabledForUser('officeonlinecode');
+            $isCODEEnabled = strpos($this->config->getAppValue('officeonline', 'wopi_url'), 'proxy.php?req=') !== false;
             if($isCODEInstalled && $isCODEEnabled && count($this->capabilities) === 0) {
                 $this->refretch();
             }
@@ -110,7 +110,7 @@ class CapabilitiesService {
 	}
 
 	private function renewCapabilities() {
-		$remoteHost = $this->config->getAppValue('richdocuments', 'wopi_url');
+		$remoteHost = $this->config->getAppValue('officeonline', 'wopi_url');
 		if ($remoteHost === '') {
 			return [];
 		}
@@ -119,7 +119,7 @@ class CapabilitiesService {
 		$client = $this->clientService->newClient();
 		$options = ['timeout' => 45, 'nextcloud' => ['allow_local_address' => true]];
 
-		if ($this->config->getAppValue('richdocuments', 'disable_certificate_verification') === 'yes') {
+		if ($this->config->getAppValue('officeonline', 'disable_certificate_verification') === 'yes') {
 			$options['verify'] = false;
 		}
 

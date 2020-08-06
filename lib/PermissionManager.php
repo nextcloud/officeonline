@@ -19,9 +19,9 @@
  *
  */
 
-namespace OCA\Richdocuments;
+namespace OCA\Officeonline;
 
-use OCA\Richdocuments\AppInfo\Application;
+use OCA\Officeonline\AppInfo\Application;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IUser;

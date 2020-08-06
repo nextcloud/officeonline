@@ -22,7 +22,7 @@
 
 <template>
 	<transition name="fade" appear>
-		<div v-show="loading" id="richdocuments-wrapper">
+		<div v-show="loading" id="officeonline-wrapper">
 			<div class="header">
 				<!-- This is obviously not the way to go since it would require absolute positioning and therefore not be compatible with viewer actions/sidebar -->
 				<div class="avatars">
@@ -140,7 +140,7 @@ export default {
 		}
 	}
 
-	#richdocuments-wrapper {
+	#officeonline-wrapper {
 		width: 100vw;
 		height: calc(100vh - 50px);
 		top: 50px;

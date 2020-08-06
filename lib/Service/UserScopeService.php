@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\Richdocuments\Service;
+namespace OCA\Officeonline\Service;
 
 
 use OCP\IUserManager;

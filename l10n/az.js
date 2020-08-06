@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Can't create document" : "Sənədi yaratmaq mümkün olmadı",
     "Saved" : "Saxlanıldı",

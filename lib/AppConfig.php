@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - Richdocuments App
+ * ownCloud - Officeonline App
  *
  * @author Victor Dubiniuk
  * @copyright 2015 Victor Dubiniuk victor.dubiniuk@gmail.com
@@ -9,9 +9,9 @@
  * later.
  */
 
-namespace OCA\Richdocuments;
+namespace OCA\Officeonline;
 
-use OCA\Richdocuments\AppInfo\Application;
+use OCA\Officeonline\AppInfo\Application;
 use \OCP\IConfig;
 
 class AppConfig {

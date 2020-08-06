@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - Richdocuments App
+ * ownCloud - Officeonline App
  *
  * @author Victor Dubiniuk
  * @copyright 2014 Victor Dubiniuk victor.dubiniuk@gmail.com
@@ -9,10 +9,10 @@
  * later.
  */
 
-namespace OCA\Richdocuments\Controller;
+namespace OCA\Officeonline\Controller;
 
-use OCA\Richdocuments\Service\FederationService;
-use OCA\Richdocuments\TokenManager;
+use OCA\Officeonline\Service\FederationService;
+use OCA\Officeonline\TokenManager;
 use \OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
@@ -31,8 +31,8 @@ use \OCP\IL10N;
 use \OCP\ILogger;
 use \OCP\AppFramework\Http\ContentSecurityPolicy;
 use \OCP\AppFramework\Http\TemplateResponse;
-use \OCA\Richdocuments\AppConfig;
-use \OCA\Richdocuments\Helper;
+use \OCA\Officeonline\AppConfig;
+use \OCA\Officeonline\Helper;
 use OCP\ISession;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
@@ -57,7 +57,7 @@ class DocumentController extends Controller {
 	private $session;
 	/** @var IRootFolder */
 	private $rootFolder;
-	/** @var \OCA\Richdocuments\TemplateManager */
+	/** @var \OCA\Officeonline\TemplateManager */
 	private $templateManager;
 	/** @var FederationService */
 	private $federationService;
@@ -91,7 +91,7 @@ class DocumentController extends Controller {
 		ISession $session,
 		$UserId,
 		ILogger $logger,
-		\OCA\Richdocuments\TemplateManager $templateManager,
+		\OCA\Officeonline\TemplateManager $templateManager,
 		FederationService $federationService,
 		Helper $helper
 	) {
@@ -145,7 +145,7 @@ class DocumentController extends Controller {
 						'token' => $token
 					];
 				} catch (\Exception $e) {
-					$this->logger->logException($e, ['app'=>'richdocuments']);
+					$this->logger->logException($e, ['app'=>'officeonline']);
 					$params = [
 						'errors' => [['error' => $e->getMessage()]]
 					];
@@ -195,15 +195,15 @@ class DocumentController extends Controller {
 					$absolute = $item->getParent()->getPath();
 					$relative = $folder->getRelativePath($absolute);
 					$url = '/index.php/apps/files?dir=' . $relative .
-						'&richdocuments_open=' . $item->getName() .
-						'&richdocuments_fileId=' . $fileId .
-						'&richdocuments_remote_access=' . $remote;
+						'&officeonline_open=' . $item->getName() .
+						'&officeonline_fileId=' . $fileId .
+						'&officeonline_remote_access=' . $remote;
 					return new RedirectResponse($url);
 				}
 				$this->logger->warning('Failed to connect to remote collabora instance for ' . $fileId);
 			}
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'richdocuments']);
+			$this->logger->logException($e, ['app'=>'officeonline']);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];
@@ -266,7 +266,7 @@ class DocumentController extends Controller {
 				$encryptionManager->getEncryptionModule()->update($absPath, $owner, $accessList);
 			}
 
-			$response = new TemplateResponse('richdocuments', 'documents', $params, 'empty');
+			$response = new TemplateResponse('officeonline', 'documents', $params, 'empty');
 			$policy = new ContentSecurityPolicy();
 			$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 			$policy->allowInlineScript(true);
@@ -276,7 +276,7 @@ class DocumentController extends Controller {
 			$response->addHeader('Pragma', 'no-cache');
 			return $response;
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'richdocuments']);
+			$this->logger->logException($e, ['app'=>'officeonline']);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];
@@ -335,7 +335,7 @@ class DocumentController extends Controller {
 			'userId' => $this->uid
 		];
 
-		$response = new TemplateResponse('richdocuments', 'documents', $params, 'empty');
+		$response = new TemplateResponse('officeonline', 'documents', $params, 'empty');
 		$policy = new ContentSecurityPolicy();
 		$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 		$policy->allowInlineScript(true);
@@ -387,7 +387,7 @@ class DocumentController extends Controller {
 					$params['urlsrc'] = $urlSrc;
 				}
 
-				$response = new TemplateResponse('richdocuments', 'documents', $params, 'empty');
+				$response = new TemplateResponse('officeonline', 'documents', $params, 'empty');
 				$policy = new ContentSecurityPolicy();
 				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 				$policy->allowInlineScript(true);
@@ -395,7 +395,7 @@ class DocumentController extends Controller {
 				return $response;
 			}
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'richdocuments']);
+			$this->logger->logException($e, ['app'=>'officeonline']);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];
@@ -455,7 +455,7 @@ class DocumentController extends Controller {
 					'userId' => $remoteWopi['editorUid'] . '@' . $remoteServer
 				];
 
-				$response = new TemplateResponse('richdocuments', 'documents', $params, 'empty');
+				$response = new TemplateResponse('officeonline', 'documents', $params, 'empty');
 				$policy = new ContentSecurityPolicy();
 				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('wopi_url')));
 				$policy->allowInlineScript(true);
@@ -467,7 +467,7 @@ class DocumentController extends Controller {
 		} catch (ShareNotFound $e) {
 			return new TemplateResponse('core', '404', [], 'guest');
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'richdocuments']);
+			$this->logger->logException($e, ['app'=>'officeonline']);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];

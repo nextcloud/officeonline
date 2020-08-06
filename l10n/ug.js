@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Description" : "چۈشەندۈرۈش",
     "Error" : "خاتالىق",

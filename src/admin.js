@@ -9,7 +9,7 @@ __webpack_nonce__ = btoa(OC.requestToken)
 // Correct the root of the app for chunk loading
 // OC.linkTo matches the apps folders
 // eslint-disable-next-line
-__webpack_public_path__ = OC.linkTo('richdocuments', 'js/')
+__webpack_public_path__ = OC.linkTo('officeonline', 'js/')
 
 Vue.prototype.t = t
 Vue.prototype.n = n
@@ -35,7 +35,7 @@ function appendTemplateFromData(data) {
 	template.querySelector('figcaption').textContent = data.name
 	template.querySelector('.delete-template').href = data.delete
 
-	document.querySelector('#richdocuments-templates > ul').appendChild(template)
+	document.querySelector('#officeonline-templates > ul').appendChild(template)
 	template.querySelector('.delete-template').addEventListener('click', deleteTemplate)
 }
 
@@ -46,8 +46,8 @@ function appendTemplateFromData(data) {
  */
 function deleteTemplate(event) {
 	event.preventDefault()
-	var emptyElmt = document.querySelector('#richdocuments-templates #emptycontent')
-	var tplListElmt = document.querySelector('#richdocuments-templates > ul')
+	var emptyElmt = document.querySelector('#officeonline-templates #emptycontent')
+	var tplListElmt = document.querySelector('#officeonline-templates > ul')
 	var elmt = event.target
 
 	// ensure no request is in progress
@@ -72,7 +72,7 @@ function deleteTemplate(event) {
 			})
 			.fail(function(e) {
 			// failure, show warning
-				elmt.textContent = t('richdocuments', 'Error')
+				elmt.textContent = t('officeonline', 'Error')
 				elmt.classList.remove('icon-loading')
 				setTimeout(function() {
 					elmt.classList.add('icon-delete')
@@ -89,17 +89,17 @@ function initTemplateManager() {
 	var inputElmt = document.querySelector('#add-template')
 	var buttonElmt = document.querySelector('.icon-add')
 	var deleteElmts = document.querySelectorAll('.delete-template')
-	var emptyElmt = document.querySelector('#richdocuments-templates #emptycontent')
-	var tplListElmt = document.querySelector('#richdocuments-templates > ul')
+	var emptyElmt = document.querySelector('#officeonline-templates #emptycontent')
+	var tplListElmt = document.querySelector('#officeonline-templates > ul')
 
 	deleteElmts.forEach(function(elmt) {
 		elmt.addEventListener('click', deleteTemplate)
 	})
 
 	// fileupload plugin
-	$('#richdocuments-templates').fileupload({
+	$('#officeonline-templates').fileupload({
 		dataType: 'json',
-		url: OC.generateUrl('apps/richdocuments/template'),
+		url: OC.generateUrl('apps/officeonline/template'),
 		type: 'POST',
 
 		add: function(e, data) {
@@ -127,7 +127,7 @@ function initTemplateManager() {
 		fail: function(e, data) {
 			// failure, show warning
 			buttonElmt.className = 'icon-add'
-			buttonElmt.textContent = t('richdocuments', 'An error occurred') + ': ' + data.jqXHR.responseJSON.data.message
+			buttonElmt.textContent = t('officeonline', 'An error occurred') + ': ' + data.jqXHR.responseJSON.data.message
 			setTimeout(function() {
 				inputElmt.disabled = false
 				buttonElmt.textContent = ''

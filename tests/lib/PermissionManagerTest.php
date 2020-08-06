@@ -19,9 +19,9 @@
  *
  */
 
-namespace Tests\Richdocuments;
+namespace Tests\Officeonline;
 
-use OCA\Richdocuments\PermissionManager;
+use OCA\Officeonline\PermissionManager;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IUser;
@@ -51,7 +51,7 @@ class PermissionManagerTest extends TestCase {
 		$this->config
 			->expects($this->once())
 			->method('getAppValue')
-			->with('richdocuments', 'use_groups', '')
+			->with('officeonline', 'use_groups', '')
 			->willReturn('');
 
 		$this->assertTrue($this->permissionManager->isEnabledForUser($user));
@@ -68,7 +68,7 @@ class PermissionManagerTest extends TestCase {
 		$this->config
 			->expects($this->once())
 			->method('getAppValue')
-			->with('richdocuments', 'use_groups', '')
+			->with('officeonline', 'use_groups', '')
 			->willReturn('Enabled1|Enabled2|Enabled3');
 
 		$this->groupManager
@@ -101,7 +101,7 @@ class PermissionManagerTest extends TestCase {
 		$this->config
 			->expects($this->once())
 			->method('getAppValue')
-			->with('richdocuments', 'use_groups', '')
+			->with('officeonline', 'use_groups', '')
 			->willReturn('Enabled1|Enabled2|Enabled3');
 
 		$this->groupManager

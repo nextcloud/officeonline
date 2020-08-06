@@ -11,7 +11,7 @@ There are two kind of templates:
 2. user defined templates
 
 Both should be simple template files and preview for them should be obtained using
-the preview API. The richdocuments works as a preview provider so it should provide
+the preview API. The officeonline works as a preview provider so it should provide
 proper previews to use.
 
 ### System wide templates
@@ -35,4 +35,4 @@ folders among each other.
 
 ### Replacing empty templates
 
-Empty template files can be replaced the existing files in `appdata_[instanceid]/richdocuments/empty_templates/`. The files can be reverted to the templates shipped with the release by running the  `occ richdocuments:update-empty-templates` command.
+Empty template files can be replaced the existing files in `appdata_[instanceid]/officeonline/empty_templates/`. The files can be reverted to the templates shipped with the release by running the  `occ officeonline:update-empty-templates` command.

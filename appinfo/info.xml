@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <info>
-	<id>richdocuments</id>
-	<name>Collabora Online</name>
+	<id>officeonline</id>
+	<name>Office Online integration</name>
 	<summary>Edit office documents directly in your browser.</summary>
 	<description>This application can connect to a Collabora Online (or other) server (WOPI-like Client). Nextcloud is the WOPI Host. Please read the documentation to learn more about that.</description>
 	<version>3.7.3</version>
@@ -14,13 +14,13 @@
 	</types>
 	<documentation>
 		<user>https://nextcloud.com/collaboraonline/</user>
-		<admin>https://github.com/nextcloud/richdocuments/wiki</admin>
+		<admin>https://github.com/nextcloud/officeonline/wiki</admin>
 	</documentation>
 	<category>office</category>
 	<category>integration</category>
 	<website>https://collaboraoffice.com/</website>
-	<bugs>https://github.com/nextcloud/richdocuments/issues</bugs>
-	<repository type="git">https://github.com/nextcloud/richdocuments.git</repository>
+	<bugs>https://github.com/nextcloud/officeonline/issues</bugs>
+	<repository type="git">https://github.com/nextcloud/officeonline.git</repository>
 	<screenshot small-thumbnail="https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-for-thumbnail.jpg">https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-1.png</screenshot>
 	<screenshot>https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-2.png</screenshot>
 	<screenshot>https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-3.png</screenshot>
@@ -30,15 +30,15 @@
 		<nextcloud min-version="15" max-version="20" />
 	</dependencies>
 	<background-jobs>
-		<job>OCA\Richdocuments\Backgroundjobs\ObtainCapabilities</job>
+		<job>OCA\Officeonline\Backgroundjobs\ObtainCapabilities</job>
 	</background-jobs>
 	<commands>
-		<command>OCA\Richdocuments\Command\UpdateEmptyTemplates</command>
+		<command>OCA\Officeonline\Command\UpdateEmptyTemplates</command>
 	</commands>
 	<settings>
-		<admin>OCA\Richdocuments\Settings\Admin</admin>
-		<admin-section>OCA\Richdocuments\Settings\Section</admin-section>
-		<personal>OCA\Richdocuments\Settings\Personal</personal>
-		<personal-section>OCA\Richdocuments\Settings\Section</personal-section>
+		<admin>OCA\Officeonline\Settings\Admin</admin>
+		<admin-section>OCA\Officeonline\Settings\Section</admin-section>
+		<personal>OCA\Officeonline\Settings\Personal</personal>
+		<personal-section>OCA\Officeonline\Settings\Section</personal-section>
 	</settings>
 </info>

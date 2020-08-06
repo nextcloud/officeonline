@@ -24,12 +24,12 @@ import Config from './../services/config'
 
 const isDirectEditing = () => Config.get('directEdit')
 
-const isMobileInterfaceAvailable = () => window.RichDocumentsMobileInterface
-	|| (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.RichDocumentsMobileInterface)
+const isMobileInterfaceAvailable = () => window.OfficeOnlineMobileInterface
+	|| (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.OfficeOnlineMobileInterface)
 
-const isMobileInterfaceOnIos = () => window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.RichDocumentsMobileInterface
+const isMobileInterfaceOnIos = () => window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.OfficeOnlineMobileInterface
 
-const isMobileInterfaceOnAndroid = () => window.RichDocumentsMobileInterface
+const isMobileInterfaceOnAndroid = () => window.OfficeOnlineMobileInterface
 
 const callMobileMessage = (messageName, attributes) => {
 	console.debug('callMobileMessage', messageName, attributes)
@@ -47,19 +47,19 @@ const callMobileMessage = (messageName, attributes) => {
 		attributesString = null
 	}
 	// Forward to mobile handler
-	if (window.RichDocumentsMobileInterface && typeof window.RichDocumentsMobileInterface[messageName] === 'function') {
+	if (window.OfficeOnlineMobileInterface && typeof window.OfficeOnlineMobileInterface[messageName] === 'function') {
 		if (attributesString === null || typeof attributesString === 'undefined') {
-			window.RichDocumentsMobileInterface[messageName]()
+			window.OfficeOnlineMobileInterface[messageName]()
 		} else {
-			window.RichDocumentsMobileInterface[messageName](attributesString)
+			window.OfficeOnlineMobileInterface[messageName](attributesString)
 		}
 	}
 
 	// iOS webkit fallback
 	if (window.webkit
 		&& window.webkit.messageHandlers
-		&& window.webkit.messageHandlers.RichDocumentsMobileInterface) {
-		window.webkit.messageHandlers.RichDocumentsMobileInterface.postMessage(message)
+		&& window.webkit.messageHandlers.OfficeOnlineMobileInterface) {
+		window.webkit.messageHandlers.OfficeOnlineMobileInterface.postMessage(message)
 	}
 }
 

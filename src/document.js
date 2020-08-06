@@ -27,25 +27,25 @@ const checkProxyStatus = () => {
 		if (val && val.status && val.status !== 'OK') {
 			if (val.status === 'starting' || val.status === 'stopped') {
 				document.getElementById('proxyLoadingIcon').classList.add('icon-loading-small')
-				document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Built-in CODE Server is starting up shortly, please wait.')
+				document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Built-in CODE Server is starting up shortly, please wait.')
 			} else if (val.status === 'restarting') {
 				document.getElementById('proxyLoadingIcon').classList.add('icon-loading-small')
-				document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Built-in CODE Server is restarting, please wait.')
+				document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Built-in CODE Server is restarting, please wait.')
 			} else if (val.status === 'error') {
 				if (val.error === 'appimage_missing') {
-					document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Error: Cannot find the AppImage, please reinstall the Collabora Online Built-in server.')
+					document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Error: Cannot find the AppImage, please reinstall the Collabora Online Built-in server.')
 				} else if (val.error === 'chmod_failed' || val.error === 'appimage_not_executable') {
-					document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Error: Unable to make the AppImage executable, please setup a standalone server.')
+					document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Error: Unable to make the AppImage executable, please setup a standalone server.')
 				} else if (val.error === 'exec_disabled') {
-					document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Error: Exec disabled in PHP, please enable it, or setup a standalone server.')
+					document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Error: Exec disabled in PHP, please enable it, or setup a standalone server.')
 				} else if (val.error === 'not_linux' || val.error === 'not_x86_64') {
-					document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Error: Not running on x86-64 Linux, please setup a standalone server.')
+					document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Error: Not running on x86-64 Linux, please setup a standalone server.')
 				} else if (val.error === 'no_fontconfig') {
-					document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Error: The fontconfig library is not installed on your server, please install it or setup a standalone server.')
+					document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Error: The fontconfig library is not installed on your server, please install it or setup a standalone server.')
 				} else if (val.error === 'no_glibc') {
-					document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Error: Not running on glibc-based Linux, please setup a standalone server.')
+					document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Error: Not running on glibc-based Linux, please setup a standalone server.')
 				} else {
-					document.getElementById('proxyLoadingMessage').textContent = t('richdocuments', 'Error: Cannot start the Collabora Online Built-in server, please setup a standalone one.')
+					document.getElementById('proxyLoadingMessage').textContent = t('officeonline', 'Error: Cannot start the Collabora Online Built-in server, please setup a standalone one.')
 				}
 
 				// probably not even worth re-trying
@@ -62,7 +62,7 @@ const checkProxyStatus = () => {
 }
 
 const showLoadingIndicator = () => {
-	if (OC.appswebroots.richdocumentscode && Config.get('urlsrc').indexOf('proxy.php') >= 0) {
+	if (OC.appswebroots.officeonlinecode && Config.get('urlsrc').indexOf('proxy.php') >= 0) {
 		checkProxyStatus()
 	} else {
 		document.getElementById('loadingContainer').classList.add('icon-loading')
@@ -88,12 +88,12 @@ $.widget('oc.guestNamePicker', {
 
 		const text = document.createElement('div')
 		text.setAttribute('style', 'margin: 0 auto; margin-top: 100px; text-align: center;')
-		text.innerHTML = t('richdocuments', 'Please choose your nickname to continue as guest user.')
+		text.innerHTML = t('officeonline', 'Please choose your nickname to continue as guest user.')
 
 		const div = document.createElement('div')
 		div.setAttribute('style', 'margin: 0 auto; width: 250px; display: flex;')
-		const nick = '<input type="text" placeholder="' + t('richdocuments', 'Nickname') + '" id="nickname" style="flex-grow: 1; border-right:none; border-top-right-radius: 0; border-bottom-right-radius: 0">'
-		const btn = '<input style="border-left:none; border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: -3px" type="button" id="btn" type="button" value="' + t('richdocuments', 'Set') + '">'
+		const nick = '<input type="text" placeholder="' + t('officeonline', 'Nickname') + '" id="nickname" style="flex-grow: 1; border-right:none; border-top-right-radius: 0; border-bottom-right-radius: 0">'
+		const btn = '<input style="border-left:none; border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: -3px" type="button" id="btn" type="button" value="' + t('officeonline', 'Set') + '">'
 		div.innerHTML = nick + btn
 
 		$('#documents-content').prepend(div)
@@ -141,7 +141,7 @@ const documentsMain = {
 	// generates docKey for given fileId
 	_generateDocKey: function(wopiFileId) {
 		let canonicalWebroot = Config.get('canonical_webroot')
-		let ocurl = getRootUrl() + '/index.php/apps/richdocuments/wopi/files/' + wopiFileId
+		let ocurl = getRootUrl() + '/index.php/apps/officeonline/wopi/files/' + wopiFileId
 		if (canonicalWebroot) {
 			if (!canonicalWebroot.startsWith('/')) {
 				canonicalWebroot = '/' + canonicalWebroot
@@ -197,7 +197,7 @@ const documentsMain = {
 		loadRevViewerContainer: function() {
 			if (!$('revViewerContainer').length) {
 				$(document.body).prepend(documentsMain.UI.viewContainer)
-				const closeButton = $('<button class="icon-close closeButton" title="' + t('richdocuments', 'Close version preview') + '"/>')
+				const closeButton = $('<button class="icon-close closeButton" title="' + t('officeonline', 'Close version preview') + '"/>')
 				$('#revViewerContainer').prepend(closeButton)
 			}
 		},
@@ -387,21 +387,21 @@ const documentsMain = {
 					if (msgId === 'UI_SaveAs') {
 						// TODO Move to file picker dialog with input field
 						OC.dialogs.prompt(
-							t('richdocuments', 'Please enter the filename to store the document as.'),
-							t('richdocuments', 'Save As'),
+							t('officeonline', 'Please enter the filename to store the document as.'),
+							t('officeonline', 'Save As'),
 							function(result, value) {
 								if (result === true && value) {
 									PostMessages.sendWOPIPostMessage('loolframe', 'Action_SaveAs', { 'Filename': value })
 								}
 							},
 							true,
-							t('richdocuments', 'New filename'),
+							t('officeonline', 'New filename'),
 							false
 						).then(function() {
 							var $dialog = $('.oc-dialog:visible')
 							var $buttons = $dialog.find('button')
-							$buttons.eq(0).text(t('richdocuments', 'Cancel'))
-							$buttons.eq(1).text(t('richdocuments', 'Save'))
+							$buttons.eq(0).text(t('officeonline', 'Cancel'))
+							$buttons.eq(1).text(t('officeonline', 'Save'))
 							var nameInput = $dialog.find('input')[0]
 							nameInput.style.minWidth = '250px'
 							nameInput.style.maxWidth = '400px'
@@ -514,15 +514,15 @@ const documentsMain = {
 
 $(document).ready(function() {
 
-	if (!OCA.RichDocuments) {
-		OCA.RichDocuments = {}
+	if (!OCA.OfficeOnline) {
+		OCA.OfficeOnline = {}
 	}
 
 	if (!OC.Share) {
 		OC.Share = {}
 	}
 
-	OCA.RichDocuments.documentsMain = documentsMain
+	OCA.OfficeOnline.documentsMain = documentsMain
 
 	if (shouldAskForGuestName()) {
 		PostMessages.sendPostMessage('parent', 'loading')

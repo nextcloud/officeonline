@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Saved" : "Saqlangan",
     "File is too big" : "Fayl juda katta",

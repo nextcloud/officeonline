@@ -7,24 +7,24 @@ import '../css/viewer.scss'
 
 const FRAME_DOCUMENT = 'FRAME_DOCUMENT'
 const PostMessages = new PostMessageService({
-	FRAME_DOCUMENT: () => document.getElementById('richdocumentsframe').contentWindow
+	FRAME_DOCUMENT: () => document.getElementById('officeonlineframe').contentWindow
 })
 
-const preloadCreate = getSearchParam('richdocuments_create')
-const preloadOpen = getSearchParam('richdocuments_open')
+const preloadCreate = getSearchParam('officeonline_create')
+const preloadOpen = getSearchParam('officeonline_open')
 const Preload = {}
 
 if (preloadCreate) {
 	Preload.create = {
-		type: getSearchParam('richdocuments_create'),
-		filename: getSearchParam('richdocuments_filename')
+		type: getSearchParam('officeonline_create'),
+		filename: getSearchParam('officeonline_filename')
 	}
 }
 
 if (preloadOpen) {
 	Preload.open = {
 		filename: preloadOpen,
-		id: getSearchParam('richdocuments_fileId'),
+		id: getSearchParam('officeonline_fileId'),
 		dir: getSearchParam('dir')
 	}
 }
@@ -38,14 +38,14 @@ const odfViewer = {
 	open: false,
 	receivedLoading: false,
 	isCollaboraConfigured: (
-		(OC.getCapabilities().richdocuments.config.wopi_url.indexOf('proxy.php') !== -1)
-		|| (typeof OC.getCapabilities().richdocuments.collabora === 'object' && OC.getCapabilities().richdocuments.collabora.length !== 0)),
-	supportedMimes: OC.getCapabilities().richdocuments.mimetypes.concat(OC.getCapabilities().richdocuments.mimetypesNoDefaultOpen),
-	excludeMimeFromDefaultOpen: OC.getCapabilities().richdocuments.mimetypesNoDefaultOpen,
+		(OC.getCapabilities().officeonline.config.wopi_url.indexOf('proxy.php') !== -1)
+		|| (typeof OC.getCapabilities().officeonline.collabora === 'object' && OC.getCapabilities().officeonline.collabora.length !== 0)),
+	supportedMimes: OC.getCapabilities().officeonline.mimetypes.concat(OC.getCapabilities().officeonline.mimetypesNoDefaultOpen),
+	excludeMimeFromDefaultOpen: OC.getCapabilities().officeonline.mimetypesNoDefaultOpen,
 	hideDownloadMimes: ['image/jpeg', 'image/svg+xml', 'image/cgm', 'image/vnd.dxf', 'image/x-emf', 'image/x-wmf', 'image/x-wpg', 'image/x-freehand', 'image/bmp', 'image/png', 'image/gif', 'image/tiff', 'image/jpg', 'image/jpeg', 'text/plain', 'application/pdf'],
 
 	register() {
-		const EDIT_ACTION_NAME = 'Edit with ' + OC.getCapabilities().richdocuments.productName
+		const EDIT_ACTION_NAME = 'Edit with ' + OC.getCapabilities().officeonline.productName
 		for (let mime of odfViewer.supportedMimes) {
 			OCA.Files.fileActions.register(
 				mime,
@@ -53,7 +53,7 @@ const odfViewer = {
 				OC.PERMISSION_READ,
 				OC.imagePath('core', 'actions/rename'),
 				this.onEdit,
-				t('richdocuments', 'Edit with {productName}', { productName: OC.getCapabilities().richdocuments.productName })
+				t('officeonline', 'Edit with {productName}', { productName: OC.getCapabilities().officeonline.productName })
 			)
 			if (odfViewer.excludeMimeFromDefaultOpen.indexOf(mime) === -1 || isDownloadHidden) {
 				OCA.Files.fileActions.setDefault(mime, EDIT_ACTION_NAME)
@@ -63,10 +63,10 @@ const odfViewer = {
 
 	onEdit: function(fileName, context) {
 		if (!odfViewer.isCollaboraConfigured) {
-			const setupUrl = OC.generateUrl('/settings/admin/richdocuments')
+			const setupUrl = OC.generateUrl('/settings/admin/officeonline')
 			const installHint = OC.isUserAdmin()
 				? `<a href="${setupUrl}">Collabora Online is not setup yet. <br />Click here to configure your own server or connect to a demo server.</a>`
-				: t('richdocuments', 'Collabora Online is not setup yet. Please contact your administrator.')
+				: t('officeonline', 'Collabora Online is not setup yet. Please contact your administrator.')
 
 			if (OCP.Toast) {
 				OCP.Toast.error(installHint, {
@@ -134,7 +134,7 @@ const odfViewer = {
 				// only redirect if remote file, not opened though reload and csp blocks the request
 				if (shareOwnerId.substr(lastIndex).indexOf('/') !== -1 && fileModel.id !== preloadId) {
 					canAccessCSP('https://' + shareOwnerId.substr(lastIndex) + '/status.php', () => {
-						window.location = OC.generateUrl('/apps/richdocuments/open?fileId=' + fileId)
+						window.location = OC.generateUrl('/apps/officeonline/open?fileId=' + fileId)
 					})
 				}
 			}
@@ -145,13 +145,13 @@ const odfViewer = {
 			reloadForFederationCSP(fileName)
 		}
 
-		$('head').append($('<link rel="stylesheet" type="text/css" href="' + OC.filePath('richdocuments', 'css', 'mobile.css') + '"/>'))
+		$('head').append($('<link rel="stylesheet" type="text/css" href="' + OC.filePath('officeonline', 'css', 'mobile.css') + '"/>'))
 
-		var $iframe = $('<iframe id="richdocumentsframe" nonce="' + btoa(OC.requestToken) + '" scrolling="no" allowfullscreen src="' + documentUrl + '" />')
+		var $iframe = $('<iframe id="officeonlineframe" nonce="' + btoa(OC.requestToken) + '" scrolling="no" allowfullscreen src="' + documentUrl + '" />')
 		odfViewer.loadingTimeout = setTimeout(function() {
 			if (!odfViewer.receivedLoading) {
 				odfViewer.onClose()
-				OC.Notification.showTemporary(t('richdocuments', 'Failed to load {productName} - please try again later', { productName: OC.getCapabilities().richdocuments.productName || 'Collabora Online' }))
+				OC.Notification.showTemporary(t('officeonline', 'Failed to load {productName} - please try again later', { productName: OC.getCapabilities().officeonline.productName || 'Collabora Online' }))
 			}
 		}, 15000)
 		$iframe.src = documentUrl
@@ -191,7 +191,7 @@ const odfViewer = {
 
 	onReceiveLoading() {
 		odfViewer.receivedLoading = true
-		$('#richdocumentsframe').show()
+		$('#officeonlineframe').show()
 		$('html, body').scrollTop(0)
 		$('#content').removeClass('loading')
 		FilesAppIntegration.initAfterReady()
@@ -201,9 +201,9 @@ const odfViewer = {
 		odfViewer.open = false
 		clearTimeout(odfViewer.loadingTimeout)
 		odfViewer.receivedLoading = false
-		$('link[href*="richdocuments/css/mobile"]').remove()
+		$('link[href*="officeonline/css/mobile"]').remove()
 		$('#app-content #controls').removeClass('hidden')
-		$('#richdocumentsframe').remove()
+		$('#officeonlineframe').remove()
 		$('.searchbox').show()
 		$('body').css('overflow', 'auto')
 
@@ -232,12 +232,12 @@ const odfViewer = {
 
 					newFileMenu.addMenuEntry({
 						id: 'add-' + document.extension,
-						displayName: t('richdocuments', 'New Document'),
-						templateName: t('richdocuments', 'New Document') + '.' + document.extension,
+						displayName: t('officeonline', 'New Document'),
+						templateName: t('officeonline', 'New Document') + '.' + document.extension,
 						iconClass: 'icon-filetype-document',
 						fileType: 'x-office-document',
 						actionHandler: function(filename) {
-							if (OC.getCapabilities().richdocuments.templates) {
+							if (OC.getCapabilities().officeonline.templates) {
 								self._openTemplatePicker('document', document.mime, filename)
 							} else {
 								self._createDocument(document.mime, filename)
@@ -247,12 +247,12 @@ const odfViewer = {
 
 					newFileMenu.addMenuEntry({
 						id: 'add-' + spreadsheet.extension,
-						displayName: t('richdocuments', 'New Spreadsheet'),
-						templateName: t('richdocuments', 'New Spreadsheet') + '.' + spreadsheet.extension,
+						displayName: t('officeonline', 'New Spreadsheet'),
+						templateName: t('officeonline', 'New Spreadsheet') + '.' + spreadsheet.extension,
 						iconClass: 'icon-filetype-spreadsheet',
 						fileType: 'x-office-spreadsheet',
 						actionHandler: function(filename) {
-							if (OC.getCapabilities().richdocuments.templates) {
+							if (OC.getCapabilities().officeonline.templates) {
 								self._openTemplatePicker('spreadsheet', spreadsheet.mime, filename)
 							} else {
 								self._createDocument(spreadsheet.mime, filename)
@@ -262,12 +262,12 @@ const odfViewer = {
 
 					newFileMenu.addMenuEntry({
 						id: 'add-' + presentation.extension,
-						displayName: t('richdocuments', 'New Presentation'),
-						templateName: t('richdocuments', 'New Presentation') + '.' + presentation.extension,
+						displayName: t('officeonline', 'New Presentation'),
+						templateName: t('officeonline', 'New Presentation') + '.' + presentation.extension,
 						iconClass: 'icon-filetype-presentation',
 						fileType: 'x-office-presentation',
 						actionHandler: function(filename) {
-							if (OC.getCapabilities().richdocuments.templates) {
+							if (OC.getCapabilities().officeonline.templates) {
 								self._openTemplatePicker('presentation', presentation.mime, filename)
 							} else {
 								self._createDocument(presentation.mime, filename)
@@ -281,7 +281,7 @@ const odfViewer = {
 					filename = FileList.getUniqueName(filename)
 
 					$.post(
-						OC.generateUrl('apps/richdocuments/ajax/documents/create'),
+						OC.generateUrl('apps/officeonline/ajax/documents/create'),
 						{ mimetype: mimetype, filename: filename, dir: $('#dir').val() },
 						function(response) {
 							if (response && response.status === 'success') {
@@ -297,7 +297,7 @@ const odfViewer = {
 					OCA.Files.Files.isFileNameValid(filename)
 					filename = FileList.getUniqueName(filename)
 					$.post(
-						OC.generateUrl('apps/richdocuments/ajax/documents/create'),
+						OC.generateUrl('apps/officeonline/ajax/documents/create'),
 						{ mimetype: mimetype, filename: filename, dir: $('#dir').val() },
 						function(response) {
 							if (response && response.status === 'success') {
@@ -318,7 +318,7 @@ const odfViewer = {
 				_openTemplatePicker: function(type, mimetype, filename) {
 					var self = this
 					$.ajax({
-						url: OC.linkToOCS('apps/richdocuments/api/v1/templates', 2) + type,
+						url: OC.linkToOCS('apps/officeonline/api/v1/templates', 2) + type,
 						dataType: 'json'
 					}).then(function(response) {
 						if (response.ocs.data.length === 1) {
@@ -335,7 +335,7 @@ const odfViewer = {
 										$(this).ocdialog('close')
 									}
 								}, {
-									text: t('richdocuments', 'Create'),
+									text: t('officeonline', 'Create'),
 									classes: 'primary',
 									click: function() {
 										var templateId = this.dataset.templateId
@@ -355,12 +355,12 @@ const odfViewer = {
 
 				_buildTemplatePicker: function(data) {
 					var self = this
-					return $.get(OC.filePath('richdocuments', 'templates', 'templatePicker.html'), function(tmpl) {
+					return $.get(OC.filePath('officeonline', 'templates', 'templatePicker.html'), function(tmpl) {
 						var $tmpl = $(tmpl)
 						// init template picker
 						var $dlg = $tmpl.octemplate({
 							dialog_name: 'template-picker',
-							dialog_title: t('richdocuments', 'Select template')
+							dialog_title: t('officeonline', 'Select template')
 						})
 
 						// create templates list
@@ -376,7 +376,7 @@ const odfViewer = {
 				_appendTemplateFromData: function(dlg, data) {
 					var template = dlg.querySelector('.template-model').cloneNode(true)
 					template.className = ''
-					template.querySelector('img').src = OC.generateUrl('apps/richdocuments/template/preview/' + data.id)
+					template.querySelector('img').src = OC.generateUrl('apps/officeonline/template/preview/' + data.id)
 					template.querySelector('h2').textContent = data.name
 					template.onclick = function() {
 						dlg.dataset.templateId = data.id
@@ -411,10 +411,10 @@ const odfViewer = {
 	}
 }
 
-const settings = OC.getCapabilities()['richdocuments']['config'] || {}
+const settings = OC.getCapabilities()['officeonline']['config'] || {}
 Config.update('ooxml', settings['doc_format'] === 'ooxml')
 
-window.OCA.RichDocuments = {
+window.OCA.OfficeOnline = {
 	config: {
 		create: Types.getFileTypes()
 	}
@@ -454,8 +454,8 @@ $(document).ready(function() {
 		case 'App_LoadingStatus':
 			if (args.Status === 'Timeout') {
 				odfViewer.onClose()
-				OC.Notification.showTemporary(t('richdocuments', 'Failed to connect to {productName}. Please try again later or contact your server administrator.',
-					{ productName: OC.getCapabilities().richdocuments.productName }
+				OC.Notification.showTemporary(t('officeonline', 'Failed to connect to {productName}. Please try again later or contact your server administrator.',
+					{ productName: OC.getCapabilities().officeonline.productName }
 				))
 			}
 			break

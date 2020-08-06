@@ -2,7 +2,7 @@
 	max-width: 50em;
 }
 
-#richdocuments {
+#officeonline {
 	#use_group_select, #edit_group_select {
 		width: 200px; display: block;
 	}
@@ -17,8 +17,8 @@
 	}
 }
 
-#richdocuments,
-#richdocuments-templates {
+#officeonline,
+#officeonline-templates {
 	// inline buttons on section headers
 	> h2 {
 		display: inline-flex;
@@ -45,7 +45,7 @@
 	}
 }
 
-#richdocuments-templates {
+#officeonline-templates {
 	> input {
 		// feedback for keyboard navigation
 		&:hover,

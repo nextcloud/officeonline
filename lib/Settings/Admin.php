@@ -21,12 +21,12 @@
  *
  */
 
-namespace OCA\Richdocuments\Settings;
+namespace OCA\Officeonline\Settings;
 
-use OCA\Richdocuments\AppConfig;
-use OCA\Richdocuments\Capabilities;
-use OCA\Richdocuments\Service\DemoService;
-use OCA\Richdocuments\TemplateManager;
+use OCA\Officeonline\AppConfig;
+use OCA\Officeonline\Capabilities;
+use OCA\Officeonline\Service\DemoService;
+use OCA\Officeonline\TemplateManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\Settings\ISettings;
@@ -65,7 +65,7 @@ class Admin implements ISettings {
 		$this->config  = $config;
 		$this->appConfig = $appConfig;
 		$this->manager = $manager;
-		$this->capabilities = $capabilities->getCapabilities()['richdocuments'];
+		$this->capabilities = $capabilities->getCapabilities()['officeonline'];
 		$this->demoService = $demoService;
 	}
 	/**
@@ -75,17 +75,17 @@ class Admin implements ISettings {
 		$demoServers = [];
 
 		return new TemplateResponse(
-			'richdocuments',
+			'officeonline',
 			'admin',
 			[
 				'settings' => [
-					'wopi_url'           => $this->config->getAppValue('richdocuments', 'wopi_url'),
-					'edit_groups'        => $this->config->getAppValue('richdocuments', 'edit_groups'),
-					'use_groups'         => $this->config->getAppValue('richdocuments', 'use_groups'),
-					'doc_format'         => $this->config->getAppValue('richdocuments', 'doc_format'),
-					'external_apps'      => $this->config->getAppValue('richdocuments', 'external_apps'),
-					'canonical_webroot'  => $this->config->getAppValue('richdocuments', 'canonical_webroot'),
-					'disable_certificate_verification' => $this->config->getAppValue('richdocuments', 'disable_certificate_verification', '') === 'yes',
+					'wopi_url'           => $this->config->getAppValue('officeonline', 'wopi_url'),
+					'edit_groups'        => $this->config->getAppValue('officeonline', 'edit_groups'),
+					'use_groups'         => $this->config->getAppValue('officeonline', 'use_groups'),
+					'doc_format'         => $this->config->getAppValue('officeonline', 'doc_format'),
+					'external_apps'      => $this->config->getAppValue('officeonline', 'external_apps'),
+					'canonical_webroot'  => $this->config->getAppValue('officeonline', 'canonical_webroot'),
+					'disable_certificate_verification' => $this->config->getAppValue('officeonline', 'disable_certificate_verification', '') === 'yes',
 					'templates'          => $this->manager->getSystemFormatted(),
 					'templatesAvailable' => array_key_exists('templates', $this->capabilities) && $this->capabilities['templates'],
 					'settings' => $this->appConfig->getAppSettings(),
@@ -102,7 +102,7 @@ class Admin implements ISettings {
 	 * @return string the section ID, e.g. 'sharing'
 	 */
 	public function getSection() {
-		return 'richdocuments';
+		return 'officeonline';
 	}
 	/**
 	 * @return int whether the form should be rather on the top or bottom of

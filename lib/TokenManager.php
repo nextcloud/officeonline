@@ -19,12 +19,12 @@
  *
  */
 
-namespace OCA\Richdocuments;
+namespace OCA\Officeonline;
 
-use OCA\Richdocuments\Db\WopiMapper;
-use OCA\Richdocuments\Db\Wopi;
-use OCA\Richdocuments\Service\CapabilitiesService;
-use OCA\Richdocuments\WOPI\Parser;
+use OCA\Officeonline\Db\WopiMapper;
+use OCA\Officeonline\Db\Wopi;
+use OCA\Officeonline\Service\CapabilitiesService;
+use OCA\Officeonline\WOPI\Parser;
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;

@@ -4,7 +4,7 @@ steps:
   - name: compatibility
     image: nextcloudci/php7.0:php7.0-19
     environment:
-      APP_NAME: richdocuments
+      APP_NAME: officeonline
       CORE_BRANCH: stable15
       DB: sqlite
     commands:
@@ -87,7 +87,7 @@ steps:
     - name: nextcloud
       image: nextcloudci/php7.3:php7.3-5
       environment:
-          APP_NAME: richdocuments
+          APP_NAME: officeonline
           CORE_BRANCH: master
           DB: sqlite
       commands:

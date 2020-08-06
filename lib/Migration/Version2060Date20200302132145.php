@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\Richdocuments\Migration;
+namespace OCA\Officeonline\Migration;
 
 use Closure;
 use OCP\DB\ISchemaWrapper;
@@ -21,7 +21,7 @@ class Version2060Date20200302132145 extends SimpleMigrationStep {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
-		$table = $schema->getTable('richdocuments_wopi');
+		$table = $schema->getTable('officeonline_wopi');
 		$table->addColumn('share', 'string', [
 			'notnull' => false,
 			'length' => 64

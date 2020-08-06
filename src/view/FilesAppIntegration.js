@@ -49,9 +49,9 @@ export default {
 		}
 
 		const headerRight = document.querySelector('#header .header-right')
-		const richdocumentsHeader = document.createElement('div')
-		richdocumentsHeader.id = 'richdocuments-header'
-		headerRight.insertBefore(richdocumentsHeader, headerRight.firstChild)
+		const officeonlineHeader = document.createElement('div')
+		officeonlineHeader.id = 'officeonline-header'
+		headerRight.insertBefore(officeonlineHeader, headerRight.firstChild)
 
 		this._addAvatarList()
 		if (!isPublic) {
@@ -70,7 +70,7 @@ export default {
 		if (!isPublic) {
 			this.removeVersionSidebarEvents()
 		}
-		$('#richdocuments-header').remove()
+		$('#officeonline-header').remove()
 	},
 
 	share() {
@@ -86,12 +86,12 @@ export default {
 		if (isPublic) {
 			console.error('[FilesAppIntegration] insertGraphic is not supported')
 		}
-		OC.dialogs.filepicker(t('richdocuments', 'Insert from {name}', { name: OC.theme.name }), function(path, type) {
+		OC.dialogs.filepicker(t('officeonline', 'Insert from {name}', { name: OC.theme.name }), function(path, type) {
 			if (type === OC.dialogs.FILEPICKER_TYPE_CHOOSE) {
 				const filename = path.substring(path.lastIndexOf('/') + 1)
 				$.ajax({
 					type: 'POST',
-					url: OC.generateUrl('apps/richdocuments/assets'),
+					url: OC.generateUrl('apps/officeonline/assets'),
 					data: {
 						path: path
 					}
@@ -163,18 +163,18 @@ export default {
 
 	_addAvatarList() {
 		// Add the avatar toolbar if possible
-		const avatarList = $('<div id="richdocuments-avatars">')
+		const avatarList = $('<div id="officeonline-avatars">')
 		avatarList.on('click', function(e) {
 			e.stopPropagation()
 			$('#editors-menu').toggle()
 		})
-		$('#richdocuments-header').append(avatarList)
+		$('#officeonline-header').append(avatarList)
 	},
 
 	_addHeaderShareButton() {
 		if ($('header').length) {
-			var $button = $('<div id="richdocuments-sharing"><a class="icon-shared icon-white"></a></div>')
-			$('#richdocuments-header').append($button)
+			var $button = $('<div id="officeonline-sharing"><a class="icon-shared icon-white"></a></div>')
+			$('#officeonline-header').append($button)
 			$button.on('click', () => {
 				if (!$('#app-sidebar').is(':visible')) {
 					return this.share()
@@ -187,10 +187,10 @@ export default {
 
 	_addHeaderFileActions() {
 		console.debug('[FilesAppIntegration] Adding header file actions')
-		OC.unregisterMenu($('#richdocuments-actions .icon-more'), $('#richdocuments-actions-menu'))
-		$('#richdocuments-actions').remove()
-		var actionsContainer = $('<div id="richdocuments-actions"><div class="icon-more icon-white"></div><ul id="richdocuments-actions-menu" class="popovermenu"></ul></div>')
-		var actions = actionsContainer.find('#richdocuments-actions-menu').empty()
+		OC.unregisterMenu($('#officeonline-actions .icon-more'), $('#officeonline-actions-menu'))
+		$('#officeonline-actions').remove()
+		var actionsContainer = $('<div id="officeonline-actions"><div class="icon-more icon-white"></div><ul id="officeonline-actions-menu" class="popovermenu"></ul></div>')
+		var actions = actionsContainer.find('#officeonline-actions-menu').empty()
 
 		var context = {
 			'$file': this.getFileList().$el.find('[data-id=' + this.originalFileId + ']').first(),
@@ -226,8 +226,8 @@ export default {
 		})
 		$download.find('a').text(t('files', 'Download'))
 		actions.append($favorite).append($info).append($download)
-		$('#richdocuments-header').append(actionsContainer)
-		OC.registerMenu($('#richdocuments-actions .icon-more'), $('#richdocuments-actions-menu'), false, true)
+		$('#officeonline-header').append(actionsContainer)
+		OC.registerMenu($('#officeonline-actions .icon-more'), $('#officeonline-actions-menu'), false, true)
 	},
 
 	/**
@@ -241,7 +241,7 @@ export default {
 		var label = $('<div class="label"></div>')
 		label.text(view.UserName)
 		if (view.ReadOnly === '1') {
-			label.text(view.UserName + ' ' + t('richdocuments', '(read only)'))
+			label.text(view.UserName + ' ' + t('officeonline', '(read only)'))
 
 		}
 		label.click((event) => {
@@ -273,7 +273,7 @@ export default {
 	 */
 	_avatarForView: function(view) {
 		const userId = (view.UserId === '') ? view.UserName : view.UserId
-		var avatarContainer = $('<div class="richdocuments-avatar"><div class="avatar" title="' + view.UserName + '" data-user="' + userId + '"></div></div>')
+		var avatarContainer = $('<div class="officeonline-avatar"><div class="avatar" title="' + view.UserName + '" data-user="' + userId + '"></div></div>')
 		var avatar = avatarContainer.find('.avatar')
 
 		avatar.css({
@@ -283,7 +283,7 @@ export default {
 		})
 		if (view.ReadOnly === '1') {
 			avatarContainer.addClass('read-only')
-			$(avatar).attr('title', view.UserName + ' ' + t('richdocuments', '(read only)'))
+			$(avatar).attr('title', view.UserName + ' ' + t('officeonline', '(read only)'))
 		} else {
 			$(avatar).attr('title', view.UserName)
 		}
@@ -293,7 +293,7 @@ export default {
 	},
 
 	renderAvatars: function() {
-		var avatardiv = $('#header .header-right #richdocuments-avatars')
+		var avatardiv = $('#header .header-right #officeonline-avatars')
 		avatardiv.empty()
 		var popover = $('<div id="editors-menu" class="popovermenu menu-center"><ul></ul></div>')
 
@@ -305,7 +305,7 @@ export default {
 			 * @type {View}
 			 */
 			var view = this.views[viewId]
-			view.UserName = view.UserName !== '' ? view.UserName : t('richdocuments', 'Guest')
+			view.UserName = view.UserName !== '' ? view.UserName : t('officeonline', 'Guest')
 			popover.find('ul').append(this._userEntry(view))
 
 			if (view.UserId === OC.currentUser) {
@@ -319,7 +319,7 @@ export default {
 				avatardiv.append(this._avatarForView(view))
 			}
 		}
-		var followCurrentEditor = $('<li><input type="checkbox" class="checkbox" /><label class="label">' + t('richdocuments', 'Follow current editor') + '</label></li>')
+		var followCurrentEditor = $('<li><input type="checkbox" class="checkbox" /><label class="label">' + t('officeonline', 'Follow current editor') + '</label></li>')
 		followCurrentEditor.find('label').click((event) => {
 			event.stopPropagation()
 			if (this.followingEditor) {
@@ -350,9 +350,9 @@ export default {
 			const preview = OC.MimeType.getIconUrl(this.getFileModel().get('mimetype'))
 			const mtime = this.getFileModel().get('mtime')
 			$('#versionsTabView').prepend('<ul id="lastSavedVersion"><li data-revision="0"><div><div class="preview-container"><img src="' + preview + '" width="44" /></div><div class="version-container">\n'
-				+ '<div><a class="downloadVersion">' + t('richdocuments', 'Last saved version') + '<span class="versiondate has-tooltip live-relative-timestamp" data-timestamp="' + mtime + '"></span></div></div></li></ul>')
+				+ '<div><a class="downloadVersion">' + t('officeonline', 'Last saved version') + '<span class="versiondate has-tooltip live-relative-timestamp" data-timestamp="' + mtime + '"></span></div></div></li></ul>')
 			$('#versionsTabView').prepend('<ul id="currentVersion"><li data-revision="" class="active"><div><div class="preview-container"><img src="' + preview + '" width="44" /></div><div class="version-container">\n'
-				+ '<div><a class="downloadVersion">' + t('richdocuments', 'Current version') + '</a></div></div></li></ul>')
+				+ '<div><a class="downloadVersion">' + t('officeonline', 'Current version') + '</a></div></div></li></ul>')
 			$('.live-relative-timestamp').each(function() {
 				$(this).text(OC.Util.relativeModifiedDate(parseInt($(this).attr('data-timestamp'), 10)))
 			})
@@ -410,16 +410,16 @@ export default {
 
 	_restoreSuccess: function(response) {
 		if (response.status === 'error') {
-			OC.Notification.showTemporary(t('richdocuments', 'Failed to revert the document to older version'))
+			OC.Notification.showTemporary(t('officeonline', 'Failed to revert the document to older version'))
 		}
 		// Reload the document frame to get the new file
 		// TODO: ideally we should have a post messsage that can be sent to collabora to just reload the file once the restore is finished
-		document.getElementById('richdocumentsframe').src = document.getElementById('richdocumentsframe').src
+		document.getElementById('officeonlineframe').src = document.getElementById('officeonlineframe').src
 		OC.Apps.hideAppSidebar()
 	},
 
 	_restoreError: function() {
-		OC.Notification.showTemporary(t('richdocuments', 'Failed to revert the document to older version'))
+		OC.Notification.showTemporary(t('officeonline', 'Failed to revert the document to older version'))
 	},
 
 	_restoreDAV: function(version) {
@@ -437,31 +437,31 @@ export default {
 	},
 
 	/* Ask for a new filename and open the files app in a new tab
-	 * the parameters richdocuments_create and richdocuments_filename are
+	 * the parameters officeonline_create and officeonline_filename are
 	 * parsed by viewer.js and open a template picker in the new tab
 	 */
 	createNewFile: function(type) {
 		OC.dialogs.prompt(
-			t('richdocuments', 'Please enter the filename for the new document'),
-			t('richdocuments', 'Save As'),
+			t('officeonline', 'Please enter the filename for the new document'),
+			t('officeonline', 'Save As'),
 			function(result, value) {
 				if (result === true && value) {
 					if (type === 'text') {
 						type = 'document'
 					}
 					var dir = parent.$('#dir').val()
-					var url = OC.generateUrl('/apps/files/?dir=' + dir + '&richdocuments_create=' + type + '&richdocuments_filename=' + encodeURI(value))
+					var url = OC.generateUrl('/apps/files/?dir=' + dir + '&officeonline_create=' + type + '&officeonline_filename=' + encodeURI(value))
 					window.open(url, '_blank')
 				}
 			},
 			true,
-			t('richdocuments', 'New filename'),
+			t('officeonline', 'New filename'),
 			false
 		).then(function() {
 			var $dialog = parent.$('.oc-dialog:visible')
 			var $buttons = $dialog.find('button')
-			$buttons.eq(0).text(t('richdocuments', 'Cancel'))
-			$buttons.eq(1).text(t('richdocuments', 'Create a new document'))
+			$buttons.eq(0).text(t('officeonline', 'Cancel'))
+			$buttons.eq(1).text(t('officeonline', 'Create a new document'))
 		})
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - Richdocuments App
+ * ownCloud - Officeonline App
  *
  * @author Victor Dubiniuk
  * @copyright 2014 Victor Dubiniuk victor.dubiniuk@gmail.com
@@ -9,12 +9,12 @@
  * later.
  */
 
-namespace OCA\Richdocuments\Controller;
+namespace OCA\Officeonline\Controller;
 
-use OCA\Richdocuments\Service\CapabilitiesService;
-use OCA\Richdocuments\Service\DemoService;
-use OCA\Richdocuments\WOPI\DiscoveryManager;
-use OCA\Richdocuments\WOPI\Parser;
+use OCA\Officeonline\Service\CapabilitiesService;
+use OCA\Officeonline\Service\DemoService;
+use OCA\Officeonline\WOPI\DiscoveryManager;
+use OCA\Officeonline\WOPI\Parser;
 use \OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
@@ -24,7 +24,7 @@ use OCP\Http\Client\IClientService;
 use OCP\ICache;
 use \OCP\IRequest;
 use \OCP\IL10N;
-use OCA\Richdocuments\AppConfig;
+use OCA\Officeonline\AppConfig;
 use OCP\IConfig;
 use OCP\PreConditionNotMetException;
 
@@ -261,7 +261,7 @@ class SettingsController extends Controller{
 
 		if ($templateFolder !== null){
 			try {
-				$this->config->setUserValue($this->userId, 'richdocuments', 'templateFolder', $templateFolder);
+				$this->config->setUserValue($this->userId, 'officeonline', 'templateFolder', $templateFolder);
 			} catch (PreConditionNotMetException $e) {
 				$message = $this->l10n->t('Error when saving');
 				$status = 'error';

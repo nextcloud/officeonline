@@ -21,9 +21,9 @@
  *
  */
 
-namespace OCA\Richdocuments\Settings;
+namespace OCA\Officeonline\Settings;
 
-use OCA\Richdocuments\Capabilities;
+use OCA\Officeonline\Capabilities;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
@@ -49,17 +49,17 @@ class Section implements IIconSection {
 	 * {@inheritdoc}
 	 */
 	public function getID() {
-		return 'richdocuments';
+		return 'officeonline';
 	}
 	/**
 	 * {@inheritdoc}
 	 */
 	public function getName() {
 		$capabilitites = $this->capabilitites->getCapabilities();
-		if (isset($capabilitites['richdocuments']['productName'])) {
-			return $capabilitites['richdocuments']['productName'];
+		if (isset($capabilitites['officeonline']['productName'])) {
+			return $capabilitites['officeonline']['productName'];
 		}
-		return $this->l10n->t('Collabora Online');
+		return $this->l10n->t('Office Online');
 	}
 	/**
 	 * {@inheritdoc}
@@ -72,6 +72,6 @@ class Section implements IIconSection {
 	 * {@inheritdoc}
 	 */
 	public function getIcon() {
-		return $this->url->imagePath('richdocuments', 'app-dark.svg');
+		return $this->url->imagePath('officeonline', 'app-dark.svg');
 	}
 }

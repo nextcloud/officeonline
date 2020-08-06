@@ -19,19 +19,19 @@
  *
  */
 
-namespace OCA\Richdocuments\Controller;
+namespace OCA\Officeonline\Controller;
 
 use OC\Files\View;
-use OCA\Richdocuments\Db\Wopi;
-use OCA\Richdocuments\AppConfig;
-use OCA\Richdocuments\Db\WopiLock;
-use OCA\Richdocuments\Db\WopiLockMapper;
-use OCA\Richdocuments\Db\WopiMapper;
-use OCA\Richdocuments\Hooks\WopiLockHooks;
-use OCA\Richdocuments\Service\UserScopeService;
-use OCA\Richdocuments\TemplateManager;
-use OCA\Richdocuments\TokenManager;
-use OCA\Richdocuments\Helper;
+use OCA\Officeonline\Db\Wopi;
+use OCA\Officeonline\AppConfig;
+use OCA\Officeonline\Db\WopiLock;
+use OCA\Officeonline\Db\WopiLockMapper;
+use OCA\Officeonline\Db\WopiMapper;
+use OCA\Officeonline\Hooks\WopiLockHooks;
+use OCA\Officeonline\Service\UserScopeService;
+use OCA\Officeonline\TemplateManager;
+use OCA\Officeonline\TokenManager;
+use OCA\Officeonline\Helper;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
@@ -180,13 +180,13 @@ class WopiController extends Controller {
 				throw new NotFoundException('No valid file found for ' . $fileId);
 			}
 		} catch (NotFoundException $e) {
-			$this->logger->debug($e->getMessage(), ['app' => 'richdocuments', '']);
+			$this->logger->debug($e->getMessage(), ['app' => 'officeonline', '']);
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		} catch (DoesNotExistException $e) {
-			$this->logger->debug($e->getMessage(), ['app' => 'richdocuments', '']);
+			$this->logger->debug($e->getMessage(), ['app' => 'officeonline', '']);
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app' => 'richdocuments']);
+			$this->logger->logException($e, ['app' => 'officeonline']);
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
@@ -248,7 +248,7 @@ class WopiController extends Controller {
 		 * and providing an URL which returns the actual template
 		 */
 		if ($wopi->hasTemplateId()) {
-			$templateUrl = 'index.php/apps/richdocuments/wopi/template/' . $wopi->getTemplateId() . '?access_token=' . $wopi->getToken();
+			$templateUrl = 'index.php/apps/officeonline/wopi/template/' . $wopi->getTemplateId() . '?access_token=' . $wopi->getToken();
 			$templateUrl = $this->urlGenerator->getAbsoluteURL($templateUrl);
 			$response['TemplateSource'] = $templateUrl;
 		}
@@ -400,7 +400,7 @@ class WopiController extends Controller {
 			$response->addHeader('Content-Type', 'application/octet-stream');
 			return $response;
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'richdocuments', 'message' => 'getFile failed']);
+			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getFile failed']);
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 	}
@@ -629,7 +629,7 @@ class WopiController extends Controller {
 				// logged in)
 				list(, $wopiToken) = $this->tokenManager->getToken($file->getId(), null, $wopi->getEditorUid());
 
-				$wopi = 'index.php/apps/richdocuments/wopi/files/' . $file->getId() . '_' . $this->config->getSystemValue('instanceid') . '?access_token=' . $wopiToken;
+				$wopi = 'index.php/apps/officeonline/wopi/files/' . $file->getId() . '_' . $this->config->getSystemValue('instanceid') . '?access_token=' . $wopiToken;
 				$url = $this->urlGenerator->getAbsoluteURL($wopi);
 
 				return new JSONResponse([ 'Name' => $file->getName(), 'Url' => $url ], Http::STATUS_OK);
@@ -640,7 +640,7 @@ class WopiController extends Controller {
 			}
 			return new JSONResponse(['LastModifiedTime' => Helper::toISO8601($file->getMTime())]);
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'richdocuments', 'message' => 'getFile failed']);
+			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getFile failed']);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -800,12 +800,12 @@ class WopiController extends Controller {
 			// logged in)
 			list(, $wopiToken) = $this->tokenManager->getToken($file->getId(), null, $wopi->getEditorUid());
 
-			$wopi = 'index.php/apps/richdocuments/wopi/files/' . $file->getId() . '_' . $this->config->getSystemValue('instanceid') . '?access_token=' . $wopiToken;
+			$wopi = 'index.php/apps/officeonline/wopi/files/' . $file->getId() . '_' . $this->config->getSystemValue('instanceid') . '?access_token=' . $wopiToken;
 			$url = $this->urlGenerator->getAbsoluteURL($wopi);
 
 			return new JSONResponse([ 'Name' => $file->getName(), 'Url' => $url ], Http::STATUS_OK);
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'richdocuments', 'message' => 'putRelativeFile failed']);
+			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'putRelativeFile failed']);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -893,7 +893,7 @@ class WopiController extends Controller {
 			$response->addHeader('Content-Type', 'application/octet-stream');
 			return $response;
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'richdocuments', 'message' => 'getTemplate failed']);
+			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getTemplate failed']);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}

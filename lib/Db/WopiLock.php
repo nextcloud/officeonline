@@ -1,6 +1,6 @@
 <?php
 
-namespace OCA\Richdocuments\Db;
+namespace OCA\Officeonline\Db;
 
 use OCP\AppFramework\Db\Entity;
 

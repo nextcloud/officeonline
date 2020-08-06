@@ -5,16 +5,16 @@
 		 timeoutForMediumTests="900"
 		 timeoutForLargeTests="900"
 		>
-	<testsuite name='Richdocuments App Tests'>
+	<testsuite name='Officeonline App Tests'>
 		<directory suffix='.php'>./lib</directory>
 	</testsuite>
 	<!-- filters for code coverage -->
 	<filter>
 		<whitelist>
-			<directory suffix=".php">../../richdocuments</directory>
+			<directory suffix=".php">../../officeonline</directory>
 			<exclude>
-				<directory suffix=".php">../../richdocuments/l10n</directory>
-				<directory suffix=".php">../../richdocuments/tests</directory>
+				<directory suffix=".php">../../officeonline/l10n</directory>
+				<directory suffix=".php">../../officeonline/tests</directory>
 			</exclude>
 		</whitelist>
 	</filter>

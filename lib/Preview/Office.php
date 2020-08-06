@@ -19,12 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  *
  */
-namespace OCA\Richdocuments\Preview;
+namespace OCA\Officeonline\Preview;
 
 use GuzzleHttp\Psr7\LimitStream;
 use function GuzzleHttp\Psr7\stream_for;
 use OC\Preview\Provider;
-use OCA\Richdocuments\Capabilities;
+use OCA\Officeonline\Capabilities;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use OCP\ILogger;
@@ -47,12 +47,12 @@ abstract class Office extends Provider {
 	public function __construct(IClientService $clientService, IConfig $config, Capabilities $capabilities, ILogger $logger) {
 		$this->clientService = $clientService;
 		$this->config = $config;
-		$this->capabilitites = $capabilities->getCapabilities()['richdocuments'];
+		$this->capabilitites = $capabilities->getCapabilities()['officeonline'];
 		$this->logger = $logger;
 	}
 
 	private function getWopiURL() {
-		return $this->config->getAppValue('richdocuments', 'wopi_url');
+		return $this->config->getAppValue('officeonline', 'wopi_url');
 	}
 
 	public function isAvailable(\OCP\Files\FileInfo $file) {
@@ -82,7 +82,7 @@ abstract class Office extends Provider {
 		$client = $this->clientService->newClient();
 		$options = ['timeout' => 10];
 
-		if ($this->config->getAppValue('richdocuments', 'disable_certificate_verification') === 'yes') {
+		if ($this->config->getAppValue('officeonline', 'disable_certificate_verification') === 'yes') {
 			$options['verify'] = false;
 		}
 
@@ -94,7 +94,7 @@ abstract class Office extends Provider {
 			$this->logger->logException($e, [
 				'message' => 'Failed to convert file to preview',
 				'level' => ILogger::INFO,
-				'app' => 'richdocuments',
+				'app' => 'officeonline',
 			]);
 			return false;
 		}

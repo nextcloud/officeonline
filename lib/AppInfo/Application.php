@@ -22,22 +22,22 @@
  *
  */
 
-namespace OCA\Richdocuments\AppInfo;
+namespace OCA\Officeonline\AppInfo;
 
 use OC\Files\Type\Detection;
 use OC\Security\CSP\ContentSecurityPolicy;
 use OCA\Federation\TrustedServers;
-use OCA\Richdocuments\AppConfig;
-use OCA\Richdocuments\Capabilities;
-use OCA\Richdocuments\Hooks\WopiLockHooks;
-use OCA\Richdocuments\Preview\MSExcel;
-use OCA\Richdocuments\Preview\MSWord;
-use OCA\Richdocuments\Preview\OOXML;
-use OCA\Richdocuments\Preview\OpenDocument;
-use OCA\Richdocuments\Preview\Pdf;
-use OCA\Richdocuments\Service\CapabilitiesService;
-use OCA\Richdocuments\Service\FederationService;
-use OCA\Richdocuments\WOPI\DiscoveryManager;
+use OCA\Officeonline\AppConfig;
+use OCA\Officeonline\Capabilities;
+use OCA\Officeonline\Hooks\WopiLockHooks;
+use OCA\Officeonline\Preview\MSExcel;
+use OCA\Officeonline\Preview\MSWord;
+use OCA\Officeonline\Preview\OOXML;
+use OCA\Officeonline\Preview\OpenDocument;
+use OCA\Officeonline\Preview\Pdf;
+use OCA\Officeonline\Service\CapabilitiesService;
+use OCA\Officeonline\Service\FederationService;
+use OCA\Officeonline\WOPI\DiscoveryManager;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\App;
 use OCP\AppFramework\QueryException;
@@ -46,7 +46,7 @@ use OCP\IPreview;
 
 class Application extends App {
 
-	const APPNAME = 'richdocuments';
+	const APPNAME = 'officeonline';
 
 	/**
 	 * Strips the path and query parameters from the URL.
@@ -70,7 +70,7 @@ class Application extends App {
 			$eventDispatcher = $this->getContainer()->getServer()->query(IEventDispatcher::class);
 			if (class_exists(LoadViewer::class)) {
 				$eventDispatcher->addListener(LoadViewer::class, function () {
-					\OCP\Util::addScript('richdocuments', 'viewer');
+					\OCP\Util::addScript('officeonline', 'viewer');
 				});
 			}
 		} catch (QueryException $e) {
@@ -105,9 +105,9 @@ class Application extends App {
 			return $container->query(OOXML::class);
 		});
 
-		// \OC::$server->getLogger()->debug('==== Richdocuments Application registerProvider: calling manager registerProvider:');
+		// \OC::$server->getLogger()->debug('==== Officeonline Application registerProvider: calling manager registerProvider:');
 		$previewManager->registerProvider('/application\/vnd.oasis.opendocument.*/', function() use ($container) {
-			// \OC::$server->getLogger()->debug('==== Richdocuments Application registerProvider lambda. OpenDocument::class=' . OpenDocument::class);
+			// \OC::$server->getLogger()->debug('==== Officeonline Application registerProvider lambda. OpenDocument::class=' . OpenDocument::class);
 			return $container->query(OpenDocument::class);
 		});
 
@@ -121,8 +121,8 @@ class Application extends App {
 	public function updateCSP() {
 		$container = $this->getContainer();
 
-		$publicWopiUrl = $container->getServer()->getConfig()->getAppValue('richdocuments', 'public_wopi_url', '');
-		$publicWopiUrl = $publicWopiUrl === '' ? \OC::$server->getConfig()->getAppValue('richdocuments', 'wopi_url') : $publicWopiUrl;
+		$publicWopiUrl = $container->getServer()->getConfig()->getAppValue('officeonline', 'public_wopi_url', '');
+		$publicWopiUrl = $publicWopiUrl === '' ? \OC::$server->getConfig()->getAppValue('officeonline', 'wopi_url') : $publicWopiUrl;
 		$cspManager = $container->getServer()->getContentSecurityPolicyManager();
 		$policy = new ContentSecurityPolicy();
 		if ($publicWopiUrl !== '') {
@@ -145,7 +145,7 @@ class Application extends App {
 			$trustedServers = $container->query(TrustedServers::class);
 			/** @var FederationService $federationService */
 			$federationService = $container->query(FederationService::class);
-			$remoteAccess = $container->getServer()->getRequest()->getParam('richdocuments_remote_access');
+			$remoteAccess = $container->getServer()->getRequest()->getParam('officeonline_remote_access');
 
 			if ($remoteAccess && $trustedServers->isTrustedServer($remoteAccess)) {
 				$remoteCollabora = $federationService->getRemoteCollaboraURL($remoteAccess);
@@ -162,7 +162,7 @@ class Application extends App {
 		if (PHP_OS_FAMILY !== 'Linux' || php_uname('m') !== 'x86_64')
 			return;
 
-		if ($this->getContainer()->getServer()->getAppManager()->isEnabledForUser('richdocumentscode')) {
+		if ($this->getContainer()->getServer()->getAppManager()->isEnabledForUser('officeonlinecode')) {
 			$appConfig = $this->getContainer()->query(AppConfig::class);
 			$wopi_url = $appConfig->getAppValue('wopi_url');
 
@@ -172,7 +172,7 @@ class Application extends App {
 			}
 
 			$urlGenerator = \OC::$server->getURLGenerator();
-			$relativeUrl = $urlGenerator->linkTo('richdocumentscode', '') . 'proxy.php';
+			$relativeUrl = $urlGenerator->linkTo('officeonlinecode', '') . 'proxy.php';
 			$absoluteUrl = $urlGenerator->getAbsoluteURL($relativeUrl);
 			$wopi_url = $absoluteUrl . '?req=';
 

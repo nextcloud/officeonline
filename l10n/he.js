@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "richdocuments",
+    "officeonline",
     {
     "Collabora Online" : "Collabora מקוון",
     "Can't create document" : "לא ניתן ליצור מסמך",

@@ -1,7 +1,7 @@
 <?php
-script('richdocuments', 'personal');
+script('officeonline', 'personal');
 ?>
-<div class="section" id="richdocuments">
+<div class="section" id="officeonline">
 	<h2>
 		<?php p($l->t('Collabora Online')) ?>
 	</h2>

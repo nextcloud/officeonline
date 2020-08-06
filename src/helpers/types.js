@@ -21,7 +21,7 @@
  *
  */
 
-const ooxml = OC.getCapabilities()['richdocuments']['config']['doc_format'] === 'ooxml'
+const ooxml = OC.getCapabilities()['officeonline']['config']['doc_format'] === 'ooxml'
 
 const getFileTypes = () => {
 	if (ooxml) {

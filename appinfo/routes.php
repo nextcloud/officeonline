@@ -23,7 +23,7 @@
  *
  */
 
-namespace OCA\Richdocuments\AppInfo;
+namespace OCA\Officeonline\AppInfo;
 
 return [
 	'routes' => [

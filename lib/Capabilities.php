@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\Richdocuments;
+namespace OCA\Officeonline;
 
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Capabilities\ICapability;
@@ -94,16 +94,16 @@ class Capabilities implements ICapability {
 		$this->l10n = $l10n;
 		$this->config = $config;
 		try {
-			$this->appData = $appData->getFolder('richdocuments');
+			$this->appData = $appData->getFolder('officeonline');
 		} catch (NotFoundException $e) {
-			$this->appData = $appData->newFolder('richdocuments');
+			$this->appData = $appData->newFolder('officeonline');
 		}
 	}
 
 	public function getCapabilities() {
 		$collaboraCapabilities = $this->getCollaboraCapabilities();
 		return [
-			'richdocuments' => [
+			'officeonline' => [
 				'mimetypes' => self::MIMETYPES,
 				'mimetypesNoDefaultOpen' => self::MIMETYPES_OPTIONAL,
 				'collabora' => $collaboraCapabilities,
