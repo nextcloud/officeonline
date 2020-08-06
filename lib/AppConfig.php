@@ -22,6 +22,7 @@ class AppConfig {
 		'watermark_allGroupsList' => [],
 		'watermark_allTagsList' => [],
 		'watermark_linkTagsList' => [],
+		'doc_format' => 'ooxml'
 
 	];
 
