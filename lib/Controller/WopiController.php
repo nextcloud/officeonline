@@ -169,7 +169,7 @@ class WopiController extends Controller {
 
 			$wopi = $this->wopiMapper->getWopiForToken($access_token);
 			if (empty($wopi))
-				return new JSONResponse([], Http::STATUS_FORBIDDEN);
+				return new JSONResponse([], Http::STATUS_NOT_FOUND);
 			if ($wopi->isTemplateToken()) {
 				$this->templateManager->setUserId($wopi->getOwnerUid());
 				$file = $this->templateManager->get($wopi->getFileid());
@@ -181,13 +181,13 @@ class WopiController extends Controller {
 			}
 		} catch (NotFoundException $e) {
 			$this->logger->debug($e->getMessage(), ['app' => 'officeonline', '']);
-			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug($e->getMessage(), ['app' => 'officeonline', '']);
-			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		} catch (\Exception $e) {
 			$this->logger->logException($e, ['app' => 'officeonline']);
-			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
 		$isPublic = $wopi->getEditorUid() === null;
@@ -203,23 +203,12 @@ class WopiController extends Controller {
 			'UserId' => !$isPublic ? $wopi->getEditorUid() : $guestUserId,
 			'OwnerId' => $wopi->getOwnerUid(),
 			'UserFriendlyName' => $userDisplayName,
-			'UserExtraInfo' => [
-			],
 			'UserCanWrite' => $wopi->getCanwrite(),
 			'UserCanNotWriteRelative' => \OC::$server->getEncryptionManager()->isEnabled() || $isPublic,
 			'PostMessageOrigin' => $wopi->getServerHost(),
 			'LastModifiedTime' => Helper::toISO8601($file->getMTime()),
 			'SupportsRename' => true,
 			'UserCanRename' => !$isPublic,
-			'EnableInsertRemoteImage' => true,
-			'EnableShare' => true,
-			'HideUserList' => 'desktop',
-			'DisablePrint' => $wopi->getHideDownload(),
-			'DisableExport' => $wopi->getHideDownload(),
-			'DisableCopy' => $wopi->getHideDownload(),
-			'HideExportOption' => $wopi->getHideDownload(),
-			'HidePrintOption' => $wopi->getHideDownload(),
-			'DownloadAsPostMessage' => $wopi->getDirect(),
 			'SupportsUpdate' => true,
 			'SupportsLocks' => true,
 		];
@@ -251,11 +240,6 @@ class WopiController extends Controller {
 			$templateUrl = 'index.php/apps/officeonline/wopi/template/' . $wopi->getTemplateId() . '?access_token=' . $wopi->getToken();
 			$templateUrl = $this->urlGenerator->getAbsoluteURL($templateUrl);
 			$response['TemplateSource'] = $templateUrl;
-		}
-
-		$user = $this->userManager->get($wopi->getEditorUid());
-		if($user !== null && $user->getAvatarImage(32) !== null) {
-			$response['UserExtraInfo']['avatar'] = $this->urlGenerator->linkToRouteAbsolute('core.avatar.getAvatar', ['userId' => $wopi->getEditorUid(), 'size' => 32]);
 		}
 
 		if ($wopi->getRemoteServer() !== '') {
