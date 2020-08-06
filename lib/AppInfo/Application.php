@@ -121,7 +121,7 @@ class Application extends App {
 	public function updateCSP() {
 		$container = $this->getContainer();
 
-		$publicWopiUrl = $container->getServer()->getConfig()->getAppValue('officeonline', 'public_wopi_url', '');
+		$publicWopiUrl = \OC::$server->getConfig()->getAppValue('officeonline', 'wopi_url');
 		$publicWopiUrl = $publicWopiUrl === '' ? \OC::$server->getConfig()->getAppValue('officeonline', 'wopi_url') : $publicWopiUrl;
 		$cspManager = $container->getServer()->getContentSecurityPolicyManager();
 		$policy = new ContentSecurityPolicy();

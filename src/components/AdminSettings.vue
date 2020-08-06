@@ -23,7 +23,7 @@
 <template>
 	<div>
 		<div class="section">
-			<h2>Collabora Online</h2>
+			<h2>Office Online</h2>
 			<p>{{ t('officeonline', 'Collabora Online is a powerful LibreOffice-based online office suite with collaborative editing, which supports all major documents, spreadsheet and presentation file formats and works together with all modern browsers.') }}</p>
 
 			<div v-if="settings.wopi_url && settings.wopi_url !== ''">

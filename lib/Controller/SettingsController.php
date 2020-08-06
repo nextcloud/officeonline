@@ -172,27 +172,6 @@ class SettingsController extends Controller{
 		}
 
 		$this->discoveryManager->refretch();
-		$this->capabilitiesService->clear();
-		try {
-			$capaUrlSrc = $this->wopiParser->getUrlSrc('Capabilities');
-			if (is_array($capaUrlSrc) && $capaUrlSrc['action'] === 'getinfo') {
-				$public_wopi_url = str_replace('/hosting/capabilities', '', $capaUrlSrc['urlsrc']);
-				if ($public_wopi_url !== null) {
-					$this->appConfig->setAppValue('public_wopi_url', $public_wopi_url);
-					$colon = strpos($public_wopi_url, ':', 0);
-					if ($this->request->getServerProtocol() !== substr($public_wopi_url, 0, $colon)){
-						$message = $this->l10n->t('Saved with error: Collabora Online should use the same protocol as the server installation.');
-					}
-				}
-			}
-		} catch (\Exception $e){
-			if ($wopi_url !== null) {
-				return new JSONResponse([
-					'status' => 'error',
-					'data' => ['message' => 'Failed to connect to the remote server']
-				], 500);
-			}
-		}
 
 		$this->capabilitiesService->clear();
 		$this->capabilitiesService->refretch();

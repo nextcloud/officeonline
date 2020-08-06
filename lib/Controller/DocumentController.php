@@ -266,7 +266,7 @@ class DocumentController extends Controller {
 				$encryptionManager->getEncryptionModule()->update($absPath, $owner, $accessList);
 			}
 
-			$response = new TemplateResponse('officeonline', 'documents', $params, 'empty');
+			$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
 			$policy = new ContentSecurityPolicy();
 			$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 			$policy->allowInlineScript(true);
@@ -335,7 +335,7 @@ class DocumentController extends Controller {
 			'userId' => $this->uid
 		];
 
-		$response = new TemplateResponse('officeonline', 'documents', $params, 'empty');
+		$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
 		$policy = new ContentSecurityPolicy();
 		$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 		$policy->allowInlineScript(true);
@@ -387,7 +387,7 @@ class DocumentController extends Controller {
 					$params['urlsrc'] = $urlSrc;
 				}
 
-				$response = new TemplateResponse('officeonline', 'documents', $params, 'empty');
+				$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
 				$policy = new ContentSecurityPolicy();
 				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 				$policy->allowInlineScript(true);
@@ -455,7 +455,7 @@ class DocumentController extends Controller {
 					'userId' => $remoteWopi['editorUid'] . '@' . $remoteServer
 				];
 
-				$response = new TemplateResponse('officeonline', 'documents', $params, 'empty');
+				$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
 				$policy = new ContentSecurityPolicy();
 				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('wopi_url')));
 				$policy->allowInlineScript(true);
