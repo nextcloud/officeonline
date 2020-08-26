@@ -41,7 +41,6 @@ import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 
 import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url'
 import PostMessageService from '../services/postMessage'
-import FilesAppIntegration from './FilesAppIntegration'
 
 const FRAME_DOCUMENT = 'FRAME_DOCUMENT'
 const PostMessages = new PostMessageService({
@@ -102,11 +101,6 @@ export default {
 			case 'Get_Views_Resp':
 			case 'Views_List':
 				this.views = args
-				break
-			case 'UI_InsertGraphic':
-				FilesAppIntegration.insertGraphic((filename, url) => {
-					PostMessages.sendWOPIPostMessage(FRAME_DOCUMENT, 'postAsset', { FileName: filename, Url: url })
-				})
 				break
 			}
 		})
