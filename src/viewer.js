@@ -1,6 +1,6 @@
 import Office from './view/Office'
 
-const supportedMimes = 	OC.getCapabilities().officeonline.mimetypes.concat(OC.getCapabilities().officeonline.mimetypesNoDefaultOpen)
+const supportedMimes = OC.getCapabilities().officeonline.mimetypes.concat(OC.getCapabilities().officeonline.mimetypesNoDefaultOpen)
 
 document.addEventListener('DOMContentLoaded', function(event) {
 	if (OCA.Viewer) {
