@@ -97,7 +97,7 @@ export default {
 			case 'loading':
 				break
 			case 'close':
-				this.$parent.close()
+				this.$parent.close && this.$parent.close()
 				break
 			case 'Get_Views_Resp':
 			case 'Views_List':

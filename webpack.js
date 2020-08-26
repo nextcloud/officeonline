@@ -20,21 +20,21 @@ const config = {
 				test: /\.(png|jpg|gif|svg)$/,
 				loader: 'url-loader',
 				options: {
-					name: '[name].[ext]?[hash]'
-				}
+					name: '[name].[ext]?[hash]',
+				},
 			},
 			{
 				test: /\.tsx?$/,
 				use: ['babel-loader', 'ts-loader'],
-				exclude: /node_modules/
+				exclude: /node_modules/,
 			},
-		]
+		],
 	},
 	resolve: {
 		alias: {
-			vue$: 'vue/dist/vue.esm.js'
+			vue$: 'vue/dist/vue.esm.js',
 		},
-		extensions: ['*', '.js', '.vue', '.json', '.tsx']
+		extensions: ['*', '.js', '.vue', '.json', '.tsx'],
 	},
 }
 const mergedConfig = merge(webpackConfig, config)

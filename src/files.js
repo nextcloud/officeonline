@@ -92,9 +92,9 @@ const NewFilePlugin = {
 document.addEventListener('DOMContentLoaded', () => {
 	// PUBLIC SHARE LINK HANDLING
 	const isPublic = document.getElementById('isPublic') ? document.getElementById('isPublic').value === '1' : false
-	const mimetype = document.getElementById('mimetype').value
+	const mimetype = document.getElementById('mimetype') ? document.getElementById('mimetype').value : undefined
 	const isSupportedMime = isPublic
-		&& getCapabilities().officeonline.supportedMimes.indexOf(mimetype) !== -1
+		&& getCapabilities().officeonline.mimetypes.indexOf(mimetype) !== -1
 		&& getCapabilities().officeonline.mimetypesNoDefaultOpen.indexOf(mimetype) === -1
 	if (isSupportedMime) {
 		/* eslint-disable-next-line no-new */
