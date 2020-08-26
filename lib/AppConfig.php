@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2020 Julius Härtl <jus@bitgrid.net>
  * @copyright 2015 Victor Dubiniuk victor.dubiniuk@gmail.com
-
+ *
  * @author Julius Härtl <jus@bitgrid.net>
  * @author Victor Dubiniuk <victor.dubiniuk@gmail.com>
  *
@@ -32,7 +32,6 @@ use OCA\Officeonline\AppInfo\Application;
 use \OCP\IConfig;
 
 class AppConfig {
-
 	private $defaults = [
 		'wopi_url' => '',
 		'doc_format' => 'ooxml'
@@ -53,7 +52,7 @@ class AppConfig {
 
 	public function getAppValue(string $key) {
 		$defaultValue = null;
-		if (array_key_exists($key, $this->defaults)){
+		if (array_key_exists($key, $this->defaults)) {
 			$defaultValue = $this->defaults[$key];
 		}
 		return $this->config->getAppValue($this->getAppNamespace($key), $key, $defaultValue);
@@ -81,5 +80,4 @@ class AppConfig {
 		}
 		return $result;
 	}
-
- }
+}

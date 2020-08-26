@@ -21,7 +21,7 @@ use \OCP\IRequest;
 use \OCP\IL10N;
 use OCA\Officeonline\AppConfig;
 
-class SettingsController extends Controller{
+class SettingsController extends Controller {
 
 	/** @var IL10N */
 	private $l10n;
@@ -74,15 +74,15 @@ class SettingsController extends Controller{
 	}
 
 	public function setSettings($wopi_url,
-	                            $disable_certificate_verification,
-	                            $edit_groups,
-	                            $use_groups,
-	                            $doc_format,
-	                            $external_apps,
-	                            $canonical_webroot): JSONResponse {
+								$disable_certificate_verification,
+								$edit_groups,
+								$use_groups,
+								$doc_format,
+								$external_apps,
+								$canonical_webroot): JSONResponse {
 		$message = $this->l10n->t('Saved');
 
-		if ($wopi_url !== null){
+		if ($wopi_url !== null) {
 			$this->appConfig->setAppValue('wopi_url', $wopi_url);
 		}
 
@@ -93,11 +93,11 @@ class SettingsController extends Controller{
 			);
 		}
 
-		if ($edit_groups !== null){
+		if ($edit_groups !== null) {
 			$this->appConfig->setAppValue('edit_groups', $edit_groups);
 		}
 
-		if ($use_groups !== null){
+		if ($use_groups !== null) {
 			$this->appConfig->setAppValue('use_groups', $use_groups);
 		}
 
@@ -122,5 +122,4 @@ class SettingsController extends Controller{
 
 		return new JSONResponse($response);
 	}
-
 }

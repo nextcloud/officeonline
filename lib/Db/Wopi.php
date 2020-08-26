@@ -142,5 +142,4 @@ class Wopi extends Entity {
 		}
 		return $this->isGuest() ? $this->getOwnerUid() : $this->getEditorUid();
 	}
-
 }

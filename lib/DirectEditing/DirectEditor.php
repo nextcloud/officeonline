@@ -4,7 +4,6 @@ namespace OCA\Officeonline;
 
 use OCA\Officeonline\AppInfo\Application;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\DirectEditing\IEditor;
@@ -13,9 +12,7 @@ use OCP\IL10N;
 use OCP\ILogger;
 use OCP\IURLGenerator;
 
-
 class DirectEditor implements IEditor {
-
 	public function __construct(IURLGenerator $urlGenerator,
 								IL10N $l10n,
 								ILogger $logger,
@@ -100,12 +97,12 @@ class DirectEditor implements IEditor {
 			$token->useTokenScope();
 			$file = $token->getFile();
 			$fileId = $file->getId();
-			$this->logger->debug("DirectEditor open: $fileId", array("app" => $this->appName));
+			$this->logger->debug("DirectEditor open: $fileId", ["app" => $this->appName]);
 
 			$documentServerUrl = $this->config->GetDocumentServerUrl();
 
 			if (empty($documentServerUrl)) {
-				$this->logger->error("documentServerUrl is empty", array("app" => $this->appName));
+				$this->logger->error("documentServerUrl is empty", ["app" => $this->appName]);
 				return $this->renderError($this->trans->t("ONLYOFFICE app is not configured. Please contact admin"));
 			}
 
@@ -145,7 +142,7 @@ class DirectEditor implements IEditor {
 
 			return $response;
 		} catch (\Exception $e) {
-			$this->logger->error("DirectEditor open: " . $e->getMessage(), array("app" => $this->appName));
+			$this->logger->error("DirectEditor open: " . $e->getMessage(), ["app" => $this->appName]);
 			return $this->renderError($e->getMessage());
 		}
 	}
@@ -159,13 +156,13 @@ class DirectEditor implements IEditor {
 	 * @return TemplateResponse
 	 */
 	private function renderError($error, $hint = "") {
-		return new TemplateResponse("", "error", array(
-			"errors" => array(
-				array(
+		return new TemplateResponse("", "error", [
+			"errors" => [
+				[
 					"error" => $error,
 					"hint" => $hint
-				)
-			)
-		), "error");
+				]
+			]
+		], "error");
 	}
 }

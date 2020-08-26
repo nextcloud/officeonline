@@ -118,7 +118,7 @@ class TokenManager {
 			$updatable = (bool)($share->getPermissions() & \OCP\Constants::PERMISSION_UPDATE);
 			$hideDownload = $share->getHideDownload();
 			$owneruid = $share->getShareOwner();
-		} else if ($this->userId !== null) {
+		} elseif ($this->userId !== null) {
 			try {
 				$editoruid = $this->userId;
 				$rootFolder = $this->rootFolder->getUserFolder($editoruid);
@@ -172,7 +172,6 @@ class TokenManager {
 					}
 				}
 			}
-
 		}
 		/** @var File $file */
 		$file = $rootFolder->getById($fileId)[0];
@@ -205,7 +204,6 @@ class TokenManager {
 		$wopi = $this->wopiMapper->generateFileToken($fileId, $owneruid, $editoruid, $version, (int)$updatable, $serverHost, $guest_name, 0, $hideDownload, $direct, $isRemoteToken, 0, $shareToken);
 
 		try {
-
 			return [
 				$this->wopiParser->getUrlSrcForFile($file, $updatable)['urlsrc'], // url src might not be found ehre
 				$wopi->getToken(),
@@ -247,7 +245,7 @@ class TokenManager {
 		$editorUser = $this->userManager->get($editoruid);
 		if ($updatable && count($editGroups) > 0 && $editorUser) {
 			$updatable = false;
-			foreach($editGroups as $editGroup) {
+			foreach ($editGroups as $editGroup) {
 				$editorGroup = $this->groupManager->get($editGroup);
 				if ($editorGroup !== null && $editorGroup->inGroup($editorUser)) {
 					$updatable = true;
@@ -296,6 +294,4 @@ class TokenManager {
 		$this->wopiMapper->update($wopi);
 		return $wopi;
 	}
-
-
 }

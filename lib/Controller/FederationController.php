@@ -27,11 +27,8 @@ use OCP\AppFramework\Http;
 use \OCP\AppFramework\OCSController;
 use OCA\Officeonline\Db\WopiMapper;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\OCS\OCSNotFoundException;
-use OCP\Files\NotFoundException;
 use OCP\IConfig;
 use OCP\IRequest;
-use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
 
 class FederationController extends OCSController {
@@ -83,8 +80,9 @@ class FederationController extends OCSController {
 	 */
 	public function remoteWopiToken($token) {
 		$wopi = $this->wopiMapper->getWopiForToken($token);
-		if (empty($wopi))
+		if (empty($wopi)) {
 			return new DataResponse([], Http::STATUS_FORBIDDEN);
+		}
 		return new DataResponse([
 			'ownerUid' => $wopi->getOwnerUid(),
 			'editorUid' => $wopi->getEditorUid(),
@@ -95,5 +93,4 @@ class FederationController extends OCSController {
 			'guestDisplayname' => $wopi->getGuestDisplayname()
 		]);
 	}
-
 }

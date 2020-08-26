@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
@@ -96,7 +97,6 @@ class TemplatesController extends Controller {
 		$a = false,
 		$forceIcon = true,
 		$mode = 'fill') {
-
 		if ($fileId === '' || $x === 0 || $y === 0) {
 			return new DataResponse([], Http::STATUS_BAD_REQUEST);
 		}
@@ -200,7 +200,6 @@ class TemplatesController extends Controller {
 		$a = false,
 		$forceIcon = true,
 		string $mode): Http\Response {
-
 		if (!($node instanceof Node) || (!$forceIcon && !$this->preview->isAvailable($node))) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}

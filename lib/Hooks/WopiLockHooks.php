@@ -14,7 +14,6 @@ use OCP\Lock\ILockingProvider;
 use OCP\Lock\LockedException;
 
 class WopiLockHooks {
-
 	private $rootFolder;
 	/**
 	 * @var WopiLockMapper
@@ -49,15 +48,16 @@ class WopiLockHooks {
 		if ($node instanceof File) {
 			try {
 				$lock = $this->lockMapper->find($node->getId());
-				if (empty($lock))
+				if (empty($lock)) {
 					return;
-				if ($lock->getValidBy() < $this->timeFactory->getTime())
-				{
+				}
+				if ($lock->getValidBy() < $this->timeFactory->getTime()) {
 					$this->lockMapper->delete($lock);
 					return;
 				}
-				if (!$this->lockBypass)
+				if (!$this->lockBypass) {
 					$node->lock(ILockingProvider::LOCK_SHARED);
+				}
 			} catch (InvalidPathException $e) {
 				$this->logger->logException($e);
 			} catch (NotFoundException $e) {

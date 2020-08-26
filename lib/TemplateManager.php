@@ -1,5 +1,6 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types = 1);
 /**
  * @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
  *
@@ -32,7 +33,6 @@ use OCP\Files\Node;
 use OCP\Files\NotFoundException;
 use OCP\IConfig;
 use OCP\IL10N;
-use OCP\IPreview;
 use OCP\IURLGenerator;
 use OC\Files\AppData\Factory;
 
@@ -57,47 +57,47 @@ class TemplateManager {
 	private $l;
 
 	/** Accepted templates mime types */
-	const MIMES_DOCUMENTS = [
+	public const MIMES_DOCUMENTS = [
 		'application/vnd.oasis.opendocument.text-template',
 		'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
 		'application/msword'
 	];
-	const MIMES_SHEETS = [
+	public const MIMES_SHEETS = [
 		'application/vnd.oasis.opendocument.spreadsheet-template',
 		'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
 		'application/vnd.ms-excel'
 	];
-	const MIMES_PRESENTATIONS = [
+	public const MIMES_PRESENTATIONS = [
 		'application/vnd.oasis.opendocument.presentation-template',
 		'application/vnd.openxmlformats-officedocument.presentationml.template',
 		'application/vnd.ms-powerpoint'
 	];
 
 	/** @var array Template mime types match */
-	static public $tplTypes = [
+	public static $tplTypes = [
 		'document'     => self::MIMES_DOCUMENTS,
 		'spreadsheet'  => self::MIMES_SHEETS,
 		'presentation' => self::MIMES_PRESENTATIONS
 	];
 
-	const TYPE_EXTENTION = [
+	public const TYPE_EXTENTION = [
 		'document'     => 'odt',
 		'spreadsheet'  => 'ods',
 		'presentation' => 'odp'
 	];
 
-	const TYPE_EXTENSION_OOXML = [
+	public const TYPE_EXTENSION_OOXML = [
 		'document'     => 'docx',
 		'spreadsheet'  => 'xlsx',
 		'presentation' => 'pptx'
 	];
 
-	const EMPTY_TEMPLATE_ID_TYPE = [
+	public const EMPTY_TEMPLATE_ID_TYPE = [
 		-1 => 'document',
 		-2 => 'spreadsheet',
 		-3 => 'presentation',
 	];
-	const EMPTY_TEMPLATE_TYPE_ID = [
+	public const EMPTY_TEMPLATE_TYPE_ID = [
 		'document'     => -1,
 		'spreadsheet'  => -2,
 		'presentation' => -3,
@@ -262,11 +262,11 @@ class TemplateManager {
 		$empty = $this->getEmpty($type);
 		$system = $this->getSystem($type);
 
-		$emptyFormatted = array_map(function(File $file) {
+		$emptyFormatted = array_map(function (File $file) {
 			return $this->formatEmpty($file);
 		}, $empty);
 
-		$systemFormatted = array_map(function(File $file) {
+		$systemFormatted = array_map(function (File $file) {
 			return $this->formatNodeReturn($file);
 		}, $system);
 
@@ -284,7 +284,7 @@ class TemplateManager {
 			$templateFiles = $templateDir->getDirectoryListing();
 
 			return $this->filterTemplates($templateFiles, $type);
-		} catch(NotFoundException $e) {
+		} catch (NotFoundException $e) {
 			return [];
 		}
 	}
@@ -295,7 +295,7 @@ class TemplateManager {
 	public function getUserFormatted($type) {
 		$templates = $this->getUser($type);
 
-		return array_map(function(File $file) {
+		return array_map(function (File $file) {
 			return $this->formatNodeReturn($file);
 		}, $templates);
 	}

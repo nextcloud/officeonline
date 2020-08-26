@@ -64,7 +64,7 @@ class DocumentController extends Controller {
 	/** @var Helper */
 	private $helper;
 
-	const ODT_TEMPLATE_PATH = '/assets/odttemplate.odt';
+	public const ODT_TEMPLATE_PATH = '/assets/odttemplate.odt';
 
 	/**
 	 * @param string $appName
@@ -124,7 +124,7 @@ class DocumentController extends Controller {
 	public function extAppGetData($fileId) {
 		$secretToken = $this->request->getParam('secret_token');
 		$apps = array_filter(explode(',', $this->appConfig->getAppValue('external_apps')));
-		foreach($apps as $app) {
+		foreach ($apps as $app) {
 			if ($app !== '' && $secretToken === $app) {
 				$appName = explode(':', $app);
 				$this->logger->debug('External app "{extApp}" authenticated; issuing access token for fileId {fileId}', [
@@ -135,7 +135,7 @@ class DocumentController extends Controller {
 				try {
 					$folder = $this->rootFolder->getUserFolder($this->uid);
 					$item = $folder->getById($fileId)[0];
-					if(!($item instanceof Node)) {
+					if (!($item instanceof Node)) {
 						throw new \Exception();
 					}
 					list($urlSrc, $token) = $this->tokenManager->getToken($item->getId());
@@ -230,7 +230,7 @@ class DocumentController extends Controller {
 				$item = $folder->getById($fileId)[0];
 			}
 
-			if(!($item instanceof File)) {
+			if (!($item instanceof File)) {
 				throw new \Exception();
 			}
 
@@ -256,8 +256,7 @@ class DocumentController extends Controller {
 			];
 
 			$encryptionManager = \OC::$server->getEncryptionManager();
-			if ($encryptionManager->isEnabled())
-			{
+			if ($encryptionManager->isEnabled()) {
 				// Update the current file to be accessible with system public shared key
 				$owner = $item->getOwner()->getUID();
 				$absPath = '/' . $owner . '/' .  $item->getInternalPath();
@@ -356,7 +355,7 @@ class DocumentController extends Controller {
 		try {
 			$share = $this->shareManager->getShareByToken($shareToken);
 			// not authenticated ?
-			if($share->getPassword()){
+			if ($share->getPassword()) {
 				if (!$this->session->exists('public_link_authenticated')
 					|| $this->session->get('public_link_authenticated') !== (string)$share->getId()
 				) {
@@ -365,7 +364,7 @@ class DocumentController extends Controller {
 			}
 
 			$node = $share->getNode();
-			if($node instanceof Folder) {
+			if ($node instanceof Folder) {
 				$item = $node->getById($fileId)[0];
 			} else {
 				$item = $node;
@@ -419,7 +418,7 @@ class DocumentController extends Controller {
 		try {
 			$share = $this->shareManager->getShareByToken($shareToken);
 			// not authenticated ?
-			if($share->getPassword()){
+			if ($share->getPassword()) {
 				if (!$this->session->exists('public_link_authenticated')
 					|| $this->session->get('public_link_authenticated') !== (string)$share->getId()
 				) {
@@ -489,16 +488,15 @@ class DocumentController extends Controller {
 	 */
 	public function create($mimetype,
 						   $filename,
-						   $dir = '/'){
-
+						   $dir = '/') {
 		$root = $this->rootFolder->getUserFolder($this->uid);
 		try {
 			/** @var Folder $folder */
 			$folder = $root->get($dir);
 		} catch (NotFoundException $e) {
 			return new JSONResponse([
-					'status' => 'error',
-					'message' => $this->l10n->t('Can\'t create document')
+				'status' => 'error',
+				'message' => $this->l10n->t('Can\'t create document')
 			], Http::STATUS_BAD_REQUEST);
 		}
 
@@ -532,7 +530,7 @@ class DocumentController extends Controller {
 				break;
 		}
 
-		if (!$filename){
+		if (!$filename) {
 			$filename = Helper::getNewFileName($folder, $basename);
 		}
 
@@ -553,12 +551,12 @@ class DocumentController extends Controller {
 		}
 
 		$content = '';
-		if (class_exists(TemplateManager::class)){
+		if (class_exists(TemplateManager::class)) {
 			$manager = \OC_Helper::getFileTemplateManager();
 			$content = $manager->getTemplate($mimetype);
 		}
 
-		if (!$content){
+		if (!$content) {
 			$content = file_get_contents(dirname(dirname(__DIR__)) . self::ODT_TEMPLATE_PATH);
 		}
 

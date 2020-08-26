@@ -1,14 +1,12 @@
 <?php
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Behat\Behat\Context\Context;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 
-class FeatureContext implements Context
-{
-
+class FeatureContext implements Context {
 	use \JuliusHaertl\NextcloudBehat\FilesSharingContextTrait;
 	use \JuliusHaertl\NextcloudBehat\FilesDavContextTrait;
 	use \JuliusHaertl\NextcloudBehat\UserContextTrait;
@@ -21,16 +19,14 @@ class FeatureContext implements Context
 	 * You can also pass arbitrary arguments to the
 	 * context constructor through behat.yml.
 	 */
-	public function __construct($baseUrl)
-	{
+	public function __construct($baseUrl) {
 		$this->setBaseUrl($baseUrl);
 	}
 
 	/**
 	 * @When User :user opens :file
 	 */
-	public function userOpens($user, $file)
-	{
+	public function userOpens($user, $file) {
 		// get file id
 		$davClient = $this->getSabreClient($user);
 		$path = $this->makeSabrePath($user, $file);
@@ -57,9 +53,8 @@ class FeatureContext implements Context
 	/**
 	 * @Then a guest opens the share link
 	 */
-	public function aGuestOpensTheShareLink()
-	{
-		if (count($this->lastShareData->data->element) > 0){
+	public function aGuestOpensTheShareLink() {
+		if (count($this->lastShareData->data->element) > 0) {
 			$token = $this->lastShareData->data[0]->token;
 		} else {
 			$token = $this->lastShareData->data->token;
@@ -84,9 +79,8 @@ class FeatureContext implements Context
 	/**
 	 * @Then a guest opens the share link as :user
 	 */
-	public function aGuestOpensTheShareLinkAs($user)
-	{
-		if (count($this->lastShareData->data->element) > 0){
+	public function aGuestOpensTheShareLinkAs($user) {
+		if (count($this->lastShareData->data->element) > 0) {
 			$token = $this->lastShareData->data[0]->token;
 		} else {
 			$token = $this->lastShareData->data->token;
@@ -127,8 +121,7 @@ class FeatureContext implements Context
 	/**
 	 * @Then Collabora puts :source
 	 */
-	public function collaboraPuts($source)
-	{
+	public function collaboraPuts($source) {
 		$file = \GuzzleHttp\Psr7\stream_for(fopen($source, 'r'));
 		$client = new Client();
 		$options = [
@@ -157,8 +150,7 @@ class FeatureContext implements Context
 	/**
 	 * @Then checkFileInfo :arg1 is ":arg2"
 	 */
-	public function checkfileinfoIs($arg1, $arg2)
-	{
+	public function checkfileinfoIs($arg1, $arg2) {
 		\PHPUnit\Framework\Assert::assertEquals($arg2, $this->checkFileInfoResult[$arg1]);
 	}
 
@@ -166,25 +158,21 @@ class FeatureContext implements Context
 	/**
 	 * @Then checkFileInfo :arg1 matches ":arg2"
 	 */
-	public function checkfileinfoMatches($arg1, $arg2)
-	{
+	public function checkfileinfoMatches($arg1, $arg2) {
 		\PHPUnit\Framework\Assert::assertRegExp($arg2, $this->checkFileInfoResult[$arg1]);
 	}
 
 	/**
 	 * @Then checkFileInfo :arg1 is true
 	 */
-	public function checkfileinfoIsTrue($arg1)
-	{
+	public function checkfileinfoIsTrue($arg1) {
 		\PHPUnit\Framework\Assert::assertTrue($this->checkFileInfoResult[$arg1]);
 	}
 
 	/**
 	 * @Then checkFileInfo :arg1 is false
 	 */
-	public function checkfileinfoIsFalse($arg1)
-	{
+	public function checkfileinfoIsFalse($arg1) {
 		\PHPUnit\Framework\Assert::assertFalse($this->checkFileInfoResult[$arg1]);
 	}
-
 }

@@ -29,7 +29,6 @@ use OCA\Officeonline\TemplateManager;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
-use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
@@ -174,16 +173,16 @@ class OCSController extends \OCP\AppFramework\OCSController {
 	private function mb_pathinfo($filepath) {
 		$result = [];
 		preg_match('%^(.*?)[\\\\/]*(([^/\\\\]*?)(\.([^\.\\\\/]+?)|))[\\\\/\.]*$%im', ltrim('/' . $filepath), $matches);
-		if($matches[1]) {
+		if ($matches[1]) {
 			$result['dirname'] = $matches[1];
 		}
-		if($matches[2]) {
+		if ($matches[2]) {
 			$result['basename'] = $matches[2];
 		}
-		if($matches[5]) {
+		if ($matches[5]) {
 			$result['extension'] = $matches[5];
 		}
-		if($matches[3]) {
+		if ($matches[3]) {
 			$result['filename'] = $matches[3];
 		}
 		return $result;

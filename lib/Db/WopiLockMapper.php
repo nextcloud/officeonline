@@ -7,7 +7,6 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 class WopiLockMapper extends QBMapper {
-
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'officeonline_locks');
 	}
@@ -47,6 +46,4 @@ class WopiLockMapper extends QBMapper {
 
 		return $this->findEntities($qb);
 	}
-
-
 }

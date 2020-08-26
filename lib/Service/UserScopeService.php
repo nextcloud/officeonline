@@ -23,12 +23,10 @@
 
 namespace OCA\Officeonline\Service;
 
-
 use OCP\IUserManager;
 use OCP\IUserSession;
 
 class UserScopeService {
-
 	public function __construct(IUserSession $userSession, IUserManager $userManager) {
 		$this->userSession = $userSession;
 		$this->userManager = $userManager;

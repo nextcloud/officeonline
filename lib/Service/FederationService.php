@@ -23,11 +23,9 @@
 
 namespace OCA\Officeonline\Service;
 
-
 use OCA\Federation\TrustedServers;
 use OCA\Files_Sharing\External\Storage as SharingExternalStorage;
 use OCA\Officeonline\TokenManager;
-use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\QueryException;
 use OCP\Files\File;
 use OCP\Files\InvalidPathException;
@@ -56,8 +54,9 @@ class FederationService {
 		$this->logger = $logger;
 		$this->tokenManager = $tokenManager;
 		try {
-			$this->trustedServers = \OC::$server->query( \OCA\Federation\TrustedServers::class);
-		} catch (QueryException $e) {}
+			$this->trustedServers = \OC::$server->query(\OCA\Federation\TrustedServers::class);
+		} catch (QueryException $e) {
+		}
 	}
 
 	public function getRemoteCollaboraURL($remote) {

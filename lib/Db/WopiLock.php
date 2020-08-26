@@ -14,7 +14,6 @@ use OCP\AppFramework\Db\Entity;
  * @method getValidBy()
  */
 class WopiLock extends Entity {
-
 	protected $tokenId;
 	protected $userId;
 	protected $fileId;
@@ -30,11 +29,11 @@ class WopiLock extends Entity {
 	public function columnToProperty($column) {
 		if ($column === 'token_id') {
 			return 'tokenId';
-		} else if ($column === 'user_id') {
+		} elseif ($column === 'user_id') {
 			return 'userId';
-		} else  if ($column === 'file_id') {
+		} elseif ($column === 'file_id') {
 			return 'fileId';
-		} else if ($column === 'valid_by') {
+		} elseif ($column === 'valid_by') {
 			return 'validBy';
 		} else {
 			return parent::columnToProperty($column);
@@ -44,11 +43,11 @@ class WopiLock extends Entity {
 	public function propertyToColumn($property) {
 		if ($property === 'tokenId') {
 			return 'token_id';
-		} else if ($property === 'userId') {
+		} elseif ($property === 'userId') {
 			return 'user_id';
-		} else  if ($property === 'fileId') {
+		} elseif ($property === 'fileId') {
 			return 'file_id';
-		} else if ($property === 'validBy') {
+		} elseif ($property === 'validBy') {
 			return 'valid_by';
 		} else {
 			return parent::propertyToColumn($property);

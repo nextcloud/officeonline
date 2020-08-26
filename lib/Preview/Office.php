@@ -21,8 +21,6 @@
  */
 namespace OCA\Officeonline\Preview;
 
-use GuzzleHttp\Psr7\LimitStream;
-use function GuzzleHttp\Psr7\stream_for;
 use OC\Preview\Provider;
 use OCA\Officeonline\Capabilities;
 use OCP\Http\Client\IClientService;
@@ -107,7 +105,5 @@ abstract class Office extends Provider {
 			return $image;
 		}
 		return false;
-
 	}
-
 }

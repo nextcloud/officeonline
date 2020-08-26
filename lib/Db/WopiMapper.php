@@ -22,7 +22,6 @@
  */
 namespace OCA\Officeonline\Db;
 
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\Mapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
@@ -32,7 +31,7 @@ use OCP\Security\ISecureRandom;
 
 class WopiMapper extends Mapper {
 	// Tokens expire after this many seconds (not defined by WOPI specs).
-	const TOKEN_LIFETIME_SECONDS = 1800;
+	public const TOKEN_LIFETIME_SECONDS = 1800;
 
 	/** @var ISecureRandom */
 	private $random;
@@ -101,7 +100,6 @@ class WopiMapper extends Mapper {
 	 * @return Wopi
 	 */
 	public function getWopiForToken($token) {
-
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from('officeonline_wopi')
@@ -123,7 +121,7 @@ class WopiMapper extends Mapper {
 		/** @var Wopi $wopi */
 		$wopi = Wopi::fromRow($row);
 
-		if ($wopi->getExpiry() < $this->timeFactory->getTime()){
+		if ($wopi->getExpiry() < $this->timeFactory->getTime()) {
 			$qb = $this->db->getQueryBuilder();
 			$qb->delete('officeonline_wopi')->where($qb->expr()->lt('expiry',
 				$qb->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT)))->execute();

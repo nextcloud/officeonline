@@ -36,10 +36,8 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Http\FileDisplayResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\Constants;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
@@ -83,7 +81,7 @@ class WopiController extends Controller {
 	private $userScopeService;
 
 	// Signifies LOOL that document has been changed externally in this storage
-	const LOOL_STATUS_DOC_CHANGED = 1010;
+	public const LOOL_STATUS_DOC_CHANGED = 1010;
 	/**
 	 * @var WopiLockMapper
 	 */
@@ -168,15 +166,16 @@ class WopiController extends Controller {
 			list($fileId, , $version) = Helper::parseFileId($fileId);
 
 			$wopi = $this->wopiMapper->getWopiForToken($access_token);
-			if (empty($wopi))
+			if (empty($wopi)) {
 				return new JSONResponse([], Http::STATUS_NOT_FOUND);
+			}
 			if ($wopi->isTemplateToken()) {
 				$this->templateManager->setUserId($wopi->getOwnerUid());
 				$file = $this->templateManager->get($wopi->getFileid());
 			} else {
 				$file = $this->getFileForWopiToken($wopi);
 			}
-			if(!($file instanceof File)) {
+			if (!($file instanceof File)) {
 				throw new NotFoundException('No valid file found for ' . $fileId);
 			}
 		} catch (NotFoundException $e) {
@@ -194,8 +193,9 @@ class WopiController extends Controller {
 		$guestUserId = 'Guest-' . \OC::$server->getSecureRandom()->generate(8);
 		$user = $this->userManager->get($wopi->getEditorUid());
 		$userDisplayName = $user !== null && !$isPublic ? $user->getDisplayName() : $wopi->getGuestDisplayname();
-		if ($version === '0')
+		if ($version === '0') {
 			$version = (string)$file->getMTime();
+		}
 		$response = [
 			'BaseFileName' => $file->getName(),
 			'Size' => $file->getSize(),
@@ -302,15 +302,12 @@ class WopiController extends Controller {
 				$relPath = $view->getRelativePath($file->getPath());
 				$versionPath = '/files_versions/' . $relPath . '.v' . $version;
 				$view = new View('/' . $wopi->getOwnerUid());
-				if ($view->file_exists($versionPath)){
+				if ($view->file_exists($versionPath)) {
 					$response = new StreamResponse($view->fopen($versionPath, 'rb'));
-				}
-				else {
+				} else {
 					return new JSONResponse([], Http::STATUS_NOT_FOUND);
 				}
-			}
-			else
-			{
+			} else {
 				$response = new StreamResponse($file->fopen('rb'));
 			}
 			$response->addHeader('Content-Disposition', 'attachment');
@@ -337,58 +334,50 @@ class WopiController extends Controller {
 	public function lock($fileId, $access_token) {
 		list($fileId, ,) = Helper::parseFileId($fileId);
 		$token = $this->wopiMapper->getWopiForToken($access_token);
-		if (empty($token))
+		if (empty($token)) {
 			return new DataResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 		try {
 			$file = $this->getFileForWopiToken($token);
-		} catch (ShareNotFound $e){
+		} catch (ShareNotFound $e) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
-		} catch (NotFoundException $e){
+		} catch (NotFoundException $e) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}
 		$lck = $this->request->getHeader('X-WOPI-Lock');
 		$wover = $this->request->getHeader('X-WOPI-Override');
-		if (strlen($lck) === 0 && $wover !== "GET_LOCK" && strpos($wover,"LOCK") !== false)
+		if (strlen($lck) === 0 && $wover !== "GET_LOCK" && strpos($wover,"LOCK") !== false) {
 			return new DataResponse([], Http::STATUS_BAD_REQUEST);
+		}
 		$result = new DataResponse([], Http::STATUS_NOT_IMPLEMENTED);
-		switch ($wover)
-		{
+		switch ($wover) {
 			case "LOCK":
 				$oldLck = $this->request->getHeader('X-WOPI-OldLock');
-				if (strlen($oldLck) > 0)
-				{
+				if (strlen($oldLck) > 0) {
 					$fLock = $this->lockMapper->find($fileId);
-					if (!empty($fLock))
-					{
-						if ($fLock->getValue() !== $oldLck)
-						{
+					if (!empty($fLock)) {
+						if ($fLock->getValue() !== $oldLck) {
 							$result->setStatus(Http::STATUS_CONFLICT);
 							$result->addHeader('X-WOPI-Lock', $fLock->getValue());
 							break;
 						}
 						$this->lockMapper->delete($fLock);
-					}
-					else
-					{
+					} else {
 						$result->setStatus(Http::STATUS_CONFLICT);
 						$result->addHeader('X-WOPI-Lock', '');
 						break;
 					}
 				}
 				$fLock = $this->lockMapper->find($fileId);
-				if (!empty($fLock))
-				{
-					if ($fLock->getValue() !== $lck)
-					{
+				if (!empty($fLock)) {
+					if ($fLock->getValue() !== $lck) {
 						$result->setStatus(Http::STATUS_CONFLICT);
 						$result->addHeader('X-WOPI-Lock', $fLock->getValue());
 						break;
 					}
 					$result->setStatus(Http::STATUS_OK);
 					break;
-				}
-				else
-				{
+				} else {
 					$newLock = new WopiLock();
 					$newLock->setId(Helper::getGuid());
 					$newLock->setUserId($token->getEditorUid() ?? $token->getOwnerUid());
@@ -407,10 +396,8 @@ class WopiController extends Controller {
 				break;
 			case "REFRESH_LOCK":
 				$fLock = $this->lockMapper->find($fileId);
-				if (!empty($fLock))
-				{
-					if ($fLock->getValue() !== $lck)
-					{
+				if (!empty($fLock)) {
+					if ($fLock->getValue() !== $lck) {
 						$result->setStatus(Http::STATUS_CONFLICT);
 						$result->addHeader('X-WOPI-Lock', $fLock->getValue());
 						break;
@@ -419,35 +406,30 @@ class WopiController extends Controller {
 					$this->lockMapper->update($fLock);
 					$result->setStatus(Http::STATUS_OK);
 					break;
-				}
-				else
-				{
+				} else {
 					$result->setStatus(Http::STATUS_CONFLICT);
 					$result->addHeader('X-WOPI-Lock', '');
 				}
 				break;
 			case "UNLOCK":
 				$fLock = $this->lockMapper->find($fileId);
-				if (!empty($fLock))
-				{
-					if ($fLock->getValue() !== $lck)
-					{
+				if (!empty($fLock)) {
+					if ($fLock->getValue() !== $lck) {
 						$result->setStatus(Http::STATUS_CONFLICT);
 						$result->addHeader('X-WOPI-Lock', $fLock->getValue());
 						break;
 					}
 					$this->lockMapper->delete($fLock);
 					$result->setStatus(Http::STATUS_OK);
-				}
-				else
-				{
+				} else {
 					$result->setStatus(Http::STATUS_CONFLICT);
 					$result->addHeader('X-WOPI-Lock', '');
 				}
 				break;
 		}
-		if ($result->getStatus() !== Http::STATUS_NOT_IMPLEMENTED)
+		if ($result->getStatus() !== Http::STATUS_NOT_IMPLEMENTED) {
 			$result->addHeader('X-WOPI-ItemVersion', $file->getMTime());
+		}
 		return $result;
 	}
 
@@ -488,11 +470,9 @@ class WopiController extends Controller {
 
 				if ($suggested[0] === '.') {
 					$path = dirname($file->getPath()) . '/New File' . $suggested;
-				}
-				else if ($suggested[0] !== '/') {
+				} elseif ($suggested[0] !== '/') {
 					$path = dirname($file->getPath()) . '/' . $suggested;
-				}
-				else {
+				} else {
 					$userFolder = $this->rootFolder->getUserFolder($wopi->getEditorUid());
 					$path = $userFolder->getPath() . $suggested;
 				}
@@ -533,7 +513,7 @@ class WopiController extends Controller {
 			$this->lockHooks->setLockBypass(true);
 
 			try {
-				$this->retryOperation(function () use ($file, $content){
+				$this->retryOperation(function () use ($file, $content) {
 					return $file->putContent($content);
 				});
 			} catch (LockedException $e) {
@@ -580,8 +560,9 @@ class WopiController extends Controller {
 	public function putRelativeFile($fileId,
 					$access_token) {
 		$wover = $this->request->getHeader('X-WOPI-Override');
-		if (!($wover === 'PUT_RELATIVE' || $wover === 'RENAME_FILE'))
+		if (!($wover === 'PUT_RELATIVE' || $wover === 'RENAME_FILE')) {
 			return $this->lock($fileId, $access_token);
+		}
 		list($fileId, ,) = Helper::parseFileId($fileId);
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
 
@@ -612,8 +593,7 @@ class WopiController extends Controller {
 				if ($isRenameFile) {
 					$lck = $this->request->getHeader('X-WOPI-Lock');
 					$fLock = $this->lockMapper->find($fileId);
-					if ($fLock !== null && $lck !== $fLock->getValue())
-					{
+					if ($fLock !== null && $lck !== $fLock->getValue()) {
 						$result = new JSONResponse([], Http::STATUS_CONFLICT);
 						$result->addHeader('X-WOPI-Lock', $fLock->getValue());
 						return result;
@@ -624,11 +604,9 @@ class WopiController extends Controller {
 
 					if (strpos($suggested, '.') === 0) {
 						$path = dirname($file->getPath()) . '/New File' . $suggested;
-					}
-					else if (strpos($suggested, '/') !== 0) {
+					} elseif (strpos($suggested, '/') !== 0) {
 						$path = dirname($file->getPath()) . '/' . $suggested;
-					}
-					else {
+					} else {
 						$path = $userFolder->getPath() . $suggested;
 					}
 
@@ -645,15 +623,15 @@ class WopiController extends Controller {
 				} else {
 					$suggested = $this->request->getHeader('X-WOPI-SuggestedTarget');
 					$relative = $this->request->getHeader('X-WOPI-RelativeTarget');
-					if (!empty($suggested) && !empty($relative)){
+					if (!empty($suggested) && !empty($relative)) {
 						return new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
 					}
-					if (!empty($suggested)){
+					if (!empty($suggested)) {
 						$suggested = iconv('utf-7', 'utf-8', $suggested);
 
 						if ($suggested[0] === '.') {
 							$path = dirname($file->getPath()) . '/New File' . $suggested;
-						} else if ($suggested[0] !== '/') {
+						} elseif ($suggested[0] !== '/') {
 							$path = dirname($file->getPath()) . '/' . $suggested;
 						} else {
 							$path = $userFolder->getPath() . $suggested;
@@ -668,12 +646,12 @@ class WopiController extends Controller {
 						$path = $this->rootFolder->getNonExistingName($path);
 						$file = $this->rootFolder->newFile($path);
 					}
-					if (!empty($relative)){
+					if (!empty($relative)) {
 						$relative = iconv('utf-7', 'utf-8', $relative);
 
 						if ($relative[0] === '.') {
 							$path = dirname($file->getPath()) . '/New File' . $relative;
-						} else if ($relative[0] !== '/') {
+						} elseif ($relative[0] !== '/') {
 							$path = dirname($file->getPath()) . '/' . $relative;
 						} else {
 							$path = $userFolder->getPath() . $relative;
@@ -683,18 +661,18 @@ class WopiController extends Controller {
 						if (!$this->rootFolder->nodeExists(dirname($path))) {
 							$this->rootFolder->newFolder(dirname($path));
 						}
-						if ($this->rootFolder->nodeExists($path)){
-							if ($this->request->getHeader('X-WOPI-OverwriteRelativeTarget') === 'true')
+						if ($this->rootFolder->nodeExists($path)) {
+							if ($this->request->getHeader('X-WOPI-OverwriteRelativeTarget') === 'true') {
 								$file = $this->rootFolder->get($path);
-							else{
+							} else {
 								$result = new JSONResponse([], Http::STATUS_NOT_FOUND);
 								$validRelative = iconv('utf-8', 'utf-7', $path = $this->rootFolder->getNonExistingName($path));
 								$result->addHeader('X-WOPI-ValidRelativeTarget', $validRelative);
 								return $result;
 							}
-						}
-						else
+						} else {
 							$file = $this->rootFolder->newFile($path);
+						}
 					}
 				}
 			}
@@ -706,7 +684,7 @@ class WopiController extends Controller {
 
 			$this->lockHooks->setLockBypass(true);
 			try {
-				$this->retryOperation(function () use ($file, $content){
+				$this->retryOperation(function () use ($file, $content) {
 					return $file->putContent($content);
 				});
 			} catch (LockedException $e) {
@@ -758,7 +736,7 @@ class WopiController extends Controller {
 		$file = null;
 
 		if ($wopi->getRemoteServer() !== '') {
-			try{
+			try {
 				$share = $this->shareManager->getShareByToken($wopi->getEditorUid());
 				$node = $share->getNode();
 				if ($node instanceof Folder) {
@@ -766,10 +744,8 @@ class WopiController extends Controller {
 				} else {
 					$file = $node;
 				}
-			} catch(ShareNotFound $e){
-
-			} catch(NotFoundException $e){
-
+			} catch (ShareNotFound $e) {
+			} catch (NotFoundException $e) {
 			}
 		} else {
 			// Unless the editor is empty (public link) we modify the files as the current editor
@@ -814,5 +790,4 @@ class WopiController extends Controller {
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
-
 }

@@ -29,5 +29,4 @@ class Version2060Date20200302132145 extends SimpleMigrationStep {
 
 		return $schema;
 	}
-
 }

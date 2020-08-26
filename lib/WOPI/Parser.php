@@ -64,7 +64,6 @@ class Parser {
 		}
 
 		throw new Exception('Could not find urlsrc in WOPI');
-
 	}
 
 	/**
@@ -72,8 +71,9 @@ class Parser {
 	 * @throws Exception
 	 */
 	public function getParsed() {
-		if (!empty($this->parsed))
+		if (!empty($this->parsed)) {
 			return $this->parsed;
+		}
 		$discovery = $this->discoveryManager->get();
 		$loadEntities = libxml_disable_entity_loader(true);
 		$discoveryParsed = simplexml_load_string($discovery);
@@ -89,26 +89,26 @@ class Parser {
 	 * @throws Exception
 	 */
 	public function getUrlSrcForFile(File $file, $edit) {
-		try{
+		try {
 			$result = $this->getUrlSrc($file->getMimeType());
 			return $result;
-		}
-		catch(Exception $e){
-
+		} catch (Exception $e) {
 		}
 		// FIXME: we might want to support different action types here as well like imagepreview
 		$actionName = $edit ? 'edit' : 'view';
 		$discoveryParsed = $this->getParsed();
 		$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-https\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), $actionName));
-		if (!$result || count($result) == 0)
+		if (!$result || count($result) == 0) {
 			$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-https\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), 'view'));
+		}
 
-		if ($this->request->getServerProtocol() === 'http')
-		{
-			if (!$result || count($result) == 0)
+		if ($this->request->getServerProtocol() === 'http') {
+			if (!$result || count($result) == 0) {
 				$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-http\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), $actionName));
-			if (!$result || count($result) == 0)
+			}
+			if (!$result || count($result) == 0) {
 				$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-http\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), 'view'));
+			}
 		}
 		if ($result && count($result) > 0) {
 			return [
@@ -117,7 +117,5 @@ class Parser {
 			];
 		}
 		throw new Exception('Could not find urlsrc in WOPI');
-
 	}
-
 }

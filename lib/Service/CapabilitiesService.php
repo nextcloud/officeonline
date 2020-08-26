@@ -25,7 +25,6 @@ namespace OCA\Officeonline\Service;
 
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
-use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
@@ -54,11 +53,11 @@ class CapabilitiesService {
 
 	public function getCapabilities() {
 		if ($this->capabilities) {
-            $isCODEInstalled = $this->getContainer()->getServer()->getAppManager()->isEnabledForUser('officeonlinecode');
-            $isCODEEnabled = strpos($this->config->getAppValue('officeonline', 'wopi_url'), 'proxy.php?req=') !== false;
-            if($isCODEInstalled && $isCODEEnabled && count($this->capabilities) === 0) {
-                $this->refretch();
-            }
+			$isCODEInstalled = $this->getContainer()->getServer()->getAppManager()->isEnabledForUser('officeonlinecode');
+			$isCODEEnabled = strpos($this->config->getAppValue('officeonline', 'wopi_url'), 'proxy.php?req=') !== false;
+			if ($isCODEInstalled && $isCODEEnabled && count($this->capabilities) === 0) {
+				$this->refretch();
+			}
 			return $this->capabilities;
 		}
 		try {
@@ -138,5 +137,4 @@ class CapabilitiesService {
 
 		return $ret;
 	}
-
 }

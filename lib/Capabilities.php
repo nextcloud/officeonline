@@ -29,7 +29,6 @@ use OCP\Capabilities\ICapability;
 use OCP\IL10N;
 
 class Capabilities implements ICapability {
-
 	public const MIMETYPES = [
 		'application/vnd.oasis.opendocument.text',
 		'application/vnd.oasis.opendocument.spreadsheet',

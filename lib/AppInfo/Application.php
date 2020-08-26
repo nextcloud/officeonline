@@ -42,7 +42,6 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IPreview;
 
 class Application extends App {
-
 	public const APP_ID = 'officeonline';
 
 	/**
@@ -59,7 +58,7 @@ class Application extends App {
 		return "$scheme$host$port";
 	}
 
-	public function __construct(array $urlParams = array()) {
+	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
 
 		try {
@@ -90,23 +89,23 @@ class Application extends App {
 		/** @var IPreview $previewManager */
 		$previewManager = $container->query(IPreview::class);
 
-		$previewManager->registerProvider('/application\/vnd.ms-excel/', function() use ($container) {
+		$previewManager->registerProvider('/application\/vnd.ms-excel/', function () use ($container) {
 			return $container->query(MSExcel::class);
 		});
 
-		$previewManager->registerProvider('/application\/msword/', function() use ($container) {
+		$previewManager->registerProvider('/application\/msword/', function () use ($container) {
 			return $container->query(MSWord::class);
 		});
 
-		$previewManager->registerProvider('/application\/vnd.openxmlformats-officedocument.*/', function() use ($container) {
+		$previewManager->registerProvider('/application\/vnd.openxmlformats-officedocument.*/', function () use ($container) {
 			return $container->query(OOXML::class);
 		});
 
-		$previewManager->registerProvider('/application\/vnd.oasis.opendocument.*/', function() use ($container) {
+		$previewManager->registerProvider('/application\/vnd.oasis.opendocument.*/', function () use ($container) {
 			return $container->query(OpenDocument::class);
 		});
 
-		$previewManager->registerProvider('/application\/pdf/', function() use ($container) {
+		$previewManager->registerProvider('/application\/pdf/', function () use ($container) {
 			return $container->query(Pdf::class);
 		});
 
@@ -134,7 +133,8 @@ class Application extends App {
 		$path = '';
 		try {
 			$path = $container->getServer()->getRequest()->getPathInfo();
-		} catch (\Exception $e) {}
+		} catch (\Exception $e) {
+		}
 		if (strpos($path, '/apps/files') === 0 && $container->getServer()->getAppManager()->isEnabledForUser('federation')) {
 			/** @var TrustedServers $trustedServers */
 			$trustedServers = $container->query(TrustedServers::class);
@@ -151,5 +151,4 @@ class Application extends App {
 
 		$cspManager->addDefaultPolicy($policy);
 	}
-
 }

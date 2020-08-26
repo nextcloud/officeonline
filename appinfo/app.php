@@ -25,10 +25,10 @@ namespace OCA\Officeonline\AppInfo;
 use OCA\Officeonline\PermissionManager;
 
 $currentUser = \OC::$server->getUserSession()->getUser();
-if($currentUser !== null) {
+if ($currentUser !== null) {
 	/** @var PermissionManager $permissionManager */
 	$permissionManager = \OC::$server->query(PermissionManager::class);
-	if(!$permissionManager->isEnabledForUser($currentUser)) {
+	if (!$permissionManager->isEnabledForUser($currentUser)) {
 		return;
 	}
 }
@@ -36,13 +36,13 @@ if($currentUser !== null) {
 $eventDispatcher = \OC::$server->getEventDispatcher();
 $eventDispatcher->addListener(
 	'OCA\Files::loadAdditionalScripts',
-	function() {
+	function () {
 		\OCP\Util::addScript('officeonline', 'files');
 	}
 );
 $eventDispatcher->addListener(
 	'OCA\Files_Sharing::loadAdditionalScripts',
-	function() {
+	function () {
 		\OCP\Util::addScript('officeonline', 'files');
 	}
 );
@@ -56,7 +56,6 @@ if (class_exists('\OC\Files\Type\TemplateManager')) {
 	$manager->registerTemplate('application/vnd.oasis.opendocument.presentation', dirname(__DIR__) . '/assets/template.odp');
 	$manager->registerTemplate('application/vnd.oasis.opendocument.text', dirname(__DIR__) . '/assets/template.odt');
 	$manager->registerTemplate('application/vnd.oasis.opendocument.spreadsheet', dirname(__DIR__) . '/assets/template.ods');
-
 }
 
 $app = \OC::$server->query(Application::class);
