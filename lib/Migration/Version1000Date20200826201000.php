@@ -9,35 +9,18 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
 
-/**
- * Auto-generated migration step: Please modify to your needs!
- */
-class Version030407Date20191220160355 extends SimpleMigrationStep {
+class Version1000Date20200826201000 extends SimpleMigrationStep {
 
-	/**
-	 * @param IOutput $output
-	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
-	 */
-	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
-	}
-
-	/**
-	 * @param IOutput $output
-	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
-	 * @return null|ISchemaWrapper
-	 */
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		if (!$schema->hasTable('officeonline_wopi')) {
 			$table = $schema->createTable('officeonline_wopi');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', 'bigint', [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
+				'length' => 11,
 				'unsigned' => true,
 			]);
 			$table->addColumn('owner_uid', 'string', [
@@ -108,55 +91,20 @@ class Version030407Date20191220160355 extends SimpleMigrationStep {
 				'length' => 32,
 				'default' => '',
 			]);
+			$table->addColumn('share', 'string', [
+				'notnull' => false,
+				'length' => 64
+			]);
 			$table->setPrimaryKey(['id']);
 			$table->addUniqueIndex(['token'], 'rd_wopi_token_idx');
 		}
 
-		if (!$schema->hasTable('officeonline_direct')) {
-			$table = $schema->createTable('officeonline_direct');
-			$table->addColumn('id', 'integer', [
-				'autoincrement' => true,
-				'notnull' => true,
-				'length' => 4,
-				'unsigned' => true,
-			]);
-			$table->addColumn('token', 'string', [
-				'notnull' => false,
-				'length' => 64,
-			]);
-			$table->addColumn('uid', 'string', [
-				'notnull' => false,
-				'length' => 64,
-			]);
-			$table->addColumn('fileid', 'integer', [
-				'notnull' => true,
-				'length' => 4,
-			]);
-			$table->addColumn('timestamp', 'integer', [
-				'notnull' => true,
-				'length' => 4,
-				'default' => 0,
-				'unsigned' => true,
-			]);
-			$table->addColumn('template_destination', 'integer', [
-				'notnull' => false,
-				'length' => 4,
-			]);
-			$table->addColumn('template_id', 'integer', [
-				'notnull' => false,
-				'length' => 4,
-			]);
-			$table->setPrimaryKey(['id']);
-			$table->addUniqueIndex(['token'], 'rd_direct_token_idx');
-			$table->addIndex(['timestamp'], 'rd_direct_timestamp_idx');
-		}
-
 		if (!$schema->hasTable('officeonline_assets')) {
 			$table = $schema->createTable('officeonline_assets');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', 'bigint', [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
+				'length' => 11,
 				'unsigned' => true,
 			]);
 			$table->addColumn('uid', 'string', [
@@ -178,17 +126,40 @@ class Version030407Date20191220160355 extends SimpleMigrationStep {
 				'unsigned' => true,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addUniqueIndex(['token'], 'rd_assets_token_idx');
-			$table->addUniqueIndex(['timestamp'], 'rd_assets_timestamp_idx');
+			$table->addUniqueIndex(['token'], 'oon_assets_token_idx');
+			$table->addUniqueIndex(['timestamp'], 'oon_assets_timestamp_idx');
 		}
+
+		if (!$schema->hasTable('officeonline_locks')) {
+			$table = $schema->createTable('officeonline_locks');
+			$table->addColumn('id', 'string', [
+				'length' => 36,
+				'notnull' => true,
+			]);
+			$table->addColumn('valid_by', 'integer', [
+				'notnull' => true
+			]);
+			$table->addColumn('file_id', 'integer', [
+				'notnull' => true
+			]);
+			$table->addColumn('user_id', 'string', [
+				'notnull' => true,
+				'length' => 64,
+			]);
+			$table->addColumn('token_id', 'string', [
+				'notnull' => true,
+				'length' => 36,
+			]);
+			$table->addColumn('value', 'string', [
+				'notnull' => true,
+				'length' => 1024,
+			]);
+			$table->setPrimaryKey(['id']);
+			$table->addIndex(['valid_by'], 'officeonline_locks_valid_by');
+			$table->addUniqueIndex(['file_id'], 'officeonline_locks_file_id');
+		}
+
 		return $schema;
 	}
 
-	/**
-	 * @param IOutput $output
-	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-	 * @param array $options
-	 */
-	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
-	}
 }
