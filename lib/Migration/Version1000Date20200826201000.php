@@ -10,7 +10,6 @@ use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
 
 class Version1000Date20200826201000 extends SimpleMigrationStep {
-
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
@@ -161,5 +160,4 @@ class Version1000Date20200826201000 extends SimpleMigrationStep {
 
 		return $schema;
 	}
-
 }
