@@ -1,6 +1,22 @@
 import Types from './helpers/types'
 import axios from '@nextcloud/axios'
+import { getCapabilities } from '@nextcloud/capabilities'
 import './viewer'
+import Vue from 'vue'
+import Office from './view/Office'
+
+import './css/icons.css'
+
+// eslint-disable-next-line
+__webpack_nonce__ = btoa(window.OC.requestToken)
+
+// eslint-disable-next-line
+__webpack_public_path__ = window.OC.linkTo('officeonline', 'js/')
+
+Vue.prototype.t = window.t
+Vue.prototype.n = window.n
+Vue.prototype.OC = window.OC
+Vue.prototype.OCA = window.OCA
 
 const NewFilePlugin = {
 	attach: function(newFileMenu) {
@@ -45,17 +61,29 @@ const NewFilePlugin = {
 
 	_createDocument: function(mimetype, filename) {
 		const dir = document.getElementById('dir').value
-		const path = dir + '/' + filename
-		OCA.Files.Files.isFileNameValid(filename)
+		try {
+			OCA.Files.Files.isFileNameValid(filename)
+		} catch (e) {
+			window.OC.dialogs.alert(e, t('core', 'Could not create file'))
+			return
+		}
 		filename = FileList.getUniqueName(filename)
+		const path = dir + '/' + filename
+
+		const isPublic = document.getElementById('isPublic') ? document.getElementById('isPublic').value === '1' : false
+		if (isPublic) {
+			return window.FileList.createFile(filename).then(function() {
+				OCA.Viewer.open(path)
+			})
+		}
 
 		axios.post(OC.generateUrl('apps/officeonline/ajax/documents/create'), { mimetype, filename, dir }).then(({ data }) => {
 			console.debug(data)
 			if (data && data.status === 'success') {
-				FileList.add(data.data, { animate: true, scrollTo: true })
-				OCA.Viewer.open(path)
+				window.FileList.add(data.data, { animate: true, scrollTo: true })
+				window.OCA.Viewer.open(path)
 			} else {
-				OC.dialogs.alert(data.data.message, t('core', 'Could not create file'))
+				window.OC.dialogs.alert(data.data.message, t('core', 'Could not create file'))
 			}
 		})
 	}
@@ -63,7 +91,17 @@ const NewFilePlugin = {
 
 $(document).ready(function() {
 	// PUBLIC SHARE LINK HANDLING
-
+	const isPublic = document.getElementById('isPublic') ? document.getElementById('isPublic').value === '1' : false
+	const mimetype = document.getElementById('mimetype').value
+	const isSupportedMime = isPublic
+		&& getCapabilities().officeonline.supportedMimes.indexOf(mimetype) !== -1
+		&& getCapabilities().officeonline.mimetypesNoDefaultOpen.indexOf($('#mimetype').val()) === -1
+	if (isSupportedMime) {
+		/* eslint-disable-next-line no-new */
+		new Vue({
+			render: h => h(Office, { props: { fileName: document.getElementById('filename').value } })
+		}).$mount('#imgframe')
+	}
 	// new file menu
 	OC.Plugins.register('OCA.Files.NewFileMenu', NewFilePlugin)
 })

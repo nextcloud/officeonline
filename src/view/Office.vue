@@ -31,7 +31,7 @@
 						:style="viewColor(view)" />
 				</div>
 			</div>
-			<iframe id="collaboraframe" ref="documentFrame" :src="src" />
+			<iframe id="officeonlineframe" ref="documentFrame" :src="src" />
 		</div>
 	</transition>
 </template>
@@ -39,13 +39,13 @@
 <script>
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 
-import { getDocumentUrlForFile } from '../helpers/url'
+import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url'
 import PostMessageService from '../services/postMessage'
 import FilesAppIntegration from './FilesAppIntegration'
 
 const FRAME_DOCUMENT = 'FRAME_DOCUMENT'
 const PostMessages = new PostMessageService({
-	FRAME_DOCUMENT: () => document.getElementById('collaboraframe').contentWindow
+	FRAME_DOCUMENT: () => document.getElementById('officeonlineframe').contentWindow
 })
 
 export default {
@@ -114,7 +114,16 @@ export default {
 	},
 	methods: {
 		async load() {
-			let documentUrl = getDocumentUrlForFile(this.filename, this.fileid) + '&path=' + this.filename
+			const sharingToken = document.getElementById('sharingToken')
+			const dir = document.getElementById('dir')
+			let documentUrl = ''
+			if (sharingToken && dir.value === '') {
+				documentUrl = getDocumentUrlForPublicFile(this.filename)
+			} else if (sharingToken) {
+				documentUrl = getDocumentUrlForPublicFile(this.filename, this.fileid) + '&path=' + this.filename
+			} else {
+				documentUrl = getDocumentUrlForFile(this.filename, this.fileid) + '&path=' + this.filename
+			}
 			this.$emit('update:loaded', true)
 			this.src = documentUrl
 			this.loading = true
@@ -123,6 +132,7 @@ export default {
 }
 </script>
 <style lang="scss">
+
 	.header {
 		position: absolute;
 		right: 100px;
@@ -152,6 +162,10 @@ export default {
 		flex-direction: column;
 		background-color: var(--color-main-background);
 		transition: opacity .25s;
+
+		#body-public & {
+			position: fixed;
+		}
 	}
 	iframe {
 		width: 100%;
