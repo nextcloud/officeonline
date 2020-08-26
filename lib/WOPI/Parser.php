@@ -21,13 +21,16 @@
 
 namespace OCA\Officeonline\WOPI;
 
+use Exception;
 use OCP\Files\File;
 use OCP\IRequest;
 use SimpleXMLElement;
 
 class Parser {
+
 	/** @var DiscoveryManager */
 	private $discoveryManager;
+
 	/** @var SimpleXMLElement */
 	private $parsed;
 	/**
@@ -47,7 +50,7 @@ class Parser {
 	/**
 	 * @param $mimetype
 	 * @return array
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function getUrlSrc($mimetype) {
 		$discoveryParsed = $this->getParsed();
@@ -60,22 +63,22 @@ class Parser {
 			];
 		}
 
-		throw new \Exception('Could not find urlsrc in WOPI');
+		throw new Exception('Could not find urlsrc in WOPI');
 
 	}
 
 	/**
 	 * @return SimpleXMLElement|bool
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function getParsed() {
-		if (!empty($parsed))
-			return $parsed;
+		if (!empty($this->parsed))
+			return $this->parsed;
 		$discovery = $this->discoveryManager->get();
 		$loadEntities = libxml_disable_entity_loader(true);
 		$discoveryParsed = simplexml_load_string($discovery);
 		libxml_disable_entity_loader($loadEntities);
-		$parsed = $discoveryParsed;
+		$this->parsed = $discoveryParsed;
 		return $discoveryParsed;
 	}
 
@@ -83,16 +86,17 @@ class Parser {
 	 * @param File $file
 	 * @param bool $edit
 	 * @return array
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function getUrlSrcForFile(File $file, $edit) {
 		try{
 			$result = $this->getUrlSrc($file->getMimeType());
 			return $result;
 		}
-		catch(\Exception $e){
+		catch(Exception $e){
 
 		}
+		// FIXME: we might want to support different action types here as well like imagepreview
 		$actionName = $edit ? 'edit' : 'view';
 		$discoveryParsed = $this->getParsed();
 		$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-https\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), $actionName));
@@ -112,7 +116,7 @@ class Parser {
 				'action' => (string)$result[0]['name'],
 			];
 		}
-		throw new \Exception('Could not find urlsrc in WOPI');
+		throw new Exception('Could not find urlsrc in WOPI');
 
 	}
 

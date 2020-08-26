@@ -48,7 +48,7 @@ class PermissionManager {
 	}
 
 	public function isEnabledForUser(IUser $user) {
-		$enabledForGroups = $this->config->getAppValue(Application::APPNAME, 'use_groups', '');
+		$enabledForGroups = $this->config->getAppValue(Application::APP_ID, 'use_groups', '');
 		if($enabledForGroups === '') {
 			return true;
 		}

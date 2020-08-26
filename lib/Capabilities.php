@@ -23,19 +23,14 @@
 
 namespace OCA\Officeonline;
 
-use OCP\AppFramework\Utility\ITimeFactory;
+use Exception;
+use OCA\Officeonline\WOPI\Parser;
 use OCP\Capabilities\ICapability;
-use OCP\Files\IAppData;
-use OCP\Files\NotFoundException;
-use OCP\Files\SimpleFS\ISimpleFolder;
-use OCP\Http\Client\IClientService;
-use OCP\IConfig;
 use OCP\IL10N;
-use OCP\IURLGenerator;
 
 class Capabilities implements ICapability {
 
-	const MIMETYPES = [
+	public const MIMETYPES = [
 		'application/vnd.oasis.opendocument.text',
 		'application/vnd.oasis.opendocument.spreadsheet',
 		'application/vnd.oasis.opendocument.graphics',
@@ -69,47 +64,39 @@ class Capabilities implements ICapability {
 		'text/csv'
 	];
 
-	const MIMETYPES_OPTIONAL = [
+	public const MIMETYPES_OPTIONAL = [
 		'image/svg+xml',
 		'application/pdf',
 		'text/plain',
 		'text/spreadsheet'
 	];
 
-	/** @var ISimpleFolder */
-	private $appData;
-
 	/** @var IL10N */
 	private $l10n;
 	/** @var AppConfig */
 	private $config;
+	/** @var Parser */
+	private $parser;
 
-	/**
-	 * Capabilities constructor.
-	 *
-	 * @param IAppData $appData
-	 * @throws \OCP\Files\NotPermittedException
-	 */
-	public function __construct(IAppData $appData, IL10N $l10n, AppConfig $config) {
+	public function __construct(IL10N $l10n, AppConfig $config, Parser $parser) {
 		$this->l10n = $l10n;
 		$this->config = $config;
-		try {
-			$this->appData = $appData->getFolder('officeonline');
-		} catch (NotFoundException $e) {
-			$this->appData = $appData->newFolder('officeonline');
-		}
+		$this->parser = $parser;
 	}
 
-	public function getCapabilities() {
-		$collaboraCapabilities = $this->getCollaboraCapabilities();
+	public function getCapabilities(): array {
+		$discoveryResponse = false;
+		try {
+			$discoveryResponse = $this->parser->getParsed();
+		} catch (Exception $e) {
+		}
 		return [
 			'officeonline' => [
+				'discovery' => $discoveryResponse,
 				'mimetypes' => self::MIMETYPES,
 				'mimetypesNoDefaultOpen' => self::MIMETYPES_OPTIONAL,
-				'collabora' => $collaboraCapabilities,
-				'direct_editing' => isset($collaboraCapabilities['hasMobileSupport']) ? : false,
-				'templates' => isset($collaboraCapabilities['hasTemplateSaveAs']) || isset($collaboraCapabilities['hasTemplateSource']) ? : false,
-				'productName' => isset($collaboraCapabilities['productName']) ? $collaboraCapabilities['productName'] : $this->l10n->t('Office Online'),
+				'templates' => false,
+				'productName' => $this->l10n->t('Office Online'),
 				'config' => [
 					'wopi_url' => $this->config->getAppValue('wopi_url'),
 					'public_wopi_url' => $this->config->getAppValue('public_wopi_url'),
@@ -120,25 +107,5 @@ class Capabilities implements ICapability {
 				]
 			],
 		];
-	}
-
-	/**
-	 * TODO: use CapabilitiesService
-	 * @return array
-	 * @throws \OCP\Files\NotPermittedException
-	 */
-	private function getCollaboraCapabilities() {
-		try {
-			$file = $this->appData->getFile('capabilities.json');
-			$decodedFile = \json_decode($file->getContent(), true);
-		} catch (NotFoundException $e) {
-			return [];
-		}
-
-		if (!is_array($decodedFile)) {
-			return [];
-		}
-
-		return $decodedFile;
 	}
 }

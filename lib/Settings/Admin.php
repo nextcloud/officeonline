@@ -24,8 +24,6 @@
 namespace OCA\Officeonline\Settings;
 
 use OCA\Officeonline\AppConfig;
-use OCA\Officeonline\Capabilities;
-use OCA\Officeonline\Service\DemoService;
 use OCA\Officeonline\TemplateManager;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
@@ -39,41 +37,17 @@ class Admin implements ISettings {
 	/** @var AppConfig */
 	private $appConfig;
 
-	/** @var TemplateManager */
-	private $manager;
-
-	/** @var array */
-	private $capabilities;
-
-	/** @var DemoService */
-	private $demoService;
-
-	/**
-	 * Admin template settings
-	 *
-	 * @param IConfig $config
-	 * @param TemplateManager $manager
-	 * @param Capabilities $capabilities
-	 */
 	public function __construct(
 		IConfig $config,
 		AppConfig $appConfig,
-		TemplateManager $manager,
-		Capabilities $capabilities,
-		DemoService $demoService
+		TemplateManager $manager
 	) {
 		$this->config  = $config;
 		$this->appConfig = $appConfig;
 		$this->manager = $manager;
-		$this->capabilities = $capabilities->getCapabilities()['officeonline'];
-		$this->demoService = $demoService;
 	}
-	/**
-	 * @return TemplateResponse
-	 */
-	public function getForm() {
-		$demoServers = [];
 
+	public function getForm(): TemplateResponse {
 		return new TemplateResponse(
 			'officeonline',
 			'admin',
@@ -86,18 +60,14 @@ class Admin implements ISettings {
 					'external_apps'      => $this->config->getAppValue('officeonline', 'external_apps'),
 					'canonical_webroot'  => $this->config->getAppValue('officeonline', 'canonical_webroot'),
 					'disable_certificate_verification' => $this->config->getAppValue('officeonline', 'disable_certificate_verification', '') === 'yes',
-					'templates'          => $this->manager->getSystemFormatted(),
-					'templatesAvailable' => array_key_exists('templates', $this->capabilities) && $this->capabilities['templates'],
+					'templatesAvailable' => false,
 					'settings' => $this->appConfig->getAppSettings(),
-					'demo_servers' => $this->demoService->fetchDemoServers(),
-					'web_server' => strtolower($_SERVER['SERVER_SOFTWARE']),
-					'os_family' => PHP_OS_FAMILY,
-					'platform' => php_uname('m')
 				]
 			],
 			'blank'
 		);
 	}
+
 	/**
 	 * @return string the section ID, e.g. 'sharing'
 	 */

@@ -51,6 +51,9 @@ class AssetsController extends Controller {
 	/** @var IURLGenerator */
 	private $urlGenerator;
 
+	/** @var UserScopeService */
+	private $userScopeService;
+
 	public function __construct($appName,
 								IRequest $request,
 								AssetMapper $assetMapper,

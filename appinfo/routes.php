@@ -50,12 +50,7 @@ return [
 		['name' => 'settings#setPersonalSettings', 'url' => 'ajax/personal.php', 'verb' => 'POST'],
 		['name' => 'settings#setSettings', 'url' => 'ajax/admin.php', 'verb' => 'POST'],
 		['name' => 'settings#getSettings', 'url' => 'ajax/settings.php', 'verb' => 'GET'],
-		['name' => 'settings#updateWatermarkSettings', 'url' => 'settings/watermark', 'verb' => 'POST'],
 		['name' => 'settings#checkSettings', 'url' => 'settings/check', 'verb' => 'GET'],
-		['name' => 'settings#demoServers', 'url' => 'settings/demo', 'verb' => 'GET'],
-
-		//Mobile access
-		['name' => 'directView#show', 'url' => '/direct/{token}', 'verb' => 'GET'],
 
 		//assets
 		['name' => 'assets#create', 'url' => 'assets', 'verb' => 'POST'],

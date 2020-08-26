@@ -11,83 +11,45 @@
 
 namespace OCA\Officeonline\Controller;
 
-use OCA\Officeonline\Service\CapabilitiesService;
-use OCA\Officeonline\Service\DemoService;
+use Exception;
 use OCA\Officeonline\WOPI\DiscoveryManager;
-use OCA\Officeonline\WOPI\Parser;
 use \OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\AppFramework\Http\NotFoundResponse;
-use OCP\Http\Client\IClientService;
-use OCP\ICache;
 use \OCP\IRequest;
 use \OCP\IL10N;
 use OCA\Officeonline\AppConfig;
-use OCP\IConfig;
-use OCP\PreConditionNotMetException;
 
 class SettingsController extends Controller{
+
 	/** @var IL10N */
 	private $l10n;
 	/** @var AppConfig */
 	private $appConfig;
-	/** @var IConfig */
-	private $config;
 	/** @var DiscoveryManager  */
 	private $discoveryManager;
-	/** @var Parser */
-	private $wopiParser;
-	/** @var string */
-	private $userId;
-	/** @var CapabilitiesService */
-	private $capabilitiesService;
-	/** @var DemoService */
-	private $demoService;
 
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param IL10N $l10n
-	 * @param AppConfig $appConfig
-	 * @param IConfig $config
-	 * @param DiscoveryManager $discoveryManager
-	 * @param Parser $wopiParser
-	 * @param string $userId
-	 * @param CapabilitiesService $capabilitiesService
-	 */
 	public function __construct($appName,
 		IRequest $request,
 		IL10N $l10n,
 		AppConfig $appConfig,
-		IConfig $config,
-		DiscoveryManager $discoveryManager,
-		Parser $wopiParser,
-		$userId,
-		CapabilitiesService $capabilitiesService,
-		DemoService $demoService
+		DiscoveryManager $discoveryManager
 	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
 		$this->appConfig = $appConfig;
-		$this->config = $config;
 		$this->discoveryManager = $discoveryManager;
-		$this->wopiParser = $wopiParser;
-		$this->userId = $userId;
-		$this->capabilitiesService = $capabilitiesService;
-		$this->demoService = $demoService;
 	}
 
 	/**
 	 * @PublicPage
 	 * @NoCSRFRequired
-	 * @throws \Exception
 	 */
-	public function checkSettings() {
+	public function checkSettings(): DataResponse {
 		try {
 			$response = $this->discoveryManager->fetchFromRemote();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			return new DataResponse([
 				'status' => $e->getCode(),
 				'message' => $e->getMessage()
@@ -97,20 +59,10 @@ class SettingsController extends Controller{
 		return new DataResponse();
 	}
 
-	public function demoServers() {
-		$demoServers = $this->demoService->fetchDemoServers(true);
-		if (count($demoServers) > 0) {
-			return new DataResponse($demoServers);
-		}
-		return new NotFoundResponse([]);
-	}
-
 	/**
 	 * @NoAdminRequired
-	 *
-	 * @return JSONResponse
 	 */
-	public function getSettings() {
+	public function getSettings(): JSONResponse {
 		return new JSONResponse([
 			'wopi_url' => $this->appConfig->getAppValue('wopi_url'),
 			'public_wopi_url' => $this->appConfig->getAppValue('public_wopi_url'),
@@ -121,23 +73,13 @@ class SettingsController extends Controller{
 		]);
 	}
 
-	/**
-	 * @param string $wopi_url
-	 * @param string $disable_certificate_verification
-	 * @param string $edit_groups
-	 * @param string $use_groups
-	 * @param string $doc_format
-	 * @param string $external_apps
-	 * @param string $canonical_webroot
-	 * @return JSONResponse
-	 */
 	public function setSettings($wopi_url,
 	                            $disable_certificate_verification,
 	                            $edit_groups,
 	                            $use_groups,
 	                            $doc_format,
 	                            $external_apps,
-	                            $canonical_webroot) {
+	                            $canonical_webroot): JSONResponse {
 		$message = $this->l10n->t('Saved');
 
 		if ($wopi_url !== null){
@@ -173,9 +115,6 @@ class SettingsController extends Controller{
 
 		$this->discoveryManager->refretch();
 
-		$this->capabilitiesService->clear();
-		$this->capabilitiesService->refretch();
-
 		$response = [
 			'status' => 'success',
 			'data' => ['message' => $message]
@@ -184,75 +123,4 @@ class SettingsController extends Controller{
 		return new JSONResponse($response);
 	}
 
-	public function updateWatermarkSettings($settings = []) {
-		$supportedOptions = [
-			'watermark_text',
-			'watermark_enabled',
-			'watermark_shareAll',
-			'watermark_shareRead',
-			'watermark_linkSecure',
-			'watermark_linkRead',
-			'watermark_linkAll',
-			'watermark_linkTags',
-			'watermark_linkTagsList',
-			'watermark_allGroups',
-			'watermark_allGroupsList',
-			'watermark_allTags',
-			'watermark_allTagsList',
-		];
-		$message = $this->l10n->t('Saved');
-
-		$watermarkSettings = $settings['watermark'];
-		foreach ($watermarkSettings as $key => $value) {
-			$fullKey = 'watermark_' . $key;
-			if (in_array($fullKey, $supportedOptions) !== true) {
-				return new JSONResponse([
-					'status' => 'error',
-					'data' => ['message' => $this->l10n->t('Invalid config key') . ' ' . $fullKey]
-				], Http::STATUS_BAD_REQUEST);
-			}
-			$value = $value === true ? 'yes' : $value;
-			$value = $value === false ? 'no' : $value;
-			if (AppConfig::APP_SETTING_TYPES[$fullKey] === 'array') {
-				$value = implode(',', $value);
-			}
-			$this->appConfig->setAppValue($fullKey, $value);
-		}
-
-		$response = [
-			'status' => 'success',
-			'data' => ['message' => $message]
-		];
-
-		return new JSONResponse($response);
-	}
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param $key
-	 * @param $value
-	 * @return JSONResponse
-	 */
-	public function setPersonalSettings($templateFolder) {
-		$message = $this->l10n->t('Saved');
-		$status = 'success';
-
-		if ($templateFolder !== null){
-			try {
-				$this->config->setUserValue($this->userId, 'officeonline', 'templateFolder', $templateFolder);
-			} catch (PreConditionNotMetException $e) {
-				$message = $this->l10n->t('Error when saving');
-				$status = 'error';
-			}
-		}
-
-		$response = [
-			'status' => $status,
-			'data' => ['message' => $message]
-		];
-
-		return new JSONResponse($response);
-
-	}
 }

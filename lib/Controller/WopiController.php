@@ -221,19 +221,6 @@ class WopiController extends Controller {
 			$response['TemplateSaveAs'] = $file->getName();
 		}
 
-		if ($this->shouldWatermark($isPublic, $wopi->getEditorUid(), $fileId, $wopi)) {
-			$replacements = [
-				'userId' => $wopi->getEditorUid(),
-				'date' => (new \DateTime())->format('Y-m-d H:i:s'),
-				'themingName' => \OC::$server->getThemingDefaults()->getName(),
-
-			];
-			$watermarkTemplate = $this->appConfig->getAppValue('watermark_text');
-			$response['WatermarkText'] = preg_replace_callback('/{(.+?)}/', function ($matches) use ($replacements) {
-				return $replacements[$matches[1]];
-			}, $watermarkTemplate);
-		}
-
 		/**
 		 * New approach for generating files from templates by creating an empty file
 		 * and providing an URL which returns the actual template
@@ -269,62 +256,6 @@ class WopiController extends Controller {
 			}
 		}
 		return $response;
-	}
-
-	private function shouldWatermark($isPublic, $userId, $fileId, Wopi $wopi) {
-		if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_enabled', 'no') === 'no') {
-			return false;
-		}
-
-		if ($isPublic) {
-			if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_linkAll', 'no') === 'yes') {
-				return true;
-			}
-			if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_linkRead', 'no') === 'yes' && !$wopi->getCanwrite()) {
-				return true;
-			}
-			if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_linkSecure', 'no') === 'yes' && $wopi->getHideDownload()) {
-				return true;
-			}
-			if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_linkTags', 'no') === 'yes') {
-				$tags = $this->appConfig->getAppValueArray('watermark_linkTagsList');
-				$fileTags = \OC::$server->getSystemTagObjectMapper()->getTagIdsForObjects([$fileId], 'files')[$fileId];
-				foreach ($fileTags as $tagId) {
-					if (in_array($tagId, $tags, true)) {
-						return true;
-					}
-				}
-			}
-		} else {
-			if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_shareAll', 'no') === 'yes') {
-				$files = $this->rootFolder->getUserFolder($userId)->getById($fileId);
-				if (count($files) !== 0 && $files[0]->getOwner()->getUID() !== $userId) {
-					return true;
-				}
-			}
-			if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_shareRead', 'no') === 'yes' && !$wopi->getCanwrite()) {
-				return true;
-			}
-		}
-		if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_allGroups', 'no') === 'yes') {
-			$groups = $this->appConfig->getAppValueArray('watermark_allGroupsList');
-			foreach ($groups as $group) {
-				if (\OC::$server->getGroupManager()->isInGroup($userId, $group)) {
-					return true;
-				}
-			}
-		}
-		if ($this->config->getAppValue(AppConfig::WATERMARK_APP_NAMESPACE, 'watermark_allTags', 'no') === 'yes') {
-			$tags = $this->appConfig->getAppValueArray('watermark_allTagsList');
-			$fileTags = \OC::$server->getSystemTagObjectMapper()->getTagIdsForObjects([$fileId], 'files')[$fileId];
-			foreach ($fileTags as $tagId) {
-				if (in_array($tagId, $tags, true)) {
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	/**

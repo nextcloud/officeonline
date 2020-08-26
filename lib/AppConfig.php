@@ -1,12 +1,29 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * ownCloud - Officeonline App
- *
- * @author Victor Dubiniuk
+ * @copyright Copyright (c) 2020 Julius Härtl <jus@bitgrid.net>
  * @copyright 2015 Victor Dubiniuk victor.dubiniuk@gmail.com
+
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Victor Dubiniuk <victor.dubiniuk@gmail.com>
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later.
+ * @license GNU AGPL version 3 or any later version
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace OCA\Officeonline;
@@ -18,21 +35,10 @@ class AppConfig {
 
 	private $defaults = [
 		'wopi_url' => '',
-		'watermark_text' => '{userId}',
-		'watermark_allGroupsList' => [],
-		'watermark_allTagsList' => [],
-		'watermark_linkTagsList' => [],
 		'doc_format' => 'ooxml'
-
 	];
 
-	const WATERMARK_APP_NAMESPACE = 'files';
-
-	const APP_SETTING_TYPES = [
-			'watermark_allGroupsList' => 'array',
-			'watermark_allTagsList' => 'array',
-			'watermark_linkTagsList' => 'array'
-		];
+	public const APP_SETTING_TYPES = [];
 
 	/** @var IConfig */
 	private $config;
@@ -41,19 +47,11 @@ class AppConfig {
 		$this->config = $config;
 	}
 
-	public function getAppNamespace($key) {
-		if (strpos($key, 'watermark_') === 0) {
-			return self::WATERMARK_APP_NAMESPACE;
-		}
-		return Application::APPNAME;
+	public function getAppNamespace($key): string {
+		return Application::APP_ID;
 	}
 
-	/**
-	 * Get a value by key
-	 * @param string $key
-	 * @return string
-	 */
-	public function getAppValue($key) {
+	public function getAppValue(string $key) {
 		$defaultValue = null;
 		if (array_key_exists($key, $this->defaults)){
 			$defaultValue = $this->defaults[$key];
@@ -61,11 +59,7 @@ class AppConfig {
 		return $this->config->getAppValue($this->getAppNamespace($key), $key, $defaultValue);
 	}
 
-	/**
-	 * @param $key
-	 * @return array
-	 */
-	public function getAppValueArray($key) {
+	public function getAppValueArray(string $key) {
 		$value = $this->config->getAppValue($this->getAppNamespace($key), $key, []);
 		if (array_key_exists($key, self::APP_SETTING_TYPES) && self::APP_SETTING_TYPES[$key] === 'array') {
 			$value = $value !== '' ? explode(',', $value) : [];
@@ -73,36 +67,17 @@ class AppConfig {
 		return $value;
 	}
 
-	/**
-	 * Set a value by key
-	 * @param string $key
-	 * @param string $value
-	 * @return void
-	 */
-	public function setAppValue($key, $value) {
+	public function setAppValue(string $key, string $value): void {
 		$this->config->setAppValue($this->getAppNamespace($key), $key, $value);
 	}
 
-	/**
-	 * Get all app settings
-	 * @return array
-	 */
-	public function getAppSettings() {
+	public function getAppSettings(): array {
 		$result = [];
-		$keys = $this->config->getAppKeys(Application::APPNAME);
+		$keys = $this->config->getAppKeys(Application::APP_ID);
 		foreach ($keys as $key) {
 			$value = $this->getAppValueArray($key);
 			$value = $value === 'yes' ? true : $value;
 			$result[$key] = $value === 'no' ? false : $value;
-		}
-
-		$keys = $this->config->getAppKeys(self::WATERMARK_APP_NAMESPACE);
-		foreach ($keys as $key) {
-			if (strpos($key, 'watermark_') === 0) {
-				$value = $this->getAppValueArray($key);
-				$value = $value === 'yes' ? true : $value;
-				$result[$key] = $value === 'no' ? false : $value;
-			}
 		}
 		return $result;
 	}

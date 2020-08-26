@@ -27,7 +27,6 @@ namespace OCA\Officeonline\AppInfo;
 use OC\Files\Type\Detection;
 use OC\Security\CSP\ContentSecurityPolicy;
 use OCA\Federation\TrustedServers;
-use OCA\Officeonline\AppConfig;
 use OCA\Officeonline\Capabilities;
 use OCA\Officeonline\Hooks\WopiLockHooks;
 use OCA\Officeonline\Preview\MSExcel;
@@ -35,9 +34,7 @@ use OCA\Officeonline\Preview\MSWord;
 use OCA\Officeonline\Preview\OOXML;
 use OCA\Officeonline\Preview\OpenDocument;
 use OCA\Officeonline\Preview\Pdf;
-use OCA\Officeonline\Service\CapabilitiesService;
 use OCA\Officeonline\Service\FederationService;
-use OCA\Officeonline\WOPI\DiscoveryManager;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\App;
 use OCP\AppFramework\QueryException;
@@ -46,7 +43,7 @@ use OCP\IPreview;
 
 class Application extends App {
 
-	const APPNAME = 'officeonline';
+	public const APP_ID = 'officeonline';
 
 	/**
 	 * Strips the path and query parameters from the URL.
@@ -54,7 +51,7 @@ class Application extends App {
 	 * @param string $url
 	 * @return string
 	 */
-	private function domainOnly($url) {
+	private function domainOnly(string $url): string {
 		$parsed_url = parse_url($url);
 		$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
 		$host	= isset($parsed_url['host']) ? $parsed_url['host'] : '';
@@ -63,7 +60,7 @@ class Application extends App {
 	}
 
 	public function __construct(array $urlParams = array()) {
-		parent::__construct(self::APPNAME, $urlParams);
+		parent::__construct(self::APP_ID, $urlParams);
 
 		try {
 			/** @var IEventDispatcher $eventDispatcher */
@@ -105,9 +102,7 @@ class Application extends App {
 			return $container->query(OOXML::class);
 		});
 
-		// \OC::$server->getLogger()->debug('==== Officeonline Application registerProvider: calling manager registerProvider:');
 		$previewManager->registerProvider('/application\/vnd.oasis.opendocument.*/', function() use ($container) {
-			// \OC::$server->getLogger()->debug('==== Officeonline Application registerProvider lambda. OpenDocument::class=' . OpenDocument::class);
 			return $container->query(OpenDocument::class);
 		});
 
