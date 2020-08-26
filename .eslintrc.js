@@ -1,8 +1,24 @@
 module.exports = {
 	extends: [
-		'@nextcloud'
+		'@nextcloud',
 	],
 	rules: {
 		'valid-jsdoc': ['off'],
-	}
+		'node/no-missing-import': ['error', {
+			'tryExtensions': ['.js', '.vue', '.tsx'],
+		}],
+	},
+	settings: {
+		'import/resolver': {
+			'node': {
+				'extensions': [
+					'.js',
+					'.jsx',
+					'.ts',
+					'.tsx',
+					'.vue',
+				],
+			},
+		},
+	},
 }

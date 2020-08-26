@@ -37,7 +37,7 @@ const callMobileMessage = (messageName, attributes) => {
 	if (typeof attributes !== 'undefined') {
 		message = {
 			MessageName: messageName,
-			Values: attributes
+			Values: attributes,
 		}
 	}
 	let attributesString = null
@@ -65,7 +65,7 @@ const callMobileMessage = (messageName, attributes) => {
 
 export default {
 	isDirectEditing,
-	callMobileMessage
+	callMobileMessage,
 }
 
 export {
@@ -73,5 +73,5 @@ export {
 	callMobileMessage,
 	isMobileInterfaceAvailable,
 	isMobileInterfaceOnAndroid,
-	isMobileInterfaceOnIos
+	isMobileInterfaceOnIos,
 }

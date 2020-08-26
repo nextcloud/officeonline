@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 			id: 'officeonline',
 			group: null,
 			mimes: supportedMimes,
-			component: Office
+			component: Office,
 		})
 	}
 })

@@ -2,27 +2,29 @@ import { getRootUrl } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 import Config from './services/config'
 import { setGuestNameCookie, shouldAskForGuestName } from './helpers/guestName'
-
 import PostMessageService from './services/postMessage'
 import {
 	callMobileMessage,
 	isDirectEditing,
-	isMobileInterfaceAvailable
+	isMobileInterfaceAvailable,
 } from './helpers/mobile'
 import { getWopiUrl, getSearchParam } from './helpers/url'
 
 import '../css/document.scss'
 
+// FIXME: Remove dependency in a next step
+const $ = window.$
+
 const PostMessages = new PostMessageService({
 	parent: window.parent,
-	loolframe: () => document.getElementById('loleafletframe').contentWindow
+	loolframe: () => document.getElementById('loleafletframe').contentWindow,
 })
 
-var checkingProxyStatus = false
+let checkingProxyStatus = false
 
 const checkProxyStatus = () => {
 	checkingProxyStatus = true
-	var url = Config.get('urlsrc').substr(0, Config.get('urlsrc').indexOf('proxy.php') + 'proxy.php'.length)
+	const url = Config.get('urlsrc').substr(0, Config.get('urlsrc').indexOf('proxy.php') + 'proxy.php'.length)
 	$.get(url + '?status').done(function(val) {
 		if (val && val.status && val.status !== 'OK') {
 			if (val.status === 'starting' || val.status === 'stopped') {
@@ -110,7 +112,7 @@ $.widget('oc.guestNamePicker', {
 			}
 		})
 		$('#btn').click(() => setGuestNameSubmit())
-	}
+	},
 })
 
 /**
@@ -209,7 +211,7 @@ const documentsMain = {
 				return
 			}
 
-			OC.Util.History.addOnPopStateHandler(_.bind(documentsMain.onClose))
+			OC.Util.History.addOnPopStateHandler(window._.bind(documentsMain.onClose))
 			OC.Util.History.pushState()
 
 			PostMessages.sendPostMessage('parent', 'loading')
@@ -221,14 +223,14 @@ const documentsMain = {
 			const urlsrc = getWopiUrl({ fileId, title, readOnly: false, closeButton: true, revisionHistory: true })
 
 			// access_token - must be passed via a form post
-			var accessToken = encodeURIComponent(documentsMain.token)
+			const accessToken = encodeURIComponent(documentsMain.token)
 
 			// form to post the access token for WOPISrc
-			var form = '<form id="loleafletform" name="loleafletform" target="loleafletframe" action="' + urlsrc + '" method="post">'
+			const form = '<form id="loleafletform" name="loleafletform" target="loleafletframe" action="' + urlsrc + '" method="post">'
 				+ '<input name="access_token" value="' + accessToken + '" type="hidden"/></form>'
 
 			// iframe that contains the Collabora Online
-			var frame = '<iframe id="loleafletframe" name="loleafletframe" nonce="' + btoa(getRequestToken()) + '" scrolling="no" allowfullscreen style="width:100%;height:100%;position:absolute;" />'
+			const frame = '<iframe id="loleafletframe" name="loleafletframe" nonce="' + btoa(getRequestToken()) + '" scrolling="no" allowfullscreen style="width:100%;height:100%;position:absolute;" />'
 
 			$('#mainContainer').append(form)
 			$('#mainContainer').append(frame)
@@ -285,7 +287,7 @@ const documentsMain = {
 				const ViewerToLool = [
 					'Action_FollowUser',
 					'Host_VersionRestore',
-					'Action_RemoveView'
+					'Action_RemoveView',
 				]
 				PostMessages.registerPostMessageHandler(({ parsed, data }) => {
 					console.debug('[document] Received post message ', parsed)
@@ -296,7 +298,8 @@ const documentsMain = {
 					}
 
 					if (documentsMain.isViewerMode) {
-						let { fileId, title, version } = args
+						let { fileId, title } = args
+						const { version } = args
 						switch (parsed.msgId) {
 						case 'Action_loadRevViewer':
 							documentsMain.UI.loadRevViewerContainer()
@@ -398,11 +401,11 @@ const documentsMain = {
 							t('officeonline', 'New filename'),
 							false
 						).then(function() {
-							var $dialog = $('.oc-dialog:visible')
-							var $buttons = $dialog.find('button')
+							const $dialog = $('.oc-dialog:visible')
+							const $buttons = $dialog.find('button')
 							$buttons.eq(0).text(t('officeonline', 'Cancel'))
 							$buttons.eq(1).text(t('officeonline', 'Save'))
-							var nameInput = $dialog.find('input')[0]
+							const nameInput = $dialog.find('input')[0]
 							nameInput.style.minWidth = '250px'
 							nameInput.style.maxWidth = '400px'
 							nameInput.value = documentsMain.fileName
@@ -427,14 +430,12 @@ const documentsMain = {
 				$('#content-wrapper').fadeIn('fast')
 				$(document.body).removeClass('claro')
 			})
-		}
+		},
 	},
 
 	onStartup: function() {
-		var fileId
-
 		// Does anything indicate that we need to autostart a session?
-		fileId = (getSearchParam('fileId') || '').replace(/^\W*/, '')
+		const fileId = (getSearchParam('fileId') || '').replace(/^\W*/, '')
 
 		if (fileId && Number.isInteger(Number(fileId)) && $('#nickname').length === 0) {
 			documentsMain.isEditorMode = true
@@ -503,13 +504,13 @@ const documentsMain = {
 	postAsset: function(filename, url) {
 		PostMessages.sendWOPIPostMessage('loolframe', 'Action_InsertGraphic', {
 			filename: filename,
-			url: url
+			url: url,
 		})
 	},
 
 	postGrabFocus: function() {
 		PostMessages.sendWOPIPostMessage('loolframe', 'Grab_Focus')
-	}
+	},
 }
 
 $(document).ready(function() {
@@ -532,7 +533,7 @@ $(document).ready(function() {
 	}
 	documentsMain.renderComplete = true
 
-	var viewport = document.querySelector('meta[name=viewport]')
+	const viewport = document.querySelector('meta[name=viewport]')
 	viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
 
 	documentsMain.onStartup()

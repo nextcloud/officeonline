@@ -26,7 +26,9 @@
 			<div class="header">
 				<!-- This is obviously not the way to go since it would require absolute positioning and therefore not be compatible with viewer actions/sidebar -->
 				<div class="avatars">
-					<avatar v-for="view in avatarViews" :key="view.ViewId" :user="view.UserId"
+					<Avatar v-for="view in avatarViews"
+						:key="view.ViewId"
+						:user="view.UserId"
 						:display-name="view.UserName"
 						:style="viewColor(view)" />
 				</div>
@@ -42,36 +44,35 @@ import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url'
 import PostMessageService from '../services/postMessage'
 
-const FRAME_DOCUMENT = 'FRAME_DOCUMENT'
 const PostMessages = new PostMessageService({
-	FRAME_DOCUMENT: () => document.getElementById('officeonlineframe').contentWindow
+	FRAME_DOCUMENT: () => document.getElementById('officeonlineframe').contentWindow,
 })
 
 export default {
 	name: 'Office',
 	components: {
-		Avatar
+		Avatar,
 	},
 	props: {
 		filename: {
 			type: String,
-			default: null
+			default: null,
 		},
 		fileid: {
 			type: Number,
-			default: null
+			default: null,
 		},
 		hasPreview: {
 			type: Boolean,
 			required: false,
-			default: () => false
-		}
+			default: () => false,
+		},
 	},
 	data() {
 		return {
 			src: null,
 			loading: false,
-			views: []
+			views: [],
 		}
 	},
 	computed: {
@@ -82,9 +83,9 @@ export default {
 			return view => ({
 				'border-color': '#' + ('000000' + Number(view.Color).toString(16)).substr(-6),
 				'border-width': '2px',
-				'border-style': 'solid'
+				'border-style': 'solid',
 			})
-		}
+		},
 	},
 	mounted() {
 		PostMessages.registerPostMessageHandler(({ parsed }) => {
@@ -121,8 +122,8 @@ export default {
 			this.$emit('update:loaded', true)
 			this.src = documentUrl
 			this.loading = true
-		}
-	}
+		},
+	},
 }
 </script>
 <style lang="scss">
@@ -161,13 +162,16 @@ export default {
 			position: fixed;
 		}
 	}
+
 	iframe {
 		width: 100%;
 		flex-grow: 1;
 	}
+
 	.fade-enter-active, .fade-leave-active {
 		transition: opacity .25s;
 	}
+
 	.fade-enter, .fade-leave-to {
 		opacity: 0;
 	}

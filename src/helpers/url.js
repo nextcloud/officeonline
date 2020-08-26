@@ -25,7 +25,7 @@ import { languageToBCP47 } from './index'
 import Config from './../services/config'
 
 const getSearchParam = (name) => {
-	var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href)
+	const results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href)
 	if (results === null) {
 		return null
 	}
@@ -59,7 +59,7 @@ const getDocumentUrlFromTemplate = (templateId, fileName, fileDir, fillWithTempl
 			templateId: templateId,
 			fileName: fileName,
 			dir: fileDir,
-			requesttoken: OC.requestToken
+			requesttoken: OC.requestToken,
 		}
 	)
 }
@@ -71,7 +71,7 @@ const getDocumentUrlForPublicFile = (fileName, fileId) => {
 			shareToken: document.getElementById('sharingToken').value,
 			fileName: fileName,
 			fileId: fileId,
-			requesttoken: OC.requestToken
+			requesttoken: OC.requestToken,
 		}
 	)
 }
@@ -82,7 +82,7 @@ const getDocumentUrlForFile = (fileDir, fileId) => {
 		{
 			fileId: fileId,
 			dir: fileDir,
-			requesttoken: OC.requestToken
+			requesttoken: OC.requestToken,
 		})
 }
 
@@ -92,5 +92,5 @@ export {
 
 	getDocumentUrlFromTemplate,
 	getDocumentUrlForPublicFile,
-	getDocumentUrlForFile
+	getDocumentUrlForFile,
 }

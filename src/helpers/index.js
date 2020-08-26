@@ -24,7 +24,7 @@ import { getLanguage, getLocale } from '@nextcloud/l10n'
 
 const languageToBCP47 = () => {
 	let language = getLanguage().replace(/_/g, '-')
-	let locale = getLocale()
+	const locale = getLocale()
 
 	// German formal should just be treated as 'de'
 	if (language === 'de-DE') {
@@ -35,8 +35,8 @@ const languageToBCP47 = () => {
 		de: {
 			'de_CH': 'de-CH',
 			'gsw': 'de-CH',
-			'gsw_CH': 'de-CH'
-		}
+			'gsw_CH': 'de-CH',
+		},
 	}
 	const matchingWhitelist = whitelist[language]
 	if (typeof matchingWhitelist !== 'undefined' && typeof matchingWhitelist[locale] !== 'undefined') {
@@ -55,5 +55,5 @@ const getNextcloudVersion = () => {
 
 export {
 	languageToBCP47,
-	getNextcloudVersion
+	getNextcloudVersion,
 }

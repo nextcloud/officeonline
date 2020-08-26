@@ -44,13 +44,19 @@
 				<form @submit.prevent.stop="updateServer">
 					<p>
 						<label for="wopi_url">{{ t('officeonline', 'URL (and Port) of Office Online server') }}</label><br>
-						<input id="wopi_url" v-model="settings.wopi_url" type="text"
+						<input id="wopi_url"
+							v-model="settings.wopi_url"
+							type="text"
 							:disabled="updating">
 						<input type="submit" value="Save" :disabled="updating"><br>
 					</p>
 					<p>
-						<input id="disable_certificate_verification" v-model="settings.disable_certificate_verification" type="checkbox"
-							class="checkbox" :disabled="updating" @change="updateServer">
+						<input id="disable_certificate_verification"
+							v-model="settings.disable_certificate_verification"
+							type="checkbox"
+							class="checkbox"
+							:disabled="updating"
+							@change="updateServer">
 						<label for="disable_certificate_verification">{{ t('officeonline', 'Disable certificate verification (insecure)') }}</label><br>
 						<em>{{ t('Enable if your Office Online server uses a self signed certificate') }}</em>
 					</p>
@@ -60,20 +66,37 @@
 
 		<div v-if="isSetup" id="advanced-settings" class="section">
 			<h2>{{ t('officeonline', 'Advanced settings') }}</h2>
-			<settings-checkbox :value="isOoxml" :label="t('officeonline', 'Use Office Open XML (OOXML) instead of OpenDocument Format (ODF) by default for new files')" hint=""
-				:disabled="updating" @input="updateOoxml" />
+			<SettingsCheckbox :value="isOoxml"
+				:label="t('officeonline', 'Use Office Open XML (OOXML) instead of OpenDocument Format (ODF) by default for new files')"
+				hint=""
+				:disabled="updating"
+				@input="updateOoxml" />
 
-			<settings-checkbox :value="settings.use_groups !== null" :label="t('officeonline', 'Restrict usage to specific groups')" :hint="t('officeonline', 'Office Online is enabled for all users by default. When this setting is active, only members of the specified groups can use it.')"
-				:disabled="updating" @input="updateUseGroups">
-				<settings-select-group v-if="settings.use_groups !== null" v-model="settings.use_groups" :label="t('officeonline', 'Select groups')"
-					class="option-inline" :disabled="updating" @input="updateUseGroups" />
-			</settings-checkbox>
+			<SettingsCheckbox :value="settings.use_groups !== null"
+				:label="t('officeonline', 'Restrict usage to specific groups')"
+				:hint="t('officeonline', 'Office Online is enabled for all users by default. When this setting is active, only members of the specified groups can use it.')"
+				:disabled="updating"
+				@input="updateUseGroups">
+				<SettingsSelectGroup v-if="settings.use_groups !== null"
+					v-model="settings.use_groups"
+					:label="t('officeonline', 'Select groups')"
+					class="option-inline"
+					:disabled="updating"
+					@input="updateUseGroups" />
+			</SettingsCheckbox>
 
-			<settings-checkbox :value="settings.edit_groups !== null" :label="t('officeonline', 'Restrict edit to specific groups')" hint="All users can edit documents with Office Online by default. When this setting is active, only the members of the specified groups can edit and the others can only view documents.')"
-				:disabled="updating" @input="updateEditGroups">
-				<settings-select-group v-if="settings.edit_groups !== null" v-model="settings.edit_groups" :label="t('officeonline', 'Select groups')"
-					class="option-inline" :disabled="updating" @input="updateEditGroups" />
-			</settings-checkbox>
+			<SettingsCheckbox :value="settings.edit_groups !== null"
+				:label="t('officeonline', 'Restrict edit to specific groups')"
+				hint="All users can edit documents with Office Online by default. When this setting is active, only the members of the specified groups can edit and the others can only view documents.')"
+				:disabled="updating"
+				@input="updateEditGroups">
+				<SettingsSelectGroup v-if="settings.edit_groups !== null"
+					v-model="settings.edit_groups"
+					:label="t('officeonline', 'Select groups')"
+					class="option-inline"
+					:disabled="updating"
+					@input="updateEditGroups" />
+			</SettingsCheckbox>
 		</div>
 	</div>
 </template>
@@ -94,13 +117,13 @@ export default {
 	name: 'AdminSettings',
 	components: {
 		SettingsCheckbox,
-		SettingsSelectGroup
+		SettingsSelectGroup,
 	},
 	props: {
 		initial: {
 			type: Object,
-			required: true
-		}
+			required: true,
+		},
 	},
 	data() {
 		return {
@@ -111,7 +134,7 @@ export default {
 			tags: [],
 			uiVisible: {
 				canonical_webroot: false,
-				external_apps: false
+				external_apps: false,
 			},
 			settings: {
 				demoUrl: null,
@@ -129,9 +152,9 @@ export default {
 					allGroupsList: [],
 					allTags: false,
 					allTagsList: [],
-					text: ''
-				}
-			}
+					text: '',
+				},
+			},
 		}
 	},
 	computed: {
@@ -146,15 +169,15 @@ export default {
 		},
 		hasHostErrors() {
 			return this.hostErrors.some(x => x)
-		}
+		},
 	},
 	beforeMount() {
-		for (let key in this.initial.settings) {
+		for (const key in this.initial.settings) {
 			if (!Object.prototype.hasOwnProperty.call(this.initial.settings, key)) {
 				continue
 			}
 
-			let [ parent, setting ] = key.split('_')
+			const [ parent, setting ] = key.split('_')
 			if (parent === 'watermark') {
 				Vue.set(this.settings[parent], setting, this.initial.settings[key])
 			} else {
@@ -196,7 +219,7 @@ export default {
 		},
 		update() {
 			this.updating = true
-			let settings = this.settings
+			const settings = this.settings
 			axios.post(generateUrl('/apps/officeonline/settings/watermark'), { settings }).then((response) => {
 				this.updating = false
 			}).catch((error) => {
@@ -212,7 +235,7 @@ export default {
 				this.settings.use_groups = null
 			}
 			await this.updateSettings({
-				use_groups: this.settings.use_groups !== null ? this.settings.use_groups.join('|') : ''
+				use_groups: this.settings.use_groups !== null ? this.settings.use_groups.join('|') : '',
 			})
 		},
 		async updateEditGroups(enabled) {
@@ -222,7 +245,7 @@ export default {
 				this.settings.edit_groups = null
 			}
 			await this.updateSettings({
-				edit_groups: this.settings.edit_groups !== null ? this.settings.edit_groups.join('|') : ''
+				edit_groups: this.settings.edit_groups !== null ? this.settings.edit_groups.join('|') : '',
 			})
 		},
 		async updateCanonicalWebroot(canonicalWebroot) {
@@ -231,7 +254,7 @@ export default {
 				return
 			}
 			await this.updateSettings({
-				canonical_webroot: this.settings.canonical_webroot
+				canonical_webroot: this.settings.canonical_webroot,
 			})
 		},
 		async updateExternalApps(externalApps) {
@@ -240,13 +263,13 @@ export default {
 				return
 			}
 			await this.updateSettings({
-				external_apps: this.settings.external_apps
+				external_apps: this.settings.external_apps,
 			})
 		},
 		async updateOoxml(enabled) {
 			this.settings.doc_format = enabled ? 'ooxml' : ''
 			await this.updateSettings({
-				doc_format: this.settings.doc_format
+				doc_format: this.settings.doc_format,
 			})
 		},
 		async updateServer() {
@@ -254,7 +277,7 @@ export default {
 			try {
 				await this.updateSettings({
 					wopi_url: this.settings.wopi_url,
-					disable_certificate_verification: this.settings.disable_certificate_verification
+					disable_certificate_verification: this.settings.disable_certificate_verification,
 				})
 				this.serverError = SERVER_STATE_OK
 			} catch (e) {
@@ -302,8 +325,8 @@ export default {
 			this.settings.wopi_url = this.settings.CODEUrl
 			this.settings.disable_certificate_verification = false
 			await this.updateServer()
-		}
-	}
+		},
+	},
 }
 </script>
 
@@ -311,6 +334,7 @@ export default {
 	p {
 		margin-bottom: 15px;
 	}
+
 	p.checkbox-details {
 		margin-left: 25px;
 		margin-top: -10px;

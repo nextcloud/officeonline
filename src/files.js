@@ -33,7 +33,7 @@ const NewFilePlugin = {
 			fileType: 'x-office-document',
 			actionHandler: function(filename) {
 				self._createDocument(document.mime, filename)
-			}
+			},
 		})
 
 		newFileMenu.addMenuEntry({
@@ -44,7 +44,7 @@ const NewFilePlugin = {
 			fileType: 'x-office-spreadsheet',
 			actionHandler: function(filename) {
 				self._createDocument(spreadsheet.mime, filename)
-			}
+			},
 		})
 
 		newFileMenu.addMenuEntry({
@@ -55,7 +55,7 @@ const NewFilePlugin = {
 			fileType: 'x-office-presentation',
 			actionHandler: function(filename) {
 				self._createDocument(presentation.mime, filename)
-			}
+			},
 		})
 	},
 
@@ -86,20 +86,20 @@ const NewFilePlugin = {
 				window.OC.dialogs.alert(data.data.message, t('core', 'Could not create file'))
 			}
 		})
-	}
+	},
 }
 
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', () => {
 	// PUBLIC SHARE LINK HANDLING
 	const isPublic = document.getElementById('isPublic') ? document.getElementById('isPublic').value === '1' : false
 	const mimetype = document.getElementById('mimetype').value
 	const isSupportedMime = isPublic
 		&& getCapabilities().officeonline.supportedMimes.indexOf(mimetype) !== -1
-		&& getCapabilities().officeonline.mimetypesNoDefaultOpen.indexOf($('#mimetype').val()) === -1
+		&& getCapabilities().officeonline.mimetypesNoDefaultOpen.indexOf(mimetype) === -1
 	if (isSupportedMime) {
 		/* eslint-disable-next-line no-new */
 		new Vue({
-			render: h => h(Office, { props: { fileName: document.getElementById('filename').value } })
+			render: h => h(Office, { props: { fileName: document.getElementById('filename').value } }),
 		}).$mount('#imgframe')
 	}
 	// new file menu
