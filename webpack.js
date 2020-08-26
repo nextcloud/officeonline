@@ -37,6 +37,6 @@ const config = {
 		extensions: ['*', '.js', '.vue', '.json', '.tsx']
 	},
 }
-
-module.exports = merge(webpackConfig, config)
-
+const mergedConfig = merge(webpackConfig, config)
+delete mergedConfig.entry.main
+module.exports = mergedConfig
