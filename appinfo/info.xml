@@ -17,10 +17,9 @@
 	</documentation>
 	<category>office</category>
 	<category>integration</category>
-	<website>https://collaboraoffice.com/</website>
 	<bugs>https://github.com/nextcloud/officeonline/issues</bugs>
 	<repository type="git">https://github.com/nextcloud/officeonline.git</repository>
-	<screenshot>https://www.collaboraoffice.com/nextcloud/co/collabora-online-screenshot-2.png</screenshot>
+	<screenshot>https://github.com/nextcloud-gmbh/officeonline/raw/officeonline/screenshot.png</screenshot>
 	<dependencies>
 		<nextcloud min-version="18" max-version="20" />
 	</dependencies>
