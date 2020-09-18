@@ -95,7 +95,7 @@ class Version1000Date20200826201000 extends SimpleMigrationStep {
 				'length' => 64
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addUniqueIndex(['token'], 'rd_wopi_token_idx');
+			$table->addUniqueIndex(['token'], 'oon_wopi_token_idx');
 		}
 
 		if (!$schema->hasTable('officeonline_assets')) {
@@ -154,8 +154,8 @@ class Version1000Date20200826201000 extends SimpleMigrationStep {
 				'length' => 1024,
 			]);
 			$table->setPrimaryKey(['id']);
-			$table->addIndex(['valid_by'], 'officeonline_locks_valid_by');
-			$table->addUniqueIndex(['file_id'], 'officeonline_locks_file_id');
+			$table->addIndex(['valid_by'], 'oon_locks_valid_by');
+			$table->addUniqueIndex(['file_id'], 'oon_locks_file_id');
 		}
 
 		return $schema;
