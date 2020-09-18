@@ -98,15 +98,15 @@ class Parser {
 		$actionName = $edit ? 'edit' : 'view';
 		$discoveryParsed = $this->getParsed();
 		$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-https\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), $actionName));
-		if (!$result || count($result) == 0) {
+		if (!$result || count($result) === 0) {
 			$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-https\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), 'view'));
 		}
 
 		if ($this->request->getServerProtocol() === 'http') {
-			if (!$result || count($result) == 0) {
+			if (!$result || count($result) === 0) {
 				$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-http\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), $actionName));
 			}
-			if (!$result || count($result) == 0) {
+			if (!$result || count($result) === 0) {
 				$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-http\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), 'view'));
 			}
 		}
