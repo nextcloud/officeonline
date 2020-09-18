@@ -21,7 +21,7 @@
 	<repository type="git">https://github.com/nextcloud/officeonline.git</repository>
 	<screenshot>https://github.com/nextcloud/officeonline/raw/master/screenshot.png</screenshot>
 	<dependencies>
-		<nextcloud min-version="18" max-version="20" />
+		<nextcloud min-version="18" max-version="21" />
 	</dependencies>
 	<settings>
 		<admin>OCA\Officeonline\Settings\Admin</admin>
