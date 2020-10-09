@@ -44,7 +44,7 @@
 		"@babel/polyfill": "^7.11.5",
 		"@babel/preset-env": "^7.11.5",
 		"@nextcloud/eslint-config": "^2.0.0",
-		"@nextcloud/eslint-plugin": "^1.4.0",
+		"@nextcloud/eslint-plugin": "^1.5.0",
 		"@nextcloud/initial-state": "^1.1.2",
 		"@nextcloud/webpack-vue-config": "^1.4.1",
 		"@vue/test-utils": "^1.1.0",
