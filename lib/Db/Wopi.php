@@ -154,5 +154,4 @@ class Wopi extends Entity {
 	public function getDirect() {
 		return (bool)$this->direct;
 	}
-
 }
