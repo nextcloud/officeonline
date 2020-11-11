@@ -142,4 +142,17 @@ class Wopi extends Entity {
 		}
 		return $this->isGuest() ? $this->getOwnerUid() : $this->getEditorUid();
 	}
+
+	public function getCanwrite() {
+		return (bool)$this->canwrite;
+	}
+
+	public function getHideDownload() {
+		return (bool)$this->hideDownload;
+	}
+
+	public function getDirect() {
+		return (bool)$this->direct;
+	}
+
 }
