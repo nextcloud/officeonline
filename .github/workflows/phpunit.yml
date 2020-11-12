@@ -63,7 +63,7 @@ jobs:
 
       - name: PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
-        run: ./vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml
+        run: phpunit -c tests/phpunit.xml
 
   mysql:
     runs-on: ubuntu-latest
@@ -129,7 +129,7 @@ jobs:
 
       - name: PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
-        run: ./vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml
+        run: phpunit -c tests/phpunit.xml
 
   pgsql:
     runs-on: ubuntu-latest
@@ -197,7 +197,7 @@ jobs:
 
       - name: PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
-        run: ./vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml
+        run: phpunit -c tests/phpunit.xml
 
   oci:
     runs-on: ubuntu-latest
@@ -259,4 +259,4 @@ jobs:
 
       - name: PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
-        run: ./vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml
+        run: phpunit -c tests/phpunit.xml
