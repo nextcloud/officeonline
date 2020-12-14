@@ -73,7 +73,7 @@ const NewFilePlugin = {
 		const isPublic = document.getElementById('isPublic') ? document.getElementById('isPublic').value === '1' : false
 		if (isPublic) {
 			return window.FileList.createFile(filename).then(function() {
-				OCA.Viewer.open(path)
+				OCA.Viewer.open(path.replace(/&/g, '%26'))
 			})
 		}
 

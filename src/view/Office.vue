@@ -112,6 +112,7 @@ export default {
 			const sharingToken = document.getElementById('sharingToken')
 			const dir = document.getElementById('dir')
 			let documentUrl = ''
+			this.filename = this.filename.replace(/&/g, '%26')
 			if (sharingToken && dir.value === '') {
 				documentUrl = getDocumentUrlForPublicFile(this.filename)
 			} else if (sharingToken) {
