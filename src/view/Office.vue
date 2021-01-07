@@ -115,9 +115,9 @@ export default {
 			if (sharingToken && dir.value === '') {
 				documentUrl = getDocumentUrlForPublicFile(this.filename)
 			} else if (sharingToken) {
-				documentUrl = getDocumentUrlForPublicFile(this.filename, this.fileid) + '&path=' + this.filename
+				documentUrl = getDocumentUrlForPublicFile(this.filename, this.fileid) + '&path=' + encodeURIComponent(this.filename)
 			} else {
-				documentUrl = getDocumentUrlForFile(this.filename, this.fileid) + '&path=' + this.filename
+				documentUrl = getDocumentUrlForFile(this.filename, this.fileid) + '&path=' + encodeURIComponent(this.filename)
 			}
 			this.$emit('update:loaded', true)
 			this.src = documentUrl

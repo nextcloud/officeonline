@@ -58,7 +58,7 @@ const getDocumentUrlFromTemplate = (templateId, fileName, fileDir, fillWithTempl
 		{
 			templateId: templateId,
 			fileName: fileName,
-			dir: fileDir,
+			dir: encodeURIComponent(fileDir),
 			requesttoken: OC.requestToken,
 		}
 	)
@@ -69,7 +69,7 @@ const getDocumentUrlForPublicFile = (fileName, fileId) => {
 		'apps/officeonline/public?shareToken={shareToken}&fileName={fileName}&requesttoken={requesttoken}&fileId={fileId}',
 		{
 			shareToken: document.getElementById('sharingToken').value,
-			fileName: fileName,
+			fileName: encodeURIComponent(fileName),
 			fileId: fileId,
 			requesttoken: OC.requestToken,
 		}
