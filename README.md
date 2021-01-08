@@ -16,7 +16,7 @@ npm run dev
 
 ### Server
 
-You will need an working Office Online server.
+You will need an working on-premise Office Online server which has added the Nextcloud server as a trusted host for WOPI. The cloud-based Office 365 is not supported.
 
 ## Support
 
