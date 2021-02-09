@@ -6,7 +6,7 @@ php:
 #  - 7.4
 env:
   global:
-    - "CORE_BRANCH=master"
+    - "CORE_BRANCH=stable21"
     - "APP_NAME=officeonline"
   matrix:
     - "DB=mysql TEST=lint"
