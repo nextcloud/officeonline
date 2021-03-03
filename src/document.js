@@ -353,8 +353,6 @@ const documentsMain = {
 						}
 						if (msgId === 'UI_Close') {
 							callMobileMessage('close')
-						} else if (msgId === 'UI_InsertGraphic') {
-							callMobileMessage('insertGraphic')
 						} else if (msgId === 'UI_Share') {
 							callMobileMessage('share')
 						}

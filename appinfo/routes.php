@@ -52,10 +52,6 @@ return [
 		['name' => 'settings#getSettings', 'url' => 'ajax/settings.php', 'verb' => 'GET'],
 		['name' => 'settings#checkSettings', 'url' => 'settings/check', 'verb' => 'GET'],
 
-		//assets
-		['name' => 'assets#create', 'url' => 'assets', 'verb' => 'POST'],
-		['name' => 'assets#get', 'url' => 'assets/{token}', 'verb' => 'GET'],
-
 		// templates
 		['name' => 'templates#getPreview', 'url' => '/template/preview/{fileId}', 'verb' => 'GET'],
 		['name' => 'templates#add', 'url' => '/template', 'verb' => 'POST'],
