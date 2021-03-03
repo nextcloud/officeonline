@@ -114,7 +114,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: phpunit:8.5.2
-          extensions: mbstring, iconv, fileinfo, intl, mysql, pdo_mysql
+          extensions: mbstring, iconv, fileinfo, intl, mysql, pdo_mysql, gd, zip
           coverage: none
 
       - name: Set up PHPUnit
