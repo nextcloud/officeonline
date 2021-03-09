@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.3
+
+* [#111](https://github.com/nextcloud/officeonline/pull/111) Remove asset handling since Office Online does not support it
+* Bump dependencies
+
 ## 1.0.2
 
 * [#59](https://github.com/nextcloud/officeonline/pull/59) Do not generate random parts that exceet 8bit values @juliushaertl
