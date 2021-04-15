@@ -21,7 +21,7 @@
  */
 
 import { getRootUrl } from '@nextcloud/router'
-import { languageToBCP47 } from './index'
+import { getLocale } from '@nextcloud/l10n'
 import Config from './../services/config'
 
 const getSearchParam = (name) => {
@@ -46,7 +46,7 @@ const getWopiUrl = ({ fileId, title, readOnly, closeButton, revisionHistory }) =
 	return Config.get('urlsrc')
 		+ 'WOPISrc=' + wopisrc
 		+ '&title=' + encodeURIComponent(title)
-		+ '&lang=' + languageToBCP47()
+		+ '&ui=' + getLocale().replace(/_/g, '-')
 		+ (closeButton ? '&closebutton=1' : '')
 		+ (revisionHistory ? '&revisionhistory=1' : '')
 		+ (readOnly ? '&permission=readonly' : '')
