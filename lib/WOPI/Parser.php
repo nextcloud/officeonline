@@ -176,9 +176,13 @@ class Parser {
 			return $this->parsed;
 		}
 		$discovery = $this->discoveryManager->get();
-		$loadEntities = libxml_disable_entity_loader(true);
-		$discoveryParsed = simplexml_load_string($discovery);
-		libxml_disable_entity_loader($loadEntities);
+		if (\PHP_VERSION_ID < 80000) {
+			$loadEntities = libxml_disable_entity_loader(true);
+			$discoveryParsed = simplexml_load_string($discovery);
+			libxml_disable_entity_loader($loadEntities);
+		} else {
+			$discoveryParsed = simplexml_load_string($discovery);
+		}
 		$this->parsed = $discoveryParsed;
 		return $discoveryParsed;
 	}
