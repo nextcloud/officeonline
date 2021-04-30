@@ -23,28 +23,127 @@ namespace OCA\Officeonline\WOPI;
 
 use Exception;
 use OCP\Files\File;
+use OCP\IL10N;
 use OCP\IRequest;
 use SimpleXMLElement;
 
 class Parser {
 
+	// https://wopi.readthedocs.io/en/latest/faq/languages.html
+	public const SUPPORTED_LANGUAGES = [
+		'af-ZA',
+		'am-ET',
+		'ar-SA',
+		'as-IN',
+		'az-Latn-AZ',
+		'be-BY',
+		'bg-BG',
+		'bn-BD',
+		'bn-IN',
+		'bs-Latn-BA',
+		'ca-ES',
+		'ca-ES-valencia',
+		'chr-Cher-US',
+		'cs-CZ',
+		'cy-GB',
+		'da-DK',
+		'de-DE',
+		'el-GR',
+		'en-gb',
+		'en-US',
+		'es-ES',
+		'es-mx',
+		'et-EE',
+		'eu-ES',
+		'fa-IR',
+		'fi-FI',
+		'fil-PH',
+		'fr-ca',
+		'fr-FR',
+		'ga-IE',
+		'gd-GB',
+		'gl-ES',
+		'gu-IN',
+		'ha-Latn-NG',
+		'he-IL',
+		'hi-IN',
+		'hr-HR',
+		'hu-HU',
+		'hy-AM',
+		'id-ID',
+		'is-IS',
+		'it-IT',
+		'ja-JP',
+		'ka-GE',
+		'kk-KZ',
+		'km-KH',
+		'kn-IN',
+		'kok-IN',
+		'ko-KR',
+		'ky-KG',
+		'lb-LU',
+		'lo-la',
+		'lt-LT',
+		'lv-LV',
+		'mi-NZ',
+		'mk-MK',
+		'ml-IN',
+		'mn-MN',
+		'mr-IN',
+		'ms-MY',
+		'mt-MT',
+		'nb-NO',
+		'ne-NP',
+		'nl-NL',
+		'nn-NO',
+		'or-IN',
+		'pa-IN',
+		'pl-PL',
+		'prs-AF',
+		'pt-BR',
+		'pt-PT',
+		'quz-PE',
+		'ro-Ro',
+		'ru-Ru',
+		'sd-Arab-PK',
+		'si-LK',
+		'sk-SK',
+		'sl-SI',
+		'sq-AL',
+		'sr-Cyrl-BA',
+		'sr-Cyrl-RS',
+		'sr-Latn-RS',
+		'sv-SE',
+		'sw-KE',
+		'ta-IN',
+		'te-IN',
+		'th-TH',
+		'tk-TM',
+		'tr-TR',
+		'tt-RU',
+		'ug-CN',
+		'uk-UA',
+		'ur-PK',
+		'uz-Latn-UZ',
+		'vi-VN',
+		'zh-CN',
+		'zh-TW'
+	];
+
 	/** @var DiscoveryManager */
 	private $discoveryManager;
+	/** @var IRequest */
+	private $request;
+	/** @var IL10N */
+	private $l10n;
 
 	/** @var SimpleXMLElement */
 	private $parsed;
-	/**
-	 * @var IRequest
-	 */
-	private $request;
 
-	/**
-	 * @param DiscoveryManager $discoveryManager
-	 * @param IRequest $request
-	 */
-	public function __construct(DiscoveryManager $discoveryManager, IRequest $request) {
+	public function __construct(DiscoveryManager $discoveryManager, IRequest $request, IL10N $l10n) {
 		$this->discoveryManager = $discoveryManager;
 		$this->request = $request;
+		$this->l10n = $l10n;
 	}
 
 	/**
@@ -57,8 +156,10 @@ class Parser {
 
 		$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone/app[@name=\'%s\']/action', $mimetype));
 		if ($result && count($result) > 0) {
+			$urlSrc = $result[0]['urlsrc'];
+			$urlSrc = preg_replace('/<ui=UI_LLCC&>/', 'ui=' . $this->getLanguageCode() . '&', $urlSrc);
 			return [
-				'urlsrc' => (string)$result[0]['urlsrc'],
+				'urlsrc' => preg_replace('/<.+>/', '', $urlSrc),
 				'action' => (string)$result[0]['name'],
 			];
 		}
@@ -111,11 +212,46 @@ class Parser {
 			}
 		}
 		if ($result && count($result) > 0) {
+			$urlSrc = $result[0]['urlsrc'];
+			$urlSrc = preg_replace('/<ui=UI_LLCC&>/', 'ui=' . $this->getLanguageCode() . '&', $urlSrc);
 			return [
-				'urlsrc' => preg_replace('/<.+>/', '', $result[0]['urlsrc']),
+				'urlsrc' => preg_replace('/<.+>/', '', $urlSrc),
 				'action' => (string)$result[0]['name'],
 			];
 		}
 		throw new Exception('Could not find urlsrc in WOPI');
+	}
+
+	private function getLanguageCode(): string {
+		$languageCode = $this->l10n->getLanguageCode();
+		$localeCode = $this->l10n->getLocaleCode();
+		$splitLocale = explode('_', $localeCode);
+		if (count($splitLocale) > 1) {
+			$localeCode = $splitLocale[1];
+		}
+
+		$languageMatches = array_filter(self::SUPPORTED_LANGUAGES, function ($language) use ($languageCode, $localeCode) {
+			return stripos($language, $languageCode) === 0;
+		});
+
+		// Unique match on the language
+		if (count($languageMatches) === 1) {
+			return array_shift($languageMatches);
+		}
+		$localeMatches = array_filter($languageMatches, function ($language) use ($languageCode, $localeCode) {
+			return stripos($language, $languageCode . '-' . $localeCode) === 0;
+		});
+
+		// Matches with language and locale with region
+		if (count($localeMatches) >= 1) {
+			return array_shift($localeMatches);
+		}
+
+		// Fallback to first language match if multiple found and no fitting region is available
+		if (count($languageMatches) > 1) {
+			return array_shift($languageMatches);
+		}
+
+		return 'en-US';
 	}
 }
