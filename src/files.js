@@ -73,7 +73,7 @@ const NewFilePlugin = {
 		const isPublic = document.getElementById('isPublic') ? document.getElementById('isPublic').value === '1' : false
 		if (isPublic) {
 			return window.FileList.createFile(filename).then(function() {
-				OCA.Viewer.open(path)
+				OCA.Viewer.open({ path })
 			})
 		}
 
@@ -81,7 +81,7 @@ const NewFilePlugin = {
 			console.debug(data)
 			if (data && data.status === 'success') {
 				window.FileList.add(data.data, { animate: true, scrollTo: true })
-				window.OCA.Viewer.open(path)
+				window.OCA.Viewer.open({ path })
 			} else {
 				window.OC.dialogs.alert(data.data.message, t('core', 'Could not create file'))
 			}
