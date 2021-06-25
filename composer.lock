@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "05a6706b04f4e609b56f6ccaf5d12731",
+    "content-hash": "aa226623afd965491d9d89b1143d5878",
     "packages": [],
     "packages-dev": [
         {
@@ -1458,20 +1458,20 @@
         },
         {
             "name": "psalm/phar",
-            "version": "3.18.2",
+            "version": "4.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psalm/phar.git",
-                "reference": "69279a55b228a07c1d3c71439880032ec1b75622"
+                "reference": "ce0856e5c28a78382d1fa4e1a11cf9aac6292231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/phar/zipball/69279a55b228a07c1d3c71439880032ec1b75622",
-                "reference": "69279a55b228a07c1d3c71439880032ec1b75622",
+                "url": "https://api.github.com/repos/psalm/phar/zipball/ce0856e5c28a78382d1fa4e1a11cf9aac6292231",
+                "reference": "ce0856e5c28a78382d1fa4e1a11cf9aac6292231",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.1 || ^8.0"
             },
             "conflict": {
                 "vimeo/psalm": "*"
@@ -1487,9 +1487,9 @@
             "description": "Composer-based Psalm Phar",
             "support": {
                 "issues": "https://github.com/psalm/phar/issues",
-                "source": "https://github.com/psalm/phar/tree/3.18.2"
+                "source": "https://github.com/psalm/phar/tree/4.8.1"
             },
-            "time": "2020-10-20T14:18:13+00:00"
+            "time": "2021-06-21T02:02:58+00:00"
         },
         {
             "name": "psr/container",
