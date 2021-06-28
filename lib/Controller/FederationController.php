@@ -50,7 +50,7 @@ class FederationController extends OCSController {
 		IManager $shareManager
 	) {
 		parent::__construct($appName, $request);
-		$this->config   = $config;
+		$this->config = $config;
 		$this->wopiMapper = $wopiMapper;
 		$this->shareManager = $shareManager;
 	}

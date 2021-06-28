@@ -37,16 +37,16 @@ class Helper {
 			$instanceId = '';
 			$version = '0';
 		} elseif (count($arr) === 2) {
-			list($fileId, $instanceId) = $arr;
+			[$fileId, $instanceId] = $arr;
 			$version = '0';
 		} elseif (count($arr) === 3) {
-			list($fileId, $instanceId, $version) = $arr;
+			[$fileId, $instanceId, $version] = $arr;
 		} else {
 			throw new \Exception('$fileId has not the expected format');
 		}
 
 		if (strpos($fileId, '-') !== false) {
-			list($fileId, $templateId) = explode('/', $fileId);
+			[$fileId, $templateId] = explode('/', $fileId);
 		}
 
 		return [

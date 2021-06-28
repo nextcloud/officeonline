@@ -107,7 +107,7 @@ class TokenManager {
 	 * @throws \Exception
 	 */
 	public function getToken($fileId, $shareToken = null, $editoruid = null, $direct = false, $isRemoteToken = false) {
-		list($fileId, , $version) = Helper::parseFileId($fileId);
+		[$fileId, , $version] = Helper::parseFileId($fileId);
 		$owneruid = null;
 		$hideDownload = false;
 		// if the user is not logged-in do use the sharers storage
@@ -274,7 +274,7 @@ class TokenManager {
 	 * @return Wopi
 	 */
 	public function getRemoteToken(Node $node) {
-		list($urlSrc, $token, $wopi) = $this->getToken($node->getId(), null, null, false, true);
+		[$urlSrc, $token, $wopi] = $this->getToken($node->getId(), null, null, false, true);
 		$wopi->setIsRemoteToken(true);
 		$wopi->setRemoteServer($node->getStorage()->getRemote());
 
@@ -287,7 +287,7 @@ class TokenManager {
 	 * @return Wopi
 	 */
 	public function getRemoteTokenFromDirect(Node $node, $editorUid) {
-		list($urlSrc, $token, $wopi) = $this->getToken($node->getId(), null, $editorUid, true, true);
+		[$urlSrc, $token, $wopi] = $this->getToken($node->getId(), null, $editorUid, true, true);
 		$wopi->setIsRemoteToken(true);
 		$wopi->setRemoteServer($node->getStorage()->getRemote());
 

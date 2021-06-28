@@ -138,14 +138,14 @@ class DocumentController extends Controller {
 					if (!($item instanceof Node)) {
 						throw new \Exception();
 					}
-					list($urlSrc, $token) = $this->tokenManager->getToken($item->getId());
+					[$urlSrc, $token] = $this->tokenManager->getToken($item->getId());
 					return [
 						'status' => 'success',
 						'urlsrc' => $urlSrc,
 						'token' => $token
 					];
 				} catch (\Exception $e) {
-					$this->logger->logException($e, ['app'=>'officeonline']);
+					$this->logger->logException($e, ['app' => 'officeonline']);
 					$params = [
 						'errors' => [['error' => $e->getMessage()]]
 					];
@@ -168,8 +168,8 @@ class DocumentController extends Controller {
 	private function domainOnly($url) {
 		$parsed_url = parse_url($url);
 		$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-		$host   = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-		$port   = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+		$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+		$port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
 		return "$scheme$host$port";
 	}
 
@@ -203,7 +203,7 @@ class DocumentController extends Controller {
 				$this->logger->warning('Failed to connect to remote collabora instance for ' . $fileId);
 			}
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'officeonline']);
+			$this->logger->logException($e, ['app' => 'officeonline']);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];
@@ -242,7 +242,7 @@ class DocumentController extends Controller {
 				return $response;
 			}
 
-			list($urlSrc, $token, $wopi) = $this->tokenManager->getToken($item->getId());
+			[$urlSrc, $token, $wopi] = $this->tokenManager->getToken($item->getId());
 			$params = [
 				'permissions' => $item->getPermissions(),
 				'title' => $item->getName(),
@@ -275,7 +275,7 @@ class DocumentController extends Controller {
 			$response->addHeader('Pragma', 'no-cache');
 			return $response;
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'officeonline']);
+			$this->logger->logException($e, ['app' => 'officeonline']);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];
@@ -317,7 +317,7 @@ class DocumentController extends Controller {
 		$file = $folder->newFile($fileName);
 
 		$template = $this->templateManager->get($templateId);
-		list($urlSrc, $wopi) = $this->tokenManager->getTokenForTemplate($template, $this->uid, $file->getId());
+		[$urlSrc, $wopi] = $this->tokenManager->getTokenForTemplate($template, $this->uid, $file->getId());
 
 		$wopiFileId = $template->getId() . '-' . $file->getId() . '_' . $this->settings->getSystemValue('instanceid');
 		$wopiFileId = $wopi->getFileid() . '_' . $this->settings->getSystemValue('instanceid');
@@ -381,7 +381,7 @@ class DocumentController extends Controller {
 				];
 
 				if ($this->uid !== null || ($share->getPermissions() & \OCP\Constants::PERMISSION_UPDATE) === 0 || $this->helper->getGuestName() !== null) {
-					list($urlSrc, $token) = $this->tokenManager->getToken($item->getId(), $shareToken, $this->uid);
+					[$urlSrc, $token] = $this->tokenManager->getToken($item->getId(), $shareToken, $this->uid);
 					$params['token'] = $token;
 					$params['urlsrc'] = $urlSrc;
 				}
@@ -394,7 +394,7 @@ class DocumentController extends Controller {
 				return $response;
 			}
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'officeonline']);
+			$this->logger->logException($e, ['app' => 'officeonline']);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];
@@ -432,7 +432,7 @@ class DocumentController extends Controller {
 			}
 
 			if ($node instanceof Node) {
-				list($urlSrc, $token, $wopi) = $this->tokenManager->getToken($node->getId(), $shareToken, $this->uid);
+				[$urlSrc, $token, $wopi] = $this->tokenManager->getToken($node->getId(), $shareToken, $this->uid);
 
 				$remoteWopi = $this->federationService->getRemoteFileDetails($remoteServer, $remoteServerToken);
 				$this->tokenManager->updateToRemoteToken($wopi, $shareToken, $remoteServer, $remoteServerToken, $remoteWopi);
@@ -466,7 +466,7 @@ class DocumentController extends Controller {
 		} catch (ShareNotFound $e) {
 			return new TemplateResponse('core', '404', [], 'guest');
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'officeonline']);
+			$this->logger->logException($e, ['app' => 'officeonline']);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];

@@ -42,7 +42,7 @@ class Admin implements ISettings {
 		AppConfig $appConfig,
 		TemplateManager $manager
 	) {
-		$this->config  = $config;
+		$this->config = $config;
 		$this->appConfig = $appConfig;
 		$this->manager = $manager;
 	}
@@ -53,12 +53,12 @@ class Admin implements ISettings {
 			'admin',
 			[
 				'settings' => [
-					'wopi_url'           => $this->config->getAppValue('officeonline', 'wopi_url'),
-					'edit_groups'        => $this->config->getAppValue('officeonline', 'edit_groups'),
-					'use_groups'         => $this->config->getAppValue('officeonline', 'use_groups'),
-					'doc_format'         => $this->config->getAppValue('officeonline', 'doc_format', 'ooxml'),
-					'external_apps'      => $this->config->getAppValue('officeonline', 'external_apps'),
-					'canonical_webroot'  => $this->config->getAppValue('officeonline', 'canonical_webroot'),
+					'wopi_url' => $this->config->getAppValue('officeonline', 'wopi_url'),
+					'edit_groups' => $this->config->getAppValue('officeonline', 'edit_groups'),
+					'use_groups' => $this->config->getAppValue('officeonline', 'use_groups'),
+					'doc_format' => $this->config->getAppValue('officeonline', 'doc_format', 'ooxml'),
+					'external_apps' => $this->config->getAppValue('officeonline', 'external_apps'),
+					'canonical_webroot' => $this->config->getAppValue('officeonline', 'canonical_webroot'),
 					'disable_certificate_verification' => $this->config->getAppValue('officeonline', 'disable_certificate_verification', '') === 'yes',
 					'templatesAvailable' => false,
 					'settings' => $this->appConfig->getAppSettings(),
