@@ -35,7 +35,7 @@ class WopiLockMapper extends QBMapper {
 	 * @param int $offset
 	 * @return array|WopiLock[]
 	 */
-	public function findOld($validBy, $limit=null, $offset=null) {
+	public function findOld($validBy, $limit = null, $offset = null) {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')

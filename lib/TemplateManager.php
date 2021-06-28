@@ -75,20 +75,20 @@ class TemplateManager {
 
 	/** @var array Template mime types match */
 	public static $tplTypes = [
-		'document'     => self::MIMES_DOCUMENTS,
-		'spreadsheet'  => self::MIMES_SHEETS,
+		'document' => self::MIMES_DOCUMENTS,
+		'spreadsheet' => self::MIMES_SHEETS,
 		'presentation' => self::MIMES_PRESENTATIONS
 	];
 
 	public const TYPE_EXTENTION = [
-		'document'     => 'odt',
-		'spreadsheet'  => 'ods',
+		'document' => 'odt',
+		'spreadsheet' => 'ods',
 		'presentation' => 'odp'
 	];
 
 	public const TYPE_EXTENSION_OOXML = [
-		'document'     => 'docx',
-		'spreadsheet'  => 'xlsx',
+		'document' => 'docx',
+		'spreadsheet' => 'xlsx',
 		'presentation' => 'pptx'
 	];
 
@@ -98,8 +98,8 @@ class TemplateManager {
 		-3 => 'presentation',
 	];
 	public const EMPTY_TEMPLATE_TYPE_ID = [
-		'document'     => -1,
-		'spreadsheet'  => -2,
+		'document' => -1,
+		'spreadsheet' => -2,
 		'presentation' => -3,
 	];
 
@@ -123,11 +123,11 @@ class TemplateManager {
 								IURLGenerator $urlGenerator,
 								IRootFolder $rootFolder,
 								IL10N $l) {
-		$this->appName        = $appName;
-		$this->userId         = $userId;
-		$this->config         = $config;
-		$this->rootFolder     = $rootFolder;
-		$this->urlGenerator   = $urlGenerator;
+		$this->appName = $appName;
+		$this->userId = $userId;
+		$this->config = $config;
+		$this->rootFolder = $rootFolder;
+		$this->urlGenerator = $urlGenerator;
 
 
 		$this->appData = $appData;
@@ -280,7 +280,7 @@ class TemplateManager {
 	 */
 	public function getUser($type = null) {
 		try {
-			$templateDir   = $this->getUserTemplateDir();
+			$templateDir = $this->getUserTemplateDir();
 			$templateFiles = $templateDir->getDirectoryListing();
 
 			return $this->filterTemplates($templateFiles, $type);
@@ -307,7 +307,7 @@ class TemplateManager {
 	 */
 	public function getAll($type = 'document') {
 		$system = $this->getSystem();
-		$user   = $this->getUser();
+		$user = $this->getUser();
 
 		if (!array_key_exists($type, self::$tplTypes)) {
 			return [];
@@ -329,7 +329,7 @@ class TemplateManager {
 		}
 
 		$system = $this->getSystemFormatted($type);
-		$user   = $this->getUserFormatted($type);
+		$user = $this->getUserFormatted($type);
 
 		return array_merge($system, $user);
 	}
@@ -448,11 +448,11 @@ class TemplateManager {
 		$ooxml = $this->config->getAppValue($this->appName, 'doc_format', 'ooxml') === 'ooxml';
 		$documentType = $this->flipTypes()[$template->getMimeType()];
 		return [
-			'id'        => $template->getId(),
-			'name'      => $template->getName(),
-			'preview'   => $this->urlGenerator->linkToRouteAbsolute('officeonline.templates.getPreview', ['fileId' => $template->getId()]),
-			'type'      => $this->flipTypes()[$template->getMimeType()],
-			'delete'    => $this->urlGenerator->linkToRouteAbsolute('officeonline.templates.delete', ['fileId' => $template->getId()]),
+			'id' => $template->getId(),
+			'name' => $template->getName(),
+			'preview' => $this->urlGenerator->linkToRouteAbsolute('officeonline.templates.getPreview', ['fileId' => $template->getId()]),
+			'type' => $this->flipTypes()[$template->getMimeType()],
+			'delete' => $this->urlGenerator->linkToRouteAbsolute('officeonline.templates.delete', ['fileId' => $template->getId()]),
 			'extension' => $ooxml ? self::TYPE_EXTENSION_OOXML[$documentType] : self::TYPE_EXTENTION[$documentType],
 		];
 	}
@@ -477,9 +477,9 @@ class TemplateManager {
 		$ooxml = $this->config->getAppValue($this->appName, 'doc_format', 'ooxml') === 'ooxml';
 		$documentType = $this->flipTypes()[$template->getMimeType()];
 		return [
-			'id'        => $template->getId(),
-			'name'      => $this->l->t('Empty'),
-			'type'      => $this->flipTypes()[$template->getMimeType()],
+			'id' => $template->getId(),
+			'name' => $this->l->t('Empty'),
+			'type' => $this->flipTypes()[$template->getMimeType()],
 			'extension' => $ooxml ? self::TYPE_EXTENSION_OOXML[$documentType] : self::TYPE_EXTENTION[$documentType],
 		];
 	}

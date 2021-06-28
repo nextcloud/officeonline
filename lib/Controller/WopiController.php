@@ -163,7 +163,7 @@ class WopiController extends Controller {
 	 */
 	public function checkFileInfo($fileId, $access_token) {
 		try {
-			list($fileId, , $version) = Helper::parseFileId($fileId);
+			[$fileId, , $version] = Helper::parseFileId($fileId);
 
 			$wopi = $this->wopiMapper->getWopiForToken($access_token);
 			if (empty($wopi)) {
@@ -274,7 +274,7 @@ class WopiController extends Controller {
 	 */
 	public function getFile($fileId,
 							$access_token) {
-		list($fileId, , $version) = Helper::parseFileId($fileId);
+		[$fileId, , $version] = Helper::parseFileId($fileId);
 
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
 
@@ -332,7 +332,7 @@ class WopiController extends Controller {
 	 * @throws NotFoundException
 	 */
 	public function lock($fileId, $access_token) {
-		list($fileId, ,) = Helper::parseFileId($fileId);
+		[$fileId, ,] = Helper::parseFileId($fileId);
 		$token = $this->wopiMapper->getWopiForToken($access_token);
 		if (empty($token)) {
 			return new DataResponse([], Http::STATUS_UNAUTHORIZED);
@@ -381,7 +381,7 @@ class WopiController extends Controller {
 					$newLock = new WopiLock();
 					$newLock->setId(Helper::getGuid());
 					$newLock->setUserId($token->getEditorUid() ?? $token->getOwnerUid());
-					$newLock->setValidBy($this->timeFactory->getTime() + (60*30));
+					$newLock->setValidBy($this->timeFactory->getTime() + (60 * 30));
 					$newLock->setValue($lck);
 					$newLock->setFileId($fileId);
 					$newLock->setTokenId($token->getId());
@@ -402,7 +402,7 @@ class WopiController extends Controller {
 						$result->addHeader('X-WOPI-Lock', $fLock->getValue());
 						break;
 					}
-					$fLock->setValidBy($this->timeFactory->getTime() + 60*30);
+					$fLock->setValidBy($this->timeFactory->getTime() + 60 * 30);
 					$this->lockMapper->update($fLock);
 					$result->setStatus(Http::STATUS_OK);
 					break;
@@ -446,7 +446,7 @@ class WopiController extends Controller {
 	 */
 	public function putFile($fileId,
 							$access_token) {
-		list($fileId, ,) = Helper::parseFileId($fileId);
+		[$fileId, ,] = Helper::parseFileId($fileId);
 		$isPutRelative = ($this->request->getHeader('X-WOPI-Override') === 'PUT_RELATIVE');
 		$isRenameFile = ($this->request->getHeader('X-WOPI-Override') === 'RENAME_FILE');
 
@@ -524,7 +524,7 @@ class WopiController extends Controller {
 			if ($isPutRelative) {
 				// generate a token for the new file (the user still has to be
 				// logged in)
-				list(, $wopiToken) = $this->tokenManager->getToken($file->getId(), null, $wopi->getEditorUid());
+				[, $wopiToken] = $this->tokenManager->getToken($file->getId(), null, $wopi->getEditorUid());
 
 				$wopi = 'index.php/apps/officeonline/wopi/files/' . $file->getId() . '_' . $this->config->getSystemValue('instanceid') . '?access_token=' . $wopiToken;
 				$url = $this->urlGenerator->getAbsoluteURL($wopi);
@@ -563,7 +563,7 @@ class WopiController extends Controller {
 		if (!($wover === 'PUT_RELATIVE' || $wover === 'RENAME_FILE')) {
 			return $this->lock($fileId, $access_token);
 		}
-		list($fileId, ,) = Helper::parseFileId($fileId);
+		[$fileId, ,] = Helper::parseFileId($fileId);
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
 
 		if (empty($wopi) || !$wopi->getCanwrite()) {
@@ -693,7 +693,7 @@ class WopiController extends Controller {
 
 			// generate a token for the new file (the user still has to be
 			// logged in)
-			list(, $wopiToken) = $this->tokenManager->getToken($file->getId(), null, $wopi->getEditorUid());
+			[, $wopiToken] = $this->tokenManager->getToken($file->getId(), null, $wopi->getEditorUid());
 
 			$wopi = 'index.php/apps/officeonline/wopi/files/' . $file->getId() . '_' . $this->config->getSystemValue('instanceid') . '?access_token=' . $wopiToken;
 			$url = $this->urlGenerator->getAbsoluteURL($wopi);

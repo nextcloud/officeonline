@@ -37,7 +37,7 @@ class FeatureContext implements Context {
 
 		$client = new Client();
 		$result = $client->get($this->baseUrl . 'index.php/apps/officeonline/index?fileId=' . $fileId, $this->getWebOptions());
-		$contents =$result->getBody()->getContents();
+		$contents = $result->getBody()->getContents();
 		$re = '/var officeonline_([A-z]+) = (.*);/m';
 		preg_match_all($re, $contents, $matches, PREG_SET_ORDER, 0);
 		$result = [];
@@ -64,7 +64,7 @@ class FeatureContext implements Context {
 		// 	public function publicPage($shareToken, $fileName, $fileId) {
 		$client = new Client();
 		$result = $client->get($this->baseUrl . 'index.php/apps/officeonline/public?shareToken=' . $token, $this->getWebOptions());
-		$contents =$result->getBody()->getContents();
+		$contents = $result->getBody()->getContents();
 		$re = '/var officeonline_([A-z]+) = (.*);/m';
 		preg_match_all($re, $contents, $matches, PREG_SET_ORDER, 0);
 		$result = [];

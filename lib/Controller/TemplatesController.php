@@ -71,7 +71,7 @@ class TemplatesController extends Controller {
 
 		$this->appName = $appName;
 		$this->request = $request;
-		$this->l10n    = $l10n;
+		$this->l10n = $l10n;
 		$this->manager = $manager;
 		$this->preview = $preview;
 	}
@@ -208,7 +208,7 @@ class TemplatesController extends Controller {
 		}
 
 		try {
-			$f        = $this->preview->getPreview($node, $x, $y, !$a, $mode);
+			$f = $this->preview->getPreview($node, $x, $y, !$a, $mode);
 			$response = new FileDisplayResponse($f, Http::STATUS_OK, ['Content-Type' => $f->getMimeType()]);
 			$response->cacheFor(3600 * 24);
 

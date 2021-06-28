@@ -77,11 +77,11 @@ class OCSController extends \OCP\AppFramework\OCSController {
 	) {
 		parent::__construct($appName, $request);
 
-		$this->rootFolder   = $rootFolder;
-		$this->userId       = $userId;
+		$this->rootFolder = $rootFolder;
+		$this->userId = $userId;
 		$this->directMapper = $directMapper;
 		$this->urlGenerator = $urlGenerator;
-		$this->manager      = $manager;
+		$this->manager = $manager;
 		$this->federationService = $federationService;
 	}
 
@@ -97,7 +97,7 @@ class OCSController extends \OCP\AppFramework\OCSController {
 	public function create($fileId) {
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($this->userId);
-			$nodes      = $userFolder->getById($fileId);
+			$nodes = $userFolder->getById($fileId);
 
 			if ($nodes === []) {
 				throw new OCSNotFoundException();
