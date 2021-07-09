@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0
+
+* [#143](https://github.com/nextcloud/officeonline/pull/143) Fix opening files when groupfolder ACL has revoked share permissions @juliushaertl
+* [#148](https://github.com/nextcloud/officeonline/pull/148) Set UI language parameter in the backend @juliushaertl
+* [#160](https://github.com/nextcloud/officeonline/pull/160) Use new viewer syntax with destructuring object @azul
+
 ## 1.0.3
 
 * [#111](https://github.com/nextcloud/officeonline/pull/111) Remove asset handling since Office Online does not support it
