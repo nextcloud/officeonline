@@ -17,6 +17,8 @@ use \OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\NotFoundResponse;
+use OCP\ILogger;
 use \OCP\IRequest;
 use \OCP\IL10N;
 use OCA\Officeonline\AppConfig;
@@ -29,17 +31,21 @@ class SettingsController extends Controller {
 	private $appConfig;
 	/** @var DiscoveryManager  */
 	private $discoveryManager;
+	/** @var ILogger */
+	private $logger;
 
 	public function __construct($appName,
 		IRequest $request,
 		IL10N $l10n,
 		AppConfig $appConfig,
-		DiscoveryManager $discoveryManager
+		DiscoveryManager $discoveryManager,
+		ILogger $logger
 	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
 		$this->appConfig = $appConfig;
 		$this->discoveryManager = $discoveryManager;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -50,9 +56,10 @@ class SettingsController extends Controller {
 		try {
 			$response = $this->discoveryManager->fetchFromRemote();
 		} catch (Exception $e) {
+			$this->logger->logException($e, ['app' => 'officeonline']);
 			return new DataResponse([
 				'status' => $e->getCode(),
-				'message' => $e->getMessage()
+				'message' => 'Could not fetch discovery details'
 			], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 
