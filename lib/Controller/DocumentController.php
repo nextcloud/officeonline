@@ -146,10 +146,6 @@ class DocumentController extends Controller {
 					];
 				} catch (\Exception $e) {
 					$this->logger->logException($e, ['app' => 'officeonline']);
-					$params = [
-						'errors' => [['error' => $e->getMessage()]]
-					];
-					return new TemplateResponse('core', 'error', $params, 'guest');
 				}
 			}
 		}
@@ -276,10 +272,7 @@ class DocumentController extends Controller {
 			return $response;
 		} catch (\Exception $e) {
 			$this->logger->logException($e, ['app' => 'officeonline']);
-			$params = [
-				'errors' => [['error' => $e->getMessage()]]
-			];
-			return new TemplateResponse('core', 'error', $params, 'guest');
+			return $this->renderErrorPage('Failed to open the requested file.');
 		}
 
 		return new TemplateResponse('core', '403', [], 'guest');
@@ -395,13 +388,9 @@ class DocumentController extends Controller {
 			}
 		} catch (\Exception $e) {
 			$this->logger->logException($e, ['app' => 'officeonline']);
-			$params = [
-				'errors' => [['error' => $e->getMessage()]]
-			];
-			return new TemplateResponse('core', 'error', $params, 'guest');
 		}
 
-		return new TemplateResponse('core', '403', [], 'guest');
+		return $this->renderErrorPage('Failed to open the requested file.');
 	}
 
 	/**
@@ -467,10 +456,7 @@ class DocumentController extends Controller {
 			return new TemplateResponse('core', '404', [], 'guest');
 		} catch (\Exception $e) {
 			$this->logger->logException($e, ['app' => 'officeonline']);
-			$params = [
-				'errors' => [['error' => $e->getMessage()]]
-			];
-			return new TemplateResponse('core', 'error', $params, 'guest');
+			return $this->renderErrorPage('Failed to open the requested file.');
 		}
 
 		return new TemplateResponse('core', '403', [], 'guest');
@@ -574,5 +560,12 @@ class DocumentController extends Controller {
 			'status' => 'error',
 			'message' => $this->l10n->t('Can\'t create document')
 		]);
+	}
+
+	private function renderErrorPage($message) {
+		$params = [
+			'errors' => [['error' => $message]]
+		];
+		return new TemplateResponse('core', 'error', $params, 'guest');
 	}
 }
