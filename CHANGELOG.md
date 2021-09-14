@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.1
+
+### Fixed
+
+- #204 Unify error messages accross controllers @juliushaertl
+
+### Dependencies
+
+- #193 Bump stylelint-scss from 3.19.0 to 3.20.1 @dependabot[bot]
+- #190 Bump stylelint-config-recommended-scss from 4.2.0 to 4.3.0 @dependabot[bot]
+
+
 ## 1.1.0
 
 * [#143](https://github.com/nextcloud/officeonline/pull/143) Fix opening files when groupfolder ACL has revoked share permissions @juliushaertl
