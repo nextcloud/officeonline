@@ -2,10 +2,10 @@ kind: pipeline
 name: compatibility
 steps:
   - name: compatibility
-    image: nextcloudci/php7.0:php7.0-19
+    image: nextcloudci/php7.4:latest
     environment:
       APP_NAME: officeonline
-      CORE_BRANCH: stable15
+      CORE_BRANCH: stable22
       DB: sqlite
     commands:
       - composer install
@@ -24,20 +24,8 @@ trigger:
 kind: pipeline
 name: syntax
 steps:
-  - name: syntax-php7.0
-    image: nextcloudci/php7.0:php7.0-19
-    commands:
-      - composer install
-      - find lib/ -name "*.php" -print0 | xargs -0 -n1 -P8 php -l
-      - ./vendor/bin/parallel-lint --exclude ./vendor/ .
-  - name: syntax-php7.1
-    image: nextcloudci/php7.1:php7.1-15
-    commands:
-      - composer install
-      - find lib/ -name "*.php" -print0 | xargs -0 -n1 -P8 php -l
-      - ./vendor/bin/parallel-lint --exclude ./vendor/ .
-  - name: syntax-php7.2
-    image: nextcloudci/php7.2:php7.2-9
+  - name: syntax-php7.4
+    image: nextcloudci/php7.4:latest
     commands:
       - composer install
       - find lib/ -name "*.php" -print0 | xargs -0 -n1 -P8 php -l
@@ -56,36 +44,11 @@ trigger:
     - push
 ---
 kind: pipeline
-name: frontend
-steps:
-  - name: eslint
-    image: node:lts-alpine
-    commands:
-      - npm ci
-      - npm run lint
-  - name: stylelint
-    image: node:lts-alpine
-    commands:
-      - npm ci
-      - npm run stylelint
-  - name: build
-    image: node:lts-alpine
-    commands:
-      - npm ci
-      - npm run build
-trigger:
-  branch:
-    - master
-  event:
-    - pull_request
-    - push
----
-kind: pipeline
 name: integration
 
 steps:
     - name: nextcloud
-      image: nextcloudci/php7.3:php7.3-5
+      image: nextcloudci/php7.4:latest
       environment:
           APP_NAME: officeonline
           CORE_BRANCH: master
@@ -113,19 +76,3 @@ trigger:
     event:
         - pull_request
         - push
-
----
-kind: pipeline
-name: jest
-steps:
-  - name: jest
-    image: node:lts-alpine
-    commands:
-      - npm install
-      - npm run test
-trigger:
-  branch:
-    - master
-  event:
-    - pull_request
-    - push
