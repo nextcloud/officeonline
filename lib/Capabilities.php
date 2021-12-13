@@ -64,7 +64,6 @@ class Capabilities implements ICapability {
 	];
 
 	public const MIMETYPES_OPTIONAL = [
-		'application/pdf',
 	];
 
 	/** @var IL10N */
