@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.2
+
+### Fixed
+
+- #244 Avoid opening PDF files @andyxheli
+- Update dependencies
+
+
 ## 1.1.1
 
 ### Fixed
