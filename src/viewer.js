@@ -1,3 +1,5 @@
+import '../css/filetypes.scss'
+
 import Office from './view/Office'
 import { getCapabilities } from '@nextcloud/capabilities'
 
