@@ -31,7 +31,7 @@ use OCP\Security\ISecureRandom;
 
 class WopiMapper extends Mapper {
 	// Tokens expire after this many seconds (not defined by WOPI specs).
-	public const TOKEN_LIFETIME_SECONDS = 1800;
+	public const TOKEN_LIFETIME_SECONDS = 86400;
 
 	/** @var ISecureRandom */
 	private $random;
