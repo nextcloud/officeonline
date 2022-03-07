@@ -80,7 +80,7 @@ jobs:
         server-versions: ['stable21', 'stable22', 'stable23', 'master']
         include:
           - server-versions: master
-            database: mysql
+            databases: mysql
             php-versions: 8.1
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
