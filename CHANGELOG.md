@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.3
+
+### Fixed
+
+- Fix icons in new file menu @andyxheli [#253](https://api.github.com/repos/nextcloud/officeonline/pulls/253)
+- Change Token Lifetime Limit @andyxheli [#267](https://api.github.com/repos/nextcloud/officeonline/pulls/267)
+
+
 ## 1.1.2
 
 ### Fixed
