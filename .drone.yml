@@ -57,6 +57,7 @@ steps:
           - bash ./tests/drone-server-setup.sh $APP_NAME $CORE_BRANCH $DB
           - cd ../server
           - ./occ app:enable $APP_NAME
+          - ./occ config:system:set allow_local_remote_servers --value true --type bool
           - cd apps/$APP_NAME
 
           # Run integration tests
@@ -64,7 +65,7 @@ steps:
           - bash run-integration.sh features/wopi
 services:
     - name: collabora
-      image: collabora/code:4.0.9.4
+      image: collabora/code:latest
       environment:
           extra_params: '--o:ssl.enable=false'
           domain: 'nextcloud'
