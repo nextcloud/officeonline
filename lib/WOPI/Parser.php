@@ -176,6 +176,8 @@ class Parser {
 			return $this->parsed;
 		}
 		$discovery = $this->discoveryManager->get();
+		// In PHP 8.0 and later, PHP uses libxml versions from 2.9.0, which disabled XXE by default. libxml_disable_entity_loader() is now deprecated.
+		// Ref.: https://php.watch/versions/8.0/libxml_disable_entity_loader-deprecation
 		if (\PHP_VERSION_ID < 80000) {
 			$loadEntities = libxml_disable_entity_loader(true);
 			$discoveryParsed = simplexml_load_string($discovery);
