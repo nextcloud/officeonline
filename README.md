@@ -18,9 +18,11 @@ npm run dev
 
 You will need an working on-premise Office Online server which has added the Nextcloud server as a trusted host for WOPI. The cloud-based Office 365 is not supported.
 
+- [Deploy Office Online Server](https://docs.microsoft.com/en-us/officeonlineserver/deploy-office-online-server)
+
 ## Support
 
-- [Our Forum](https://help.nextcloud.com/c/support/officeonline)
+- [Our Forum](https://help.nextcloud.com/c/apps/officeonline/173)
 
 Enterprise users who need a more reliable and scalable solution can take advantage of Nextcloud GmbH's optional support contract for Office Online integration. Find out more about Enterprise support over here: https://nextcloud.com/enterprise/
 
