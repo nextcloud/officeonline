@@ -15,7 +15,7 @@
 		"nextcloud/coding-standard": "^0.5.0",
 		"psalm/phar": "^4.8",
         "roave/security-advisories": "dev-master",
-        "christophwurst/nextcloud": "^21",
+        "christophwurst/nextcloud": "^24",
         "jakub-onderka/php-parallel-lint": "^1.0.0",
         "phpunit/phpunit": "^9",
         "nextcloud/coding-standard": "^0.5.0"
