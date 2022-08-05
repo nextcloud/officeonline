@@ -346,7 +346,7 @@ class WopiController extends Controller {
 		}
 		$lck = $this->request->getHeader('X-WOPI-Lock');
 		$wover = $this->request->getHeader('X-WOPI-Override');
-		if (strlen($lck) === 0 && $wover !== "GET_LOCK" && strpos($wover,"LOCK") !== false) {
+		if (strlen($lck) === 0 && $wover !== "GET_LOCK" && strpos($wover, "LOCK") !== false) {
 			return new DataResponse([], Http::STATUS_BAD_REQUEST);
 		}
 		$result = new DataResponse([], Http::STATUS_NOT_IMPLEMENTED);

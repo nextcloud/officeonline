@@ -1,28 +1,31 @@
 {
-    "name": "nextcloud/officeonline",
-    "authors": [
-        {
-            "name": "Julius Härtl",
-            "email": "jus@bitgrid.net"
-        }
-    ],
-    "require": {
+	"name": "nextcloud/officeonline",
+	"authors": [
+		{
+			"name": "Julius Härtl",
+			"email": "jus@bitgrid.net"
+		}
+	],
+	"config": {
+		"sort-packages": true,
+		"platform": {
+			"php": "7.3"
+		}
+	},
+	"require": {
 		"ext-json": "*",
 		"ext-pdo": "*",
 		"ext-libxml": "*"
-	},
-	"require-dev": {
-		"nextcloud/coding-standard": "^0.5.0",
-		"psalm/phar": "^4.8",
-        "roave/security-advisories": "dev-master",
-        "christophwurst/nextcloud": "^21",
-        "jakub-onderka/php-parallel-lint": "^1.0.0",
-        "phpunit/phpunit": "^9",
-        "nextcloud/coding-standard": "^0.5.0"
 	},
 	"scripts": {
 		"cs:fix": "php-cs-fixer fix",
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l"
+	},
+	"require-dev": {
+		"christophwurst/nextcloud": "dev-stable22",
+		"nextcloud/coding-standard": "^1.0.0",
+		"phpunit/phpunit": "^9",
+		"roave/security-advisories": "dev-latest"
 	}
 }

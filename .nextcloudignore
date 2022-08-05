@@ -8,6 +8,8 @@
 /_config.yml
 /.drone.yml
 /.travis.yml
+/.php-cs-fixer.cache
+/.php-cs-fixer.dist.php
 /.eslintignore
 /.eslintrc.yml
 /.gitignore
