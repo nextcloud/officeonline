@@ -51,7 +51,7 @@ class Application extends App {
 	 * @return string
 	 */
 	private function domainOnly(string $url): string {
-		$parsed_url = parse_url($url);
+		$parsed_url = parse_url(trim($url));
 		$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
 		$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
 		$port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';

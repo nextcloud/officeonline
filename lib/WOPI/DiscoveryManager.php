@@ -93,7 +93,7 @@ class DiscoveryManager {
 	 */
 	public function fetchFromRemote() {
 		$remoteHost = $this->config->getAppValue('officeonline', 'wopi_url');
-		$wopiDiscovery = $remoteHost . '/hosting/discovery';
+		$wopiDiscovery = trim($remoteHost . '/hosting/discovery');
 
 		$client = $this->clientService->newClient();
 		$options = ['timeout' => 45, 'nextcloud' => ['allow_local_address' => true]];
