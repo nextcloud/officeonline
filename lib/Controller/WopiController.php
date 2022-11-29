@@ -566,6 +566,10 @@ class WopiController extends Controller {
 		[$fileId, ,] = Helper::parseFileId($fileId);
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
 
+		if ((int) $fileId !== $wopi->getFileid()) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
 		if (empty($wopi) || !$wopi->getCanwrite()) {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
