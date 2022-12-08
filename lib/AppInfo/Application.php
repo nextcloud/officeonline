@@ -29,6 +29,7 @@ use OC\Security\CSP\ContentSecurityPolicy;
 use OCA\Federation\TrustedServers;
 use OCA\Officeonline\Capabilities;
 use OCA\Officeonline\Hooks\WopiLockHooks;
+use OCA\Officeonline\Middleware\WOPIMiddleware;
 use OCA\Officeonline\Preview\MSExcel;
 use OCA\Officeonline\Preview\MSWord;
 use OCA\Officeonline\Preview\OOXML;
@@ -73,6 +74,7 @@ class Application extends App {
 		}
 
 		$this->getContainer()->registerCapability(Capabilities::class);
+		$this->getContainer()->registerMiddleWare(WOPIMiddleware::class);
 	}
 
 	public function registerProvider() {
