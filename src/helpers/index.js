@@ -53,7 +53,16 @@ const getNextcloudVersion = () => {
 	return parseInt(OC.config.version.split('.')[0])
 }
 
+const getCurrentDirectory = () => {
+	if (OCA.Sharing?.PublicApp) {
+		return OCA.Sharing.PublicApp.fileList.getCurrentDirectory()
+	}
+
+	return OCA.Files.App.currentFileList.getCurrentDirectory()
+}
+
 export {
 	languageToBCP47,
 	getNextcloudVersion,
+	getCurrentDirectory,
 }

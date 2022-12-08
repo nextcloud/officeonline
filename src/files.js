@@ -1,11 +1,12 @@
 import Types from './helpers/types'
 import axios from '@nextcloud/axios'
 import { getCapabilities } from '@nextcloud/capabilities'
-import './viewer'
+import './viewer.js'
 import Vue from 'vue'
 import Office from './view/Office'
 
 import './css/icons.css'
+import { getCurrentDirectory } from './helpers/index.js'
 
 // eslint-disable-next-line
 __webpack_nonce__ = btoa(window.OC.requestToken)
@@ -60,7 +61,7 @@ const NewFilePlugin = {
 	},
 
 	_createDocument: function(mimetype, filename) {
-		const dir = document.getElementById('dir').value
+		const dir = getCurrentDirectory()
 		try {
 			OCA.Files.Files.isFileNameValid(filename)
 		} catch (e) {
