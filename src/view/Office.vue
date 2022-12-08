@@ -23,23 +23,12 @@
 <template>
 	<transition name="fade" appear>
 		<div v-show="loading" id="officeonline-wrapper">
-			<div class="header">
-				<!-- This is obviously not the way to go since it would require absolute positioning and therefore not be compatible with viewer actions/sidebar -->
-				<div class="avatars">
-					<Avatar v-for="view in avatarViews"
-						:key="view.ViewId"
-						:user="view.UserId"
-						:display-name="view.UserName"
-						:style="viewColor(view)" />
-				</div>
-			</div>
 			<iframe id="officeonlineframe" ref="documentFrame" :src="src" />
 		</div>
 	</transition>
 </template>
 
 <script>
-import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import { getCurrentDirectory } from './../helpers/index.js'
 
 import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url'
@@ -51,9 +40,6 @@ const PostMessages = new PostMessageService({
 
 export default {
 	name: 'Office',
-	components: {
-		Avatar,
-	},
 	props: {
 		filename: {
 			type: String,
@@ -73,13 +59,9 @@ export default {
 		return {
 			src: null,
 			loading: false,
-			views: [],
 		}
 	},
 	computed: {
-		avatarViews() {
-			return this.views
-		},
 		viewColor() {
 			return view => ({
 				'border-color': '#' + ('000000' + Number(view.Color).toString(16)).slice(-6),
@@ -90,8 +72,8 @@ export default {
 	},
 	mounted() {
 		PostMessages.registerPostMessageHandler(({ parsed }) => {
-			console.debug('[viewer] Received post message', parsed)
 			const { msgId, args, deprecated } = parsed
+			console.debug('[viewer] Received post message', parsed, { msgId, args, deprecated })
 			if (deprecated) { return }
 
 			switch (msgId) {
@@ -99,10 +81,6 @@ export default {
 				break
 			case 'close':
 				this.$parent.close && this.$parent.close()
-				break
-			case 'Get_Views_Resp':
-			case 'Views_List':
-				this.views = args
 				break
 			}
 		})
@@ -128,28 +106,11 @@ export default {
 }
 </script>
 <style lang="scss">
-
-	.header {
-		position: absolute;
-		right: 100px;
-		top: -50px;
-
-		.avatars {
-			display: flex;
-			padding: 9px;
-
-			.avatardiv {
-				margin-left: -15px;
-				box-shadow: 0 0 3px var(--color-box-shadow);
-			}
-
-		}
-	}
-
 	#officeonline-wrapper {
 		width: 100vw;
 		height: calc(100vh - 50px);
 		left: 0;
+		top: 0;
 		position: absolute;
 		z-index: 100000;
 		max-width: 100%;
@@ -157,10 +118,6 @@ export default {
 		flex-direction: column;
 		background-color: var(--color-main-background);
 		transition: opacity .25s;
-
-		#body-public & {
-			position: fixed;
-		}
 	}
 
 	iframe {
