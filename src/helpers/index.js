@@ -54,11 +54,15 @@ const getNextcloudVersion = () => {
 }
 
 const getCurrentDirectory = () => {
-	if (OCA.Sharing?.PublicApp) {
+	if (OCA.Sharing?.PublicApp?.fileList) {
 		return OCA.Sharing.PublicApp.fileList.getCurrentDirectory()
 	}
 
-	return OCA.Files.App.currentFileList.getCurrentDirectory()
+	if (OCA?.Files?.App?.currentFileList) {
+		return OCA?.Files?.App?.currentFileList.getCurrentDirectory()
+	}
+
+	return ''
 }
 
 export {

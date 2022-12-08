@@ -40,6 +40,7 @@
 
 <script>
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
+import { getCurrentDirectory } from './../helpers/index.js'
 
 import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url'
 import PostMessageService from '../services/postMessage'
@@ -110,9 +111,9 @@ export default {
 	methods: {
 		async load() {
 			const sharingToken = document.getElementById('sharingToken')
-			const dir = document.getElementById('dir')
+			const dir = getCurrentDirectory()
 			let documentUrl = ''
-			if (sharingToken && dir.value === '') {
+			if (sharingToken && dir === '') {
 				documentUrl = getDocumentUrlForPublicFile(this.filename)
 			} else if (sharingToken) {
 				documentUrl = getDocumentUrlForPublicFile(this.filename, this.fileid) + '&path=' + encodeURIComponent(this.filename)
