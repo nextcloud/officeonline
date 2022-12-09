@@ -28,6 +28,9 @@ use OCP\IRequest;
 use SimpleXMLElement;
 
 class Parser {
+	public const ACTION_EDIT = 'edit';
+	public const ACTION_VIEW = 'view';
+	public const ACTION_EDITNEW = 'editnew';
 
 	// https://wopi.readthedocs.io/en/latest/faq/languages.html
 	public const SUPPORTED_LANGUAGES = [
@@ -147,27 +150,6 @@ class Parser {
 	}
 
 	/**
-	 * @param $mimetype
-	 * @return array
-	 * @throws Exception
-	 */
-	public function getUrlSrc($mimetype) {
-		$discoveryParsed = $this->getParsed();
-
-		$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone/app[@name=\'%s\']/action', $mimetype));
-		if ($result && count($result) > 0) {
-			$urlSrc = $result[0]['urlsrc'];
-			$urlSrc = preg_replace('/<ui=UI_LLCC&>/', 'ui=' . $this->getLanguageCode() . '&', $urlSrc);
-			return [
-				'urlsrc' => preg_replace('/<.+>/', '', $urlSrc),
-				'action' => (string)$result[0]['name'],
-			];
-		}
-
-		throw new Exception('Could not find urlsrc in WOPI');
-	}
-
-	/**
 	 * @return SimpleXMLElement|bool
 	 * @throws Exception
 	 */
@@ -189,43 +171,72 @@ class Parser {
 		return $discoveryParsed;
 	}
 
-	/**
-	 * @param File $file
-	 * @param bool $edit
-	 * @return array
-	 * @throws Exception
-	 */
-	public function getUrlSrcForFile(File $file, $edit) {
-		try {
-			$result = $this->getUrlSrc($file->getMimeType());
-			return $result;
-		} catch (Exception $e) {
-		}
-		// FIXME: we might want to support different action types here as well like imagepreview
-		$actionName = $edit ? 'edit' : 'view';
-		$discoveryParsed = $this->getParsed();
-		$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-https\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), $actionName));
-		if (!$result || count($result) === 0) {
-			$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-https\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), 'view'));
+	public function getUrlSrcForFile(File $file, bool $edit): string {
+		$protocol = $this->request->getServerProtocol();
+		$fallbackProtocol = $protocol === 'https' ? 'http' : 'https';
+
+		$netZones = [
+			'external-' . $protocol,
+			'internal-' . $protocol,
+			'external-' . $fallbackProtocol,
+			'internal-' . $fallbackProtocol,
+		];
+
+		$actions = [
+			$edit && $file->getSize() === 0 ? self::ACTION_EDITNEW : null,
+			$edit ? self::ACTION_EDIT : null,
+			self::ACTION_VIEW,
+		];
+		$actions = array_filter($actions);
+
+		foreach ($netZones as $netZone) {
+			foreach ($actions as $action) {
+				$result = $this->getUrlSrcByExtension($netZone, $file->getExtension(), $action);
+				if ($result) {
+					return $this->replaceUrlSrcParams($result);
+				}
+			}
 		}
 
-		if ($this->request->getServerProtocol() === 'http') {
-			if (!$result || count($result) === 0) {
-				$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-http\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), $actionName));
-			}
-			if (!$result || count($result) === 0) {
-				$result = $discoveryParsed->xpath(sprintf('/wopi-discovery/net-zone[@name=\'external-http\']/app/action[@ext=\'%s\' and @name=\'%s\']', $file->getExtension(), 'view'));
+		foreach ($netZones as $netZone) {
+			$result = $this->getUrlSrcByMimetype($netZone, $file->getMimeType());
+			if ($result) {
+				return $this->replaceUrlSrcParams($result);
 			}
 		}
-		if ($result && count($result) > 0) {
-			$urlSrc = $result[0]['urlsrc'];
-			$urlSrc = preg_replace('/<ui=UI_LLCC&>/', 'ui=' . $this->getLanguageCode() . '&', $urlSrc);
-			return [
-				'urlsrc' => preg_replace('/<.+>/', '', $urlSrc),
-				'action' => (string)$result[0]['name'],
-			];
-		}
+
 		throw new Exception('Could not find urlsrc in WOPI');
+	}
+
+	private function getUrlSrcByExtension(string $netZoneName, string $actionExt, $actionName): ?string {
+		$result = $this->getParsed()->xpath(sprintf(
+			'/wopi-discovery/net-zone[@name=\'%s\']/app/action[@ext=\'%s\' and @name=\'%s\']',
+			$netZoneName, $actionExt, $actionName
+		));
+
+		if (!$result || count($result) === 0) {
+			return null;
+		}
+
+		return (string)current($result)->attributes()['urlsrc'];
+	}
+
+	private function getUrlSrcByMimetype(string $netZoneName, string $mimetype): ?string {
+		$result = $this->getParsed()->xpath(sprintf(
+			'/wopi-discovery/net-zone[@name=\'%s\']/app[@name=\'%s\']/action',
+			$netZoneName, $mimetype
+		));
+
+		if (!$result || count($result) === 0) {
+			return null;
+		}
+
+		return (string)current($result)->attributes()['urlsrc'];
+	}
+
+	private function replaceUrlSrcParams(string $urlSrc): string {
+		$urlSrc = preg_replace('/<ui=UI_LLCC&>/', 'ui=' . $this->getLanguageCode() . '&', $urlSrc);
+		return preg_replace('/<.+>/', '', $urlSrc);
 	}
 
 	private function getLanguageCode(): string {

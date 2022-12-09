@@ -542,23 +542,11 @@ class DocumentController extends Controller {
 			$content = $manager->getTemplate($mimetype);
 		}
 
-		if (!$content) {
-			$content = file_get_contents(dirname(dirname(__DIR__)) . self::ODT_TEMPLATE_PATH);
-		}
-
-		if ($content) {
-			$file->putContent($content);
-
-			return new JSONResponse([
-				'status' => 'success',
-				'data' => \OCA\Files\Helper::formatFileInfo($file->getFileInfo())
-			]);
-		}
-
+		$file->putContent($content);
 
 		return new JSONResponse([
-			'status' => 'error',
-			'message' => $this->l10n->t('Can\'t create document')
+			'status' => 'success',
+			'data' => \OCA\Files\Helper::formatFileInfo($file->getFileInfo())
 		]);
 	}
 
