@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.4
+
+### Fixed
+
+- Set allow_local_remote_servers to true for integration tests @juliushaertl [#290](https://github.com/nextcloud/officeonline/pull/290)
+- Replace deprecated String.prototype.substr() @CommanderRoot [#282](https://github.com/nextcloud/officeonline/pull/282)
+- Do not use libxml_disable_entity_loader on PHP 8 or later @juliushaertl [#289](https://github.com/nextcloud/officeonline/pull/289)
+- Move to QBMapper @juliushaertl [#371](https://github.com/nextcloud/officeonline/pull/371)
+- Do not use DOMContentLoaded for registering the viewer handler @juliushaertl [#378](https://github.com/nextcloud/officeonline/pull/378)
+- Fix viewer positioning on newer nextcloud releases @juliushaertl [#370](https://github.com/nextcloud/officeonline/pull/370)
+- Unify middleware checks @juliushaertl [#384](https://github.com/nextcloud/officeonline/pull/384)
+
+
 ## 1.1.3
 
 ### Fixed
