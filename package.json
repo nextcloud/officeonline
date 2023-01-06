@@ -81,7 +81,7 @@
 		"ts-loader": "^8.0.17",
 		"typescript": "^4.3.5",
 		"url-loader": "^4.1.1",
-		"vue-jest": "^3.0.7",
+		"vue-jest": "^4.0.1",
 		"vue-loader": "^15.10.0",
 		"vue-template-compiler": "^2.6.14",
 		"webpack": "^4.46.0",
