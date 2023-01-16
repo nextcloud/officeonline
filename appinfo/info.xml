@@ -25,7 +25,7 @@
 
 	<bugs>https://github.com/nextcloud/officeonline/issues</bugs>
 	<repository type="git">https://github.com/nextcloud/officeonline.git</repository>
-	<screenshot>https://github.com/nextcloud/officeonline/raw/master/screenshot.png</screenshot>
+	<screenshot>https://github.com/nextcloud/officeonline/raw/main/screenshot.png</screenshot>
 
 	<dependencies>
 		<nextcloud min-version="22" max-version="26"/>
