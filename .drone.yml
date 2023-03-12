@@ -6,7 +6,7 @@ steps:
       image: nextcloudci/php7.4:latest
       environment:
           APP_NAME: officeonline
-          CORE_BRANCH: master
+          CORE_BRANCH: stable22
           DB: sqlite
       commands:
           - bash ./tests/drone-server-setup.sh $APP_NAME $CORE_BRANCH $DB
