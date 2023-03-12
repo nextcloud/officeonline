@@ -3,7 +3,7 @@ name: integration
 
 steps:
     - name: nextcloud
-      image: nextcloudci/php7.4:latest
+      image: nextcloudci/php8.0:latest
       environment:
           APP_NAME: officeonline
           CORE_BRANCH: master
