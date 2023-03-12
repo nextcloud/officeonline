@@ -2,6 +2,13 @@
 
 ![](./screenshot.png)
 
+## Branches
+
+We currently maintain two branches for compatibility with Nextcloud versions:
+
+- main (Nextcloud 24 upwards)
+- stable1 (Nextcloud 22-23)
+
 ## Development setup
 
 Just clone this repo into your apps directory ([Nextcloud server](https://github.com/nextcloud/server#running-master-checkouts) installation needed). Additionally, [npm](https://www.npmjs.com/) and [Node.js](https://nodejs.org/en/download/package-manager/) are needed for installing JavaScript dependencies and building the frontend code.
