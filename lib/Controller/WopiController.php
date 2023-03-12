@@ -21,6 +21,11 @@
 
 namespace OCA\Officeonline\Controller;
 
+use Exception;
+use OCP\Files\Lock\LockContext;
+use OCP\Files\Lock\ILock;
+use OCA\Officeonline\AppInfo\Application;
+
 use OC\Files\View;
 use OCA\Officeonline\Db\Wopi;
 use OCA\Officeonline\AppConfig;
@@ -43,6 +48,9 @@ use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
+use OCP\Files\Lock\ILockManager;
+use OCP\Files\Lock\NoLockProviderException;
+use OCP\Files\Lock\OwnerLockedException;
 use OCP\Files\Node;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
@@ -53,6 +61,7 @@ use OCP\IURLGenerator;
 use OCP\AppFramework\Http\StreamResponse;
 use OCP\IUserManager;
 use OCP\Lock\LockedException;
+use OCP\PreConditionNotMetException;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
 
@@ -94,6 +103,10 @@ class WopiController extends Controller {
 	 * @var WopiLockHooks
 	 */
 	private $lockHooks;
+	/**
+	 * @var ILockManager
+	 */
+	private $lockManager;
 
 	/**
 	 * @param string $appName
@@ -129,7 +142,8 @@ class WopiController extends Controller {
 		UserScopeService $userScopeService,
 		WopiLockMapper $lockMapper,
 		ITimeFactory $timeFactory,
-		WopiLockHooks $lockHooks
+		WopiLockHooks $lockHooks,
+		ILockManager $lockManager
 	) {
 		parent::__construct($appName, $request);
 		$this->rootFolder = $rootFolder;
@@ -146,6 +160,7 @@ class WopiController extends Controller {
 		$this->lockMapper = $lockMapper;
 		$this->timeFactory = $timeFactory;
 		$this->lockHooks = $lockHooks;
+		$this->lockManager = $lockManager;
 	}
 
 	/**
@@ -184,7 +199,7 @@ class WopiController extends Controller {
 		} catch (DoesNotExistException $e) {
 			$this->logger->debug($e->getMessage(), ['app' => 'officeonline', '']);
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->logger->logException($e, ['app' => 'officeonline']);
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
@@ -313,25 +328,13 @@ class WopiController extends Controller {
 			$response->addHeader('Content-Disposition', 'attachment');
 			$response->addHeader('Content-Type', 'application/octet-stream');
 			return $response;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getFile failed']);
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 	}
 
-	/**
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @PublicPage
-	 * @NoSameSiteCookieRequired
-	 * @param $fileId
-	 * @param $access_token
-	 * @return DataResponse
-	 * @throws InvalidPathException
-	 * @throws NotFoundException
-	 */
-	public function lock($fileId, $access_token) {
+	private function fallbackLock($fileId, $access_token) {
 		[$fileId, ,] = Helper::parseFileId($fileId);
 		$token = $this->wopiMapper->getWopiForToken($access_token);
 		if (empty($token)) {
@@ -433,6 +436,88 @@ class WopiController extends Controller {
 		return $result;
 	}
 
+
+	private function lock(Wopi $wopi): JSONResponse {
+		$wopiLock = $this->request->getHeader('X-WOPI-Lock');
+
+		try {
+			$response = new JSONResponse();
+			$lock = $this->lockManager->lock(new LockContext(
+				$this->getFileForWopiToken($wopi),
+				ILock::TYPE_APP,
+				Application::APP_ID
+			));
+			$this->logger->error('Lock file ' . $lock->getToken() . ' request: ' . $wopiLock);
+			return $response;
+		} catch (NoLockProviderException|PreConditionNotMetException $e) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		} catch (OwnerLockedException $e) {
+			$response = new JSONResponse();
+			$response->setHeaders(['X-WOPI-Lock' => $e->getLock()->getToken()]);
+			$response->setStatus(Http::STATUS_CONFLICT);
+			return $response;
+		} catch (Exception $e) {
+			$this->logger->logException($e);
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private function unlock(Wopi $wopi): JSONResponse {
+		try {
+			$wopiLock = $this->request->getHeader('X-WOPI-Lock');
+			$this->lockManager->unlock(new LockContext(
+				$this->getFileForWopiToken($wopi),
+				ILock::TYPE_APP,
+				Application::APP_ID
+			));
+			$this->logger->error('Unlock file request: ' . $wopiLock);
+			$response = new JSONResponse();
+			$response->setHeaders(['X-WOPI-Lock' => $wopiLock]);
+			return $response;
+		} catch (NoLockProviderException|PreConditionNotMetException $e) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		} catch (Exception $e) {
+			$this->logger->logException($e);
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private function refreshLock(Wopi $wopi): JSONResponse {
+		$wopiLock = $this->request->getHeader('X-WOPI-Lock');
+		$response = new JSONResponse();
+		try {
+			$this->lockManager->lock(new LockContext(
+				$this->getFileForWopiToken($wopi),
+				ILock::TYPE_APP,
+				Application::APP_ID
+			));
+			$response->addHeader('X-WOPI-Lock', $wopiLock);
+			return new JSONResponse();
+		} catch (NoLockProviderException|PreConditionNotMetException $e) {
+			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
+		} catch (OwnerLockedException $e) {
+			$response = new JSONResponse();
+			$response->setHeaders(['X-WOPI-Lock' => $e->getLock()->getToken()]);
+			$response->setStatus(Http::STATUS_CONFLICT);
+			return $response;
+		} catch (Exception $e) {
+			$this->logger->logException($e);
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private function getLock(Wopi $wopi): JSONResponse {
+		try {
+			$response = new JSONResponse();
+			$locks = $this->lockManager->getLocks($wopi->getFileid());
+			$existingLock = array_pop($locks);
+			$response->addHeader('X-WOPI-Lock', $existingLock->getToken());
+			return $response;
+		} catch (NoLockProviderException|PreConditionNotMetException $e) {
+			return new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
+		}
+	}
+
 	/**
 	 * Given an access token and a fileId, replaces the files with the request body.
 	 * Expects a valid token in access_token parameter.
@@ -513,8 +598,14 @@ class WopiController extends Controller {
 			$this->lockHooks->setLockBypass(true);
 
 			try {
-				$this->retryOperation(function () use ($file, $content) {
-					return $file->putContent($content);
+				$this->lockManager->runInScope(new LockContext(
+					$this->getFileForWopiToken($wopi),
+					ILock::TYPE_APP,
+					Application::APP_ID
+				), function () use ($file, $content) {
+					$this->retryOperation(function () use ($file, $content) {
+						return $file->putContent($content);
+					});
 				});
 			} catch (LockedException $e) {
 				$this->logger->logException($e);
@@ -536,7 +627,7 @@ class WopiController extends Controller {
 				$this->wopiMapper->update($wopi);
 			}
 			return new JSONResponse(['LastModifiedTime' => Helper::toISO8601($file->getMTime())]);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getFile failed']);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -557,24 +648,41 @@ class WopiController extends Controller {
 	 * @param string $access_token
 	 * @return JSONResponse|DataResponse
 	 */
-	public function putRelativeFile($fileId,
-					$access_token) {
-		$wover = $this->request->getHeader('X-WOPI-Override');
-		if (!($wover === 'PUT_RELATIVE' || $wover === 'RENAME_FILE')) {
-			return $this->lock($fileId, $access_token);
-		}
+	public function postFile($fileId, $access_token) {
 		[$fileId, ,] = Helper::parseFileId($fileId);
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
+
+		if ($wopi === null || !$wopi->getCanwrite()) {
+			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		}
 
 		if ((int) $fileId !== $wopi->getFileid()) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		if (empty($wopi) || !$wopi->getCanwrite()) {
-			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
+		$wopiOverride = $this->request->getHeader('X-WOPI-Override');
+		if ($this->lockManager->isLockProviderAvailable()) {
+			switch ($wopiOverride) {
+				case 'LOCK':
+					return $this->lock($wopi);
+				case 'UNLOCK':
+					return $this->unlock($wopi);
+				case 'REFRESH_LOCK':
+					return $this->refreshLock($wopi);
+				case 'GET_LOCK':
+					return $this->getLock($wopi);
+			}
+		} else {
+			switch ($wopiOverride) {
+				case 'LOCK':
+				case 'UNLOCK':
+				case 'REFRESH_LOCK':
+				case 'GET_LOCK':
+					return $this->fallbackLock($fileId, $access_token);
+			}
 		}
 
-		$isRenameFile = ($wover === 'RENAME_FILE');
+		$isRenameFile = ($wopiOverride === 'RENAME_FILE');
 
 		// Unless the editor is empty (public link) we modify the files as the current editor
 		$editor = $wopi->getEditorUid();
@@ -703,7 +811,7 @@ class WopiController extends Controller {
 			$url = $this->urlGenerator->getAbsoluteURL($wopi);
 
 			return new JSONResponse([ 'Name' => $file->getName(), 'Url' => $url ], Http::STATUS_OK);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'putRelativeFile failed']);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
@@ -792,7 +900,7 @@ class WopiController extends Controller {
 			$response->addHeader('Content-Disposition', 'attachment');
 			$response->addHeader('Content-Type', 'application/octet-stream');
 			return $response;
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getTemplate failed']);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
