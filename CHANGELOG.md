@@ -1,5 +1,13 @@
 # Changelog
 
+
+## 2.0.0
+
+### Added
+
+- Implment locking using files_lock [#414](https://github.com/nextcloud/officeonline/pull/414)
+- Compatiblity with Nextcloud 26
+
 ## 1.1.4
 
 ### Fixed
