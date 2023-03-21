@@ -447,7 +447,7 @@ class WopiController extends Controller {
 				ILock::TYPE_APP,
 				Application::APP_ID
 			));
-			$this->logger->error('Lock file ' . $lock->getToken() . ' request: ' . $wopiLock);
+			$this->logger->debug('Lock file ' . $lock->getToken() . ' request: ' . $wopiLock);
 			return $response;
 		} catch (NoLockProviderException|PreConditionNotMetException $e) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
@@ -470,7 +470,7 @@ class WopiController extends Controller {
 				ILock::TYPE_APP,
 				Application::APP_ID
 			));
-			$this->logger->error('Unlock file request: ' . $wopiLock);
+			$this->logger->debug('Unlock file request: ' . $wopiLock);
 			$response = new JSONResponse();
 			$response->setHeaders(['X-WOPI-Lock' => $wopiLock]);
 			return $response;
