@@ -34,3 +34,11 @@ You will need an working on-premise Office Online server which has added the Nex
 Enterprise users who need a more reliable and scalable solution can take advantage of Nextcloud GmbH's optional support contract for Office Online integration. Find out more about Enterprise support over here: https://nextcloud.com/enterprise/
 
 - [Request a quote](https://nextcloud.com/enterprise/buy/)
+
+
+## Known problems
+
+- Users are not removed or document is not unlocked with Chrome (or chromium-based browsers)
+  - This is a known problem according to different sources for the Office Online Server and is out of scope of the Nextcloud intergration. You can work around this by configuring a lock timeout for the files_lock app or manually unlocking file file
+  - https://stackoverflow.com/questions/62062629/office-online-server-didnt-send-unlock-action-when-i-closed-the-session
+  - https://social.msdn.microsoft.com/Forums/office/en-US/1b783d1c-c686-4b2d-b23f-4977e6bed806/wopi-unlock-call-never-gets-triggered-in-chrome-and-latest-edge-browser?forum=os_office
