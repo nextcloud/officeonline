@@ -465,6 +465,14 @@ class WopiController extends Controller {
 	private function unlock(Wopi $wopi): JSONResponse {
 		try {
 			$wopiLock = $this->request->getHeader('X-WOPI-Lock');
+
+			// OOS sends UNLOCK with GetCurrentLock-00000000-0000-0000-0000-000000000000
+			// instead of GET_LOCK it seems, so we cannot always unlock
+			$fLock = $this->lockMapper->find($wopi->getFileid());
+			if ($fLock->getValue() !== $wopiLock) {
+				return new JSONResponse();
+			}
+
 			$this->lockManager->unlock(new LockContext(
 				$this->getFileForWopiToken($wopi),
 				ILock::TYPE_APP,
@@ -661,25 +669,34 @@ class WopiController extends Controller {
 		}
 
 		$wopiOverride = $this->request->getHeader('X-WOPI-Override');
+
 		if ($this->lockManager->isLockProviderAvailable()) {
+			// Currently we do not use the return value of those methods,
+			// as we perform actual WOPI lock token handling through the apps own lock table
 			switch ($wopiOverride) {
 				case 'LOCK':
-					return $this->lock($wopi);
+					$this->lock($wopi);
+					break;
 				case 'UNLOCK':
-					return $this->unlock($wopi);
+					$this->unlock($wopi);
+					break;
 				case 'REFRESH_LOCK':
-					return $this->refreshLock($wopi);
+					$this->refreshLock($wopi);
+					break;
 				case 'GET_LOCK':
-					return $this->getLock($wopi);
+					$this->getLock($wopi);
+					break;
 			}
-		} else {
-			switch ($wopiOverride) {
-				case 'LOCK':
-				case 'UNLOCK':
-				case 'REFRESH_LOCK':
-				case 'GET_LOCK':
-					return $this->fallbackLock($fileId, $access_token);
-			}
+		}
+
+		// FIXME: We should merge the fallbackLock method into the above individual methods
+		// The specific table is still relevant to cover different lock tokens used by OOS
+		switch ($wopiOverride) {
+			case 'LOCK':
+			case 'UNLOCK':
+			case 'REFRESH_LOCK':
+			case 'GET_LOCK':
+				return $this->fallbackLock($fileId, $access_token);
 		}
 
 		$isRenameFile = ($wopiOverride === 'RENAME_FILE');
