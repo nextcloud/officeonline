@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+
+### Fixed
+
+- fix: Avoid unlocking too early and fix collaboration in Word @juliushaertl [#423](https://github.com/nextcloud/officeonline/pull/423)
+
 
 ## 2.0.0
 
