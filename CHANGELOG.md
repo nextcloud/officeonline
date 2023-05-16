@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.2
+
+### Fixed
+
+- fix: Return X-WOPI-Lock when a manual lock from outside exists @juliushaertl [#442](https://github.com/nextcloud/officeonline/pull/442)
+- Add known issues to README @juliushaertl [#427](https://github.com/nextcloud/officeonline/pull/427)
+- Update dependencies
+
+
+
 ## 2.0.1
 
 ### Fixed
