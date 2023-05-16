@@ -518,7 +518,7 @@ class WopiController extends Controller {
 		try {
 			$response = new JSONResponse();
 			$locks = $this->lockManager->getLocks($wopi->getFileid());
-			$existingLock = array_pop($locks);
+			$existingLock = array_shift($locks);
 			$response->addHeader('X-WOPI-Lock', $existingLock->getToken());
 			return $response;
 		} catch (NoLockProviderException|PreConditionNotMetException $e) {
@@ -671,6 +671,16 @@ class WopiController extends Controller {
 		$wopiOverride = $this->request->getHeader('X-WOPI-Override');
 
 		if ($this->lockManager->isLockProviderAvailable()) {
+			$locks = $this->lockManager->getLocks($wopi->getFileid());
+			$existingLock = array_shift($locks);
+			$outsideLocked = $existingLock && $existingLock->getOwner() !== 'officeonline';
+			if ($outsideLocked) {
+				$result = new JSONResponse();
+				$result->setStatus(Http::STATUS_CONFLICT);
+				$result->addHeader('X-WOPI-Lock', $existingLock->getToken());
+				$result->addHeader('X-WOPI-LockFailureReason', 'File already locked by ' . $existingLock->getOwner());
+				return $result;
+			}
 			// Currently we do not use the return value of those methods,
 			// as we perform actual WOPI lock token handling through the apps own lock table
 			switch ($wopiOverride) {
