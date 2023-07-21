@@ -27,9 +27,14 @@ namespace OCA\Officeonline\AppInfo;
 use OC\Files\Type\Detection;
 use OC\Security\CSP\ContentSecurityPolicy;
 use OCA\Federation\TrustedServers;
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
+use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCA\Officeonline\Capabilities;
 use OCA\Officeonline\Hooks\WopiLockHooks;
+use OCA\Officeonline\Listener\LoadOfficeOnlineFilesActions;
+use OCA\Officeonline\Listener\LoadOfficeOnlineFilesSharingActions;
 use OCA\Officeonline\Middleware\WOPIMiddleware;
+use OCA\Officeonline\PermissionManager;
 use OCA\Officeonline\Preview\MSExcel;
 use OCA\Officeonline\Preview\MSWord;
 use OCA\Officeonline\Preview\OOXML;
@@ -38,11 +43,14 @@ use OCA\Officeonline\Preview\Pdf;
 use OCA\Officeonline\Service\FederationService;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\QueryException;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IPreview;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
 	public const APP_ID = 'officeonline';
 
 	/**
@@ -59,23 +67,45 @@ class Application extends App {
 		return "$scheme$host$port";
 	}
 
+    public function register(IRegistrationContext $context): void {
+        $context->registerEventListener(LoadAdditionalScriptsEvent::class, LoadOfficeOnlineFilesActions::class);
+        $context->registerEventListener(BeforeTemplateRenderedEvent::class, LoadOfficeOnlineFilesSharingActions::class);
+    }
+
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
-
-		try {
-			/** @var IEventDispatcher $eventDispatcher */
-			$eventDispatcher = $this->getContainer()->getServer()->query(IEventDispatcher::class);
-			if (class_exists(LoadViewer::class)) {
-				$eventDispatcher->addListener(LoadViewer::class, function () {
-					\OCP\Util::addScript('officeonline', 'viewer');
-				});
-			}
-		} catch (QueryException $e) {
-		}
-
-		$this->getContainer()->registerCapability(Capabilities::class);
-		$this->getContainer()->registerMiddleWare(WOPIMiddleware::class);
 	}
+
+    public function boot(IBootContext $context): void {
+        // Check if the app is enabled for the current user
+        $currentUser = \OC::$server->getUserSession()->getUser();
+        if ($currentUser !== null) {
+            /** @var PermissionManager $permissionManager */
+            $permissionManager = \OC::$server->query(PermissionManager::class);
+            if (!$permissionManager->isEnabledForUser($currentUser)) {
+                return;
+            }
+        }
+
+        // Add to LoadViewer if loaded
+        try {
+            /** @var IEventDispatcher $eventDispatcher */
+            $eventDispatcher = $this->getContainer()->getServer()->query(IEventDispatcher::class);
+            if (class_exists(LoadViewer::class)) {
+                $eventDispatcher->addListener(LoadViewer::class, function () {
+                    \OCP\Util::addScript('officeonline', 'viewer');
+                });
+            }
+        } catch (QueryException $e) {
+        }
+
+        // Register components
+        $this->getContainer()->registerCapability(Capabilities::class);
+        $this->getContainer()->registerMiddleWare(WOPIMiddleware::class);
+
+        $context->injectFn([$this, 'registerProvider']);
+        $context->injectFn([$this, 'updateCSP']);
+    }
 
 	public function registerProvider() {
 		$container = $this->getContainer();

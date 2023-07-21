@@ -7,3 +7,4 @@ officeonline.zip
 build/
 vendor/
 .php-cs-fixer.cache
+.idea
