@@ -29,7 +29,7 @@
 		"@nextcloud/l10n": "^1.6.0",
 		"@nextcloud/router": "^2.0.0",
 		"@nextcloud/vue": "^4.0.3",
-		"vue": "^2.6.14"
+		"vue": "^2.7.14"
 	},
 	"browserslist": [
 		"extends browserslist-config-nextcloud"
@@ -83,7 +83,7 @@
 		"url-loader": "^4.1.1",
 		"vue-jest": "^3.0.7",
 		"vue-loader": "^15.10.0",
-		"vue-template-compiler": "^2.6.14",
+		"vue-template-compiler": "^2.7.14",
 		"webpack": "^4.46.0",
 		"webpack-cli": "^3.3.12",
 		"webpack-merge": "^5.8.0"
