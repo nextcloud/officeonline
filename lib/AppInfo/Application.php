@@ -41,6 +41,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\QueryException;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IPreview;
+use Psr\Log\LoggerInterface;
 
 class Application extends App {
 	public const APP_ID = 'officeonline';
@@ -135,20 +136,25 @@ class Application extends App {
 		$path = '';
 		try {
 			$path = $container->getServer()->getRequest()->getPathInfo();
-		} catch (\Exception $e) {
-		}
-		if (strpos($path, '/apps/files') === 0 && $container->getServer()->getAppManager()->isEnabledForUser('federation')) {
-			/** @var TrustedServers $trustedServers */
-			$trustedServers = $container->query(TrustedServers::class);
-			/** @var FederationService $federationService */
-			$federationService = $container->query(FederationService::class);
-			$remoteAccess = $container->getServer()->getRequest()->getParam('officeonline_remote_access');
 
-			if ($remoteAccess && $trustedServers->isTrustedServer($remoteAccess)) {
-				$remoteCollabora = $federationService->getRemoteCollaboraURL($remoteAccess);
-				$policy->addAllowedFrameDomain($remoteAccess);
-				$policy->addAllowedFrameDomain($remoteCollabora);
+			if (strpos($path, '/apps/files') === 0 && $container->getServer()->getAppManager()->isEnabledForUser('federation')) {
+				/** @var TrustedServers $trustedServers */
+				$trustedServers = $container->query(TrustedServers::class);
+				/** @var FederationService $federationService */
+				$federationService = $container->query(FederationService::class);
+				$remoteAccess = $container->getServer()->getRequest()->getParam('officeonline_remote_access');
+
+				if ($remoteAccess && $trustedServers->isTrustedServer($remoteAccess)) {
+					$remoteCollabora = $federationService->getRemoteCollaboraURL($remoteAccess);
+					$policy->addAllowedFrameDomain($remoteAccess);
+					$policy->addAllowedFrameDomain($remoteCollabora);
+				}
 			}
+		} catch (\Throwable $e) {
+			\OCP\Server::get(LoggerInterface::class)->warning('Failed to gather federation hosts for CSP', [
+				'exception' => $e,
+				'app' => 'officeonline'
+			]);
 		}
 
 		$cspManager->addDefaultPolicy($policy);
