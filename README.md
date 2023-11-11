@@ -38,6 +38,7 @@ Enterprise users who need a more reliable and scalable solution can take advanta
 
 ## Known problems
 
+- When either no session keepalive or an autologout is configured in Nextcloud, the officeonline app will prevent the session expiry and auto logout as long as the user has a document open. Where usually the user interaction would be used as an indicator to idle and perform the logout, this is not possible due to missing support in Office Online Server.
 - Users are not removed or document is not unlocked with Chrome (or chromium-based browsers)
   - This is a known problem according to different sources for the Office Online Server and is out of scope of the Nextcloud intergration. You can work around this by configuring a lock timeout for the files_lock app or manually unlocking file file
   - https://stackoverflow.com/questions/62062629/office-online-server-didnt-send-unlock-action-when-i-closed-the-session

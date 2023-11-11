@@ -37,6 +37,7 @@ use OCP\ISession;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
 use OC\Files\Type\TemplateManager;
+use OCP\AppFramework\Http\DataResponse;
 
 class DocumentController extends Controller {
 	/** @var string */
@@ -555,5 +556,12 @@ class DocumentController extends Controller {
 			'errors' => [['error' => $message]]
 		];
 		return new TemplateResponse('core', 'error', $params, 'guest');
+	}
+
+	/**
+	 * @NoAdminRequired
+	 */
+	public function ping(): DataResponse {
+		return new DataResponse();
 	}
 }

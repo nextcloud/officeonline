@@ -36,6 +36,8 @@ return [
 		['name' => 'document#publicPage', 'url' => '/public', 'verb' => 'GET'],
 		['name' => 'document#create', 'url' => 'ajax/documents/create', 'verb' => 'POST'],
 
+		['name' => 'document#ping', 'url' => '/ping', 'verb' => 'GET'],
+
 		// external api access
 		['name' => 'document#extAppGetData', 'url' => '/ajax/extapp/data/{fileId}', 'verb' => 'POST'],
 

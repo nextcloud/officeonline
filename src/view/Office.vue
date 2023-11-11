@@ -30,7 +30,7 @@
 
 <script>
 import { getCurrentDirectory } from './../helpers/index.js'
-
+import autoLogout from './../mixins/autoLogout.js'
 import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url'
 import PostMessageService from '../services/postMessage'
 
@@ -40,6 +40,9 @@ const PostMessages = new PostMessageService({
 
 export default {
 	name: 'Office',
+	mixins: {
+		autoLogout,
+	},
 	props: {
 		filename: {
 			type: String,
