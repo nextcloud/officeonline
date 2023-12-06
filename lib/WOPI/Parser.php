@@ -269,6 +269,8 @@ class Parser {
 			return array_shift($languageMatches);
 		}
 
-		return 'en-US';
+		// Try to provide the language code matching RFC1766 format, if no language can be determined office will fallback to the browser language and then to en-US
+		// https://learn.microsoft.com/en-us/microsoft-365/cloud-storage-partner-program/online/discovery#ui_llcc
+		return str_replace('_', '-', $languageCode);
 	}
 }
