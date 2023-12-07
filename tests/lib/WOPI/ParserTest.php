@@ -13,12 +13,17 @@ class ParserTest extends \Test\TestCase {
 	public function dataLanguage() {
 		return [
 			['de', 'de_DE', 'de-DE'],
-			['foo', 'de_DE', 'en-US'],
+			['foo', 'de_DE', 'foo'],
 			['en', 'en_US', 'en-US'],
 			['en', 'en_GB', 'en-gb'],
 			['en', 'de_DE', 'en-gb'],
 			['fr', 'fr_FR', 'fr-FR'],
 			['fr', 'fr_CA', 'fr-ca'],
+			['zh_CN', 'zh_CN', 'zh-CN'],
+			['zh_TW', 'zh_TW', 'zh-TW'],
+			['zh_CN', 'zh_Hans_CN', 'zh-CN'],
+			['zh_CN', 'zh_Hans_CN', 'zh-CN'],
+			['es_UY', 'es_UY', 'es-UY'],
 		];
 	}
 
