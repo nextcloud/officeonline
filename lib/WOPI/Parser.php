@@ -182,6 +182,11 @@ class Parser {
 			'internal-' . $fallbackProtocol,
 		];
 
+		$userAgent = $_SERVER["HTTP_USER_AGENT"];
+		if (preg_match("/(android|mobile)/i", $userAgent)) {
+			$edit = false;
+		}
+
 		$actions = [
 			$edit && $file->getSize() === 0 ? self::ACTION_EDITNEW : null,
 			$edit ? self::ACTION_EDIT : null,
