@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.3
+
+### Fixed
+
+- fix: Do not always assume en-US as language if we cannot clearly determine @juliushaertl [#500](https://github.com/nextcloud/officeonline/pull/500)
+- fix: enforce view mode on mobile @juliushaertl [#497](https://github.com/nextcloud/officeonline/pull/497)
+- fix: Avoid throwing during app setup when federation classes could not be queried @juliushaertl [#488](https://github.com/nextcloud/officeonline/pull/488)
+
 ## 2.0.2
 
 ### Fixed
