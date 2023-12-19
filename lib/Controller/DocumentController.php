@@ -264,7 +264,6 @@ class DocumentController extends Controller {
 			$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
 			$policy = new ContentSecurityPolicy();
 			$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-			$policy->allowInlineScript(true);
 			$response->setContentSecurityPolicy($policy);
 			$response->addHeader('Cache-Control', 'no-cache, no-store');
 			$response->addHeader('Expires', '-1');

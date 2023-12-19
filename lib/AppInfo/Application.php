@@ -27,9 +27,14 @@ namespace OCA\Officeonline\AppInfo;
 use OC\Files\Type\Detection;
 use OC\Security\CSP\ContentSecurityPolicy;
 use OCA\Federation\TrustedServers;
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
+use OCA\Files_Sharing\Listener\LoadAdditionalListener;
 use OCA\Officeonline\Capabilities;
 use OCA\Officeonline\Hooks\WopiLockHooks;
+use OCA\Officeonline\Listener\FilesScriptListener;
+use OCA\Officeonline\Listener\LoadViewerListener;
 use OCA\Officeonline\Middleware\WOPIMiddleware;
+use OCA\Officeonline\PermissionManager;
 use OCA\Officeonline\Preview\MSExcel;
 use OCA\Officeonline\Preview\MSWord;
 use OCA\Officeonline\Preview\OOXML;
@@ -38,44 +43,46 @@ use OCA\Officeonline\Preview\Pdf;
 use OCA\Officeonline\Service\FederationService;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\App;
-use OCP\AppFramework\QueryException;
-use OCP\EventDispatcher\IEventDispatcher;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\IPreview;
 use Psr\Log\LoggerInterface;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
 	public const APP_ID = 'officeonline';
-
-	/**
-	 * Strips the path and query parameters from the URL.
-	 *
-	 * @param string $url
-	 * @return string
-	 */
-	private function domainOnly(string $url): string {
-		$parsed_url = parse_url(trim($url));
-		$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-		$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-		$port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-		return "$scheme$host$port";
-	}
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
+	}
 
-		try {
-			/** @var IEventDispatcher $eventDispatcher */
-			$eventDispatcher = $this->getContainer()->getServer()->query(IEventDispatcher::class);
-			if (class_exists(LoadViewer::class)) {
-				$eventDispatcher->addListener(LoadViewer::class, function () {
-					\OCP\Util::addScript('officeonline', 'viewer');
-				});
+	public function register(IRegistrationContext $context): void {
+		$context->registerCapability(Capabilities::class);
+		$context->registerMiddleWare(WOPIMiddleware::class);
+		$context->registerEventListener(LoadAdditionalScriptsEvent::class, FilesScriptListener::class);
+		$context->registerEventListener(LoadAdditionalListener::class, FilesScriptListener::class);
+		$context->registerEventListener(LoadViewer::class, LoadViewerListener::class);
+	}
+
+	public function boot(IBootContext $context): void {
+		if (!$this->isEnabled()) {
+			return;
+		}
+		$this->registerProvider();
+		$this->updateCSP();
+	}
+
+	public function isEnabled(): bool {
+		$currentUser = \OC::$server->getUserSession()->getUser();
+		if ($currentUser !== null) {
+			/** @var PermissionManager $permissionManager */
+			$permissionManager = \OCP\Server::get(PermissionManager::class);
+			if (!$permissionManager->isEnabledForUser($currentUser)) {
+				return false;
 			}
-		} catch (QueryException $e) {
 		}
 
-		$this->getContainer()->registerCapability(Capabilities::class);
-		$this->getContainer()->registerMiddleWare(WOPIMiddleware::class);
+		return true;
 	}
 
 	public function registerProvider() {
@@ -158,5 +165,19 @@ class Application extends App {
 		}
 
 		$cspManager->addDefaultPolicy($policy);
+	}
+
+	/**
+	 * Strips the path and query parameters from the URL.
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	private function domainOnly(string $url): string {
+		$parsed_url = parse_url(trim($url));
+		$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+		$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+		$port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+		return "$scheme$host$port";
 	}
 }
