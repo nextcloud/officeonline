@@ -123,6 +123,10 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function updateCSP() {
+		if (\OC::$CLI) {
+			return;
+		}
+
 		$container = $this->getContainer();
 
 		$publicWopiUrl = \OC::$server->getConfig()->getAppValue('officeonline', 'wopi_url');
