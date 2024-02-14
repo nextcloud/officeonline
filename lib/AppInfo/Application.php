@@ -46,8 +46,12 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\Files\Template\ITemplateManager;
+use OCP\Files\Template\TemplateFileCreator;
 use OCP\IPreview;
 use Psr\Log\LoggerInterface;
+use OCP\IL10N;
+use OCP\IConfig;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'officeonline';
@@ -68,15 +72,17 @@ class Application extends App implements IBootstrap {
 		if (!$this->isEnabled()) {
 			return;
 		}
+
 		$this->registerProvider();
 		$this->updateCSP();
+		$this->registerNewFileCreators($context);
 	}
 
 	public function isEnabled(): bool {
 		$currentUser = \OC::$server->getUserSession()->getUser();
 		if ($currentUser !== null) {
 			/** @var PermissionManager $permissionManager */
-			$permissionManager = \OCP\Server::get(PermissionManager::class);
+			$permissionManager = \OC::$server->query(PermissionManager::class);
 			if (!$permissionManager->isEnabledForUser($currentUser)) {
 				return false;
 			}
@@ -162,7 +168,7 @@ class Application extends App implements IBootstrap {
 				}
 			}
 		} catch (\Throwable $e) {
-			\OCP\Server::get(LoggerInterface::class)->warning('Failed to gather federation hosts for CSP', [
+			\OC::$server->query(LoggerInterface::class)->warning('Failed to gather federation hosts for CSP', [
 				'exception' => $e,
 				'app' => 'officeonline'
 			]);
@@ -183,5 +189,53 @@ class Application extends App implements IBootstrap {
 		$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
 		$port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
 		return "$scheme$host$port";
+	}
+
+	private function registerNewFileCreators($context) {
+		$context->injectFn(function (ITemplateManager $templateManager, IL10N $l10n, IConfig $config) {
+			if (!$this->isEnabled()) {
+				return;
+			}
+			$ooxml = $config->getAppValue(self::APP_ID, 'doc_format', '') === 'ooxml';
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+				$odtType = new TemplateFileCreator('richdocuments', $l10n->t('New document'), ($ooxml ? '.docx' : '.odt'));
+				if ($ooxml) {
+					$odtType->addMimetype('application/msword');
+					$odtType->addMimetype('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+				} else {
+					$odtType->addMimetype('application/vnd.oasis.opendocument.text');
+					$odtType->addMimetype('application/vnd.oasis.opendocument.text-template');
+				}
+				$odtType->setIconClass('icon-filetype-document');
+				$odtType->setRatio(21 / 29.7);
+				return $odtType;
+			});
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+				$odsType = new TemplateFileCreator('richdocuments', $l10n->t('New spreadsheet'), ($ooxml ? '.xlsx' : '.ods'));
+				if ($ooxml) {
+					$odsType->addMimetype('application/vnd.ms-excel');
+					$odsType->addMimetype('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+				} else {
+					$odsType->addMimetype('application/vnd.oasis.opendocument.spreadsheet');
+					$odsType->addMimetype('application/vnd.oasis.opendocument.spreadsheet-template');
+				}
+				$odsType->setIconClass('icon-filetype-spreadsheet');
+				$odsType->setRatio(16 / 9);
+				return $odsType;
+			});
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+				$odpType = new TemplateFileCreator('richdocuments', $l10n->t('New presentation'), ($ooxml ? '.pptx' : '.odp'));
+				if ($ooxml) {
+					$odpType->addMimetype('application/vnd.ms-powerpoint');
+					$odpType->addMimetype('application/vnd.openxmlformats-officedocument.presentationml.presentation');
+				} else {
+					$odpType->addMimetype('application/vnd.oasis.opendocument.presentation');
+					$odpType->addMimetype('application/vnd.oasis.opendocument.presentation-template');
+				}
+				$odpType->setIconClass('icon-filetype-presentation');
+				$odpType->setRatio(16 / 9);
+				return $odpType;
+			});
+		});
 	}
 }
