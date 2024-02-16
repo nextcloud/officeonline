@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0
+
+### Fixed
+
+- fix: File creation on Nextcloud 28 @juliushaertl [#519](https://github.com/nextcloud/officeonline/pull/519)
+- fix: Skip CSP setup on CLI @juliushaertl [#507](https://github.com/nextcloud/officeonline/pull/507)
+- fix: 28 deprecation compatiblity @juliushaertl [#490](https://github.com/nextcloud/officeonline/pull/490)
+
 ## 2.0.3
 
 ### Fixed
