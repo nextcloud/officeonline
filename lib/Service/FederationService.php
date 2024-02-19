@@ -139,7 +139,7 @@ class FederationService {
 				} else {
 					$wopi = $this->tokenManager->getRemoteTokenFromDirect($item, $direct->getUid());
 				}
-				$url = $remote . 'index.php/apps/officeonline/remote?shareToken=' . $item->getStorage()->getToken() .
+				$url = $remote . '/apps/officeonline/remote?shareToken=' . $item->getStorage()->getToken() .
 					'&remoteServer=' . $wopi->getServerHost() .
 					'&remoteServerToken=' . $wopi->getToken();
 				if ($item->getInternalPath() !== '') {
