@@ -265,6 +265,9 @@ class DocumentController extends Controller {
 			$policy = new ContentSecurityPolicy();
 			$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 			$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
+			if (method_exists($policy, 'allowInlineScript')) {
+				$policy->allowInlineScript(true);
+			}
 			$response->setContentSecurityPolicy($policy);
 			$response->addHeader('Cache-Control', 'no-cache, no-store');
 			$response->addHeader('Expires', '-1');
@@ -331,6 +334,9 @@ class DocumentController extends Controller {
 		$policy = new ContentSecurityPolicy();
 		$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 		$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
+		if (method_exists($policy, 'allowInlineScript')) {
+			$policy->allowInlineScript(true);
+		}
 		$response->setContentSecurityPolicy($policy);
 		return $response;
 	}
@@ -383,6 +389,9 @@ class DocumentController extends Controller {
 				$policy = new ContentSecurityPolicy();
 				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 				$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
+				if (method_exists($policy, 'allowInlineScript')) {
+					$policy->allowInlineScript(true);
+				}
 				$response->setContentSecurityPolicy($policy);
 				return $response;
 			}
@@ -448,6 +457,9 @@ class DocumentController extends Controller {
 				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('wopi_url')));
 				$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 				$policy->addAllowedFrameAncestorDomain('https://*');
+				if (method_exists($policy, 'allowInlineScript')) {
+					$policy->allowInlineScript(true);
+				}
 				$response->setContentSecurityPolicy($policy);
 				$response->addHeader('X-Frame-Options', 'ALLOW');
 				return $response;
