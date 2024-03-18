@@ -145,6 +145,9 @@ class Application extends App implements IBootstrap {
 			if (method_exists($policy, 'addAllowedFormActionDomain')) {
 				$policy->addAllowedFormActionDomain($this->domainOnly($publicWopiUrl));
 			}
+			if (method_exists($policy, 'allowInlineScript')) {
+				$policy->allowInlineScript(true);
+			}
 		}
 
 		/**
