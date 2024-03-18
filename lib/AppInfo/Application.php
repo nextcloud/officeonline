@@ -201,7 +201,7 @@ class Application extends App implements IBootstrap {
 			}
 			$ooxml = $config->getAppValue(self::APP_ID, 'doc_format', '') === 'ooxml';
 			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
-				$odtType = new TemplateFileCreator('richdocuments', $l10n->t('New document'), ($ooxml ? '.docx' : '.odt'));
+				$odtType = new TemplateFileCreator('richdocuments', $l10n->t('New Document'), ($ooxml ? '.docx' : '.odt'));
 				if ($ooxml) {
 					$odtType->addMimetype('application/msword');
 					$odtType->addMimetype('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
@@ -214,7 +214,7 @@ class Application extends App implements IBootstrap {
 				return $odtType;
 			});
 			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
-				$odsType = new TemplateFileCreator('richdocuments', $l10n->t('New spreadsheet'), ($ooxml ? '.xlsx' : '.ods'));
+				$odsType = new TemplateFileCreator('richdocuments', $l10n->t('New Spreadsheet'), ($ooxml ? '.xlsx' : '.ods'));
 				if ($ooxml) {
 					$odsType->addMimetype('application/vnd.ms-excel');
 					$odsType->addMimetype('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -227,7 +227,7 @@ class Application extends App implements IBootstrap {
 				return $odsType;
 			});
 			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
-				$odpType = new TemplateFileCreator('richdocuments', $l10n->t('New presentation'), ($ooxml ? '.pptx' : '.odp'));
+				$odpType = new TemplateFileCreator('richdocuments', $l10n->t('New Presentation'), ($ooxml ? '.pptx' : '.odp'));
 				if ($ooxml) {
 					$odpType->addMimetype('application/vnd.ms-powerpoint');
 					$odpType->addMimetype('application/vnd.openxmlformats-officedocument.presentationml.presentation');
