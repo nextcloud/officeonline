@@ -5,7 +5,7 @@
 	<summary>Edit office documents directly in your browser.</summary>
 	<description>This application can connect to an Office Online server with Nextcloud.</description>
 
-	<version>2.1.0</version>
+	<version>2.2.0</version>
 	<licence>agpl</licence>
 
 	<author>Julius Härtl</author>
@@ -28,7 +28,7 @@
 	<screenshot>https://github.com/nextcloud/officeonline/raw/main/screenshot.png</screenshot>
 
 	<dependencies>
-		<nextcloud min-version="24" max-version="28"/>
+		<nextcloud min-version="24" max-version="29"/>
 	</dependencies>
 
 	<settings>
