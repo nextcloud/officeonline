@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.1.1
+
+### Fixed
+
+- Fix wrong language in new file menu @Dennis1993 [#528](https://github.com/nextcloud/officeonline/pull/528)
+- Fixed remote redirect URL for federation shared files @hopleus [#523](https://github.com/nextcloud/officeonline/pull/523)
+- Fix broken calls for inline script support @juliushaertl [#526](https://github.com/nextcloud/officeonline/pull/526)
+
+### Other
+
+- chore(CI): Adjust testing matrix for Nextcloud 29 on main @nickvergessen [#542](https://github.com/nextcloud/officeonline/pull/542)
+
 ## 2.1.0
 
 ### Fixed
