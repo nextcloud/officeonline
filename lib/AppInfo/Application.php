@@ -27,11 +27,10 @@ namespace OCA\Officeonline\AppInfo;
 use OC\Files\Type\Detection;
 use OC\Security\CSP\ContentSecurityPolicy;
 use OCA\Federation\TrustedServers;
-use OCA\Files\Event\LoadAdditionalScriptsEvent;
-use OCA\Files_Sharing\Listener\LoadAdditionalListener;
+use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCA\Officeonline\Capabilities;
 use OCA\Officeonline\Hooks\WopiLockHooks;
-use OCA\Officeonline\Listener\FilesScriptListener;
+use OCA\Officeonline\Listener\SharingLoadAdditionalScriptsListener;
 use OCA\Officeonline\Listener\LoadViewerListener;
 use OCA\Officeonline\Middleware\WOPIMiddleware;
 use OCA\Officeonline\PermissionManager;
@@ -63,8 +62,7 @@ class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		$context->registerCapability(Capabilities::class);
 		$context->registerMiddleWare(WOPIMiddleware::class);
-		$context->registerEventListener(LoadAdditionalScriptsEvent::class, FilesScriptListener::class);
-		$context->registerEventListener(LoadAdditionalListener::class, FilesScriptListener::class);
+		$context->registerEventListener(BeforeTemplateRenderedEvent::class, SharingLoadAdditionalScriptsListener::class);
 		$context->registerEventListener(LoadViewer::class, LoadViewerListener::class);
 	}
 
