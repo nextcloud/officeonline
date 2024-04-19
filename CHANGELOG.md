@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.2
+
+### Fixed
+
+- fix: Load public share link file creation again @juliushaertl [#548](https://github.com/nextcloud/officeonline/pull/548)
+
 ## 2.1.1
 
 ### Fixed
