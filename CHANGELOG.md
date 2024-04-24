@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0
+
+### Added
+
+- Compatiblity with Nextcloud 29
+
 ## 2.1.2
 
 ### Fixed
