@@ -10,6 +10,6 @@ use OCP\Util;
 
 class LoadViewerListener implements IEventListener {
 	public function handle(Event $event): void {
-		Util::addScript('officeonline', 'viewer');
+		Util::addScript('officeonline', 'viewer', 'viewer');
 	}
 }
