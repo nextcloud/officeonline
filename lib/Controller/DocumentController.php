@@ -15,7 +15,6 @@ use OCA\Officeonline\Service\FederationService;
 use OCA\Officeonline\TokenManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
@@ -235,7 +234,7 @@ class DocumentController extends Controller {
 				return $response;
 			}
 
-			[$urlSrc, $token, $wopi] = $this->tokenManager->getToken($item->getId());
+			[$urlSrc, $token] = $this->tokenManager->getToken($item->getId());
 			$params = [
 				'permissions' => $item->getPermissions(),
 				'title' => $item->getName(),
@@ -259,13 +258,6 @@ class DocumentController extends Controller {
 			}
 
 			$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
-			$policy = new ContentSecurityPolicy();
-			$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-			$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-			if (method_exists($policy, 'allowInlineScript')) {
-				$policy->allowInlineScript(true);
-			}
-			$response->setContentSecurityPolicy($policy);
 			$response->addHeader('Cache-Control', 'no-cache, no-store');
 			$response->addHeader('Expires', '-1');
 			$response->addHeader('Pragma', 'no-cache');
@@ -327,15 +319,7 @@ class DocumentController extends Controller {
 			'userId' => $this->uid
 		];
 
-		$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
-		$policy = new ContentSecurityPolicy();
-		$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-		$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-		if (method_exists($policy, 'allowInlineScript')) {
-			$policy->allowInlineScript(true);
-		}
-		$response->setContentSecurityPolicy($policy);
-		return $response;
+		return new TemplateResponse('officeonline', 'documents', $params, 'base');
 	}
 
 	/**
@@ -382,15 +366,7 @@ class DocumentController extends Controller {
 					$params['urlsrc'] = $urlSrc;
 				}
 
-				$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
-				$policy = new ContentSecurityPolicy();
-				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-				$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-				if (method_exists($policy, 'allowInlineScript')) {
-					$policy->allowInlineScript(true);
-				}
-				$response->setContentSecurityPolicy($policy);
-				return $response;
+				return new TemplateResponse('officeonline', 'documents', $params, 'base');
 			}
 		} catch (\Exception $e) {
 			$this->logger->error($e->getMessage(), ['app' => 'officeonline', 'exception' => $e]);
@@ -450,14 +426,6 @@ class DocumentController extends Controller {
 				];
 
 				$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
-				$policy = new ContentSecurityPolicy();
-				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('wopi_url')));
-				$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-				$policy->addAllowedFrameAncestorDomain('https://*');
-				if (method_exists($policy, 'allowInlineScript')) {
-					$policy->allowInlineScript(true);
-				}
-				$response->setContentSecurityPolicy($policy);
 				$response->addHeader('X-Frame-Options', 'ALLOW');
 				return $response;
 			}
