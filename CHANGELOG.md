@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.1
+
+### Fixed
+
+- Fix: Add mising SharingLoadAdditionalScriptsListener [#553](https://github.com/nextcloud/officeonline/pull/553)
+- Updating pr-feedback.yml workflow from template [#555](https://github.com/nextcloud/officeonline/pull/555)
+- Updating dependabot-approve-merge.yml workflow from template [#556](https://github.com/nextcloud/officeonline/pull/556)
+- Fix(UI): script to register at viewer has to require viewer [#558](https://github.com/nextcloud/officeonline/pull/558)
+- Chore(CI): Updating pr-feedback.yml workflow from template [#562](https://github.com/nextcloud/officeonline/pull/562)
+
 ## 2.2.0
 
 ### Added
