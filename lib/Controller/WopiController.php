@@ -562,7 +562,8 @@ class WopiController extends Controller {
 				$suggested = iconv('utf-7', 'utf-8', $suggested);
 
 				if ($suggested[0] === '.') {
-					$path = dirname($file->getPath()) . '/New File' . $suggested;
+					$rawName = pathinfo($file->getName(), PATHINFO_FILENAME);
+					$path = dirname($file->getPath()) . '/' . $rawName . $suggested;
 				} elseif ($suggested[0] !== '/') {
 					$path = dirname($file->getPath()) . '/' . $suggested;
 				} else {
