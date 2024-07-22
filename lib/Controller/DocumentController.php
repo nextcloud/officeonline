@@ -11,12 +11,16 @@
 
 namespace OCA\Officeonline\Controller;
 
+use OC\Files\Type\TemplateManager;
+use OCA\Officeonline\AppConfig;
+use OCA\Officeonline\Helper;
 use OCA\Officeonline\Service\FederationService;
 use OCA\Officeonline\TokenManager;
-use \OCP\AppFramework\Controller;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Constants;
 use OCP\Files\File;
 use OCP\Files\Folder;
@@ -25,18 +29,13 @@ use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
-use \OCP\IRequest;
-use \OCP\IConfig;
-use \OCP\IL10N;
-use \OCP\ILogger;
-use \OCP\AppFramework\Http\ContentSecurityPolicy;
-use \OCP\AppFramework\Http\TemplateResponse;
-use \OCA\Officeonline\AppConfig;
-use \OCA\Officeonline\Helper;
+use OCP\IConfig;
+use OCP\IL10N;
+use OCP\ILogger;
+use OCP\IRequest;
 use OCP\ISession;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
-use OC\Files\Type\TemplateManager;
 
 class DocumentController extends Controller {
 	/** @var string */
@@ -238,7 +237,7 @@ class DocumentController extends Controller {
 				return $response;
 			}
 
-			[$urlSrc, $token, $wopi] = $this->tokenManager->getToken($item->getId());
+			[$urlSrc, $token] = $this->tokenManager->getToken($item->getId());
 			$params = [
 				'permissions' => $item->getPermissions(),
 				'title' => $item->getName(),
@@ -262,13 +261,6 @@ class DocumentController extends Controller {
 			}
 
 			$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
-			$policy = new ContentSecurityPolicy();
-			$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-			$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-			if (method_exists($policy, 'allowInlineScript')) {
-				$policy->allowInlineScript(true);
-			}
-			$response->setContentSecurityPolicy($policy);
 			$response->addHeader('Cache-Control', 'no-cache, no-store');
 			$response->addHeader('Expires', '-1');
 			$response->addHeader('Pragma', 'no-cache');
@@ -330,15 +322,7 @@ class DocumentController extends Controller {
 			'userId' => $this->uid
 		];
 
-		$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
-		$policy = new ContentSecurityPolicy();
-		$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-		$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-		if (method_exists($policy, 'allowInlineScript')) {
-			$policy->allowInlineScript(true);
-		}
-		$response->setContentSecurityPolicy($policy);
-		return $response;
+		return new TemplateResponse('officeonline', 'documents', $params, 'base');
 	}
 
 	/**
@@ -385,15 +369,7 @@ class DocumentController extends Controller {
 					$params['urlsrc'] = $urlSrc;
 				}
 
-				$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
-				$policy = new ContentSecurityPolicy();
-				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-				$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-				if (method_exists($policy, 'allowInlineScript')) {
-					$policy->allowInlineScript(true);
-				}
-				$response->setContentSecurityPolicy($policy);
-				return $response;
+				return new TemplateResponse('officeonline', 'documents', $params, 'base');
 			}
 		} catch (\Exception $e) {
 			$this->logger->logException($e, ['app' => 'officeonline']);
@@ -453,14 +429,6 @@ class DocumentController extends Controller {
 				];
 
 				$response = new TemplateResponse('officeonline', 'documents', $params, 'base');
-				$policy = new ContentSecurityPolicy();
-				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('wopi_url')));
-				$policy->addAllowedScriptDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-				$policy->addAllowedFrameAncestorDomain('https://*');
-				if (method_exists($policy, 'allowInlineScript')) {
-					$policy->allowInlineScript(true);
-				}
-				$response->setContentSecurityPolicy($policy);
 				$response->addHeader('X-Frame-Options', 'ALLOW');
 				return $response;
 			}
@@ -485,8 +453,8 @@ class DocumentController extends Controller {
 	 * @throws GenericFileException
 	 */
 	public function create($mimetype,
-						   $filename,
-						   $dir = '/') {
+		$filename,
+		$dir = '/') {
 		$root = $this->rootFolder->getUserFolder($this->uid);
 		try {
 			/** @var Folder $folder */
