@@ -25,6 +25,7 @@ namespace OCA\Officeonline\Service;
 
 use OCA\Federation\TrustedServers;
 use OCA\Files_Sharing\External\Storage as SharingExternalStorage;
+use OCA\Officeonline\AppConfig;
 use OCA\Officeonline\TokenManager;
 use OCP\AppFramework\QueryException;
 use OCP\Files\File;
@@ -34,6 +35,7 @@ use OCP\Http\Client\IClientService;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\ILogger;
+use OCP\IRequest;
 
 class FederationService {
 
@@ -47,8 +49,17 @@ class FederationService {
 	private $trustedServers;
 	/** @var TokenManager */
 	private $tokenManager;
+	private AppConfig $appConfig;
+	private IRequest $request;
 
-	public function __construct(ICacheFactory $cacheFactory, IClientService $clientService, ILogger $logger, TokenManager $tokenManager) {
+	public function __construct(
+		ICacheFactory $cacheFactory,
+		IClientService $clientService,
+		ILogger $logger,
+		TokenManager $tokenManager,
+		AppConfig $appConfig,
+		IRequest $request,
+	) {
 		$this->cache = $cacheFactory->createLocal('officeonline_remote/');
 		$this->clientService = $clientService;
 		$this->logger = $logger;
@@ -57,6 +68,8 @@ class FederationService {
 			$this->trustedServers = \OC::$server->query(\OCA\Federation\TrustedServers::class);
 		} catch (QueryException $e) {
 		}
+		$this->appConfig = $appConfig;
+		$this->request = $request;
 	}
 
 	public function getRemoteCollaboraURL($remote) {
@@ -151,5 +164,58 @@ class FederationService {
 			throw new NotFoundException('Failed to connect to remote collabora instance for ' . $item->getId());
 		}
 		return null;
+	}
+
+	public function getTrustedServers(): array {
+		if (!$this->trustedServers) {
+			return [];
+		}
+
+		return array_map(function (array $server) {
+			return $server['url'];
+		}, $this->trustedServers->getServers());
+	}
+
+	public function isTrustedRemote($domainWithPort) {
+		if (strpos($domainWithPort, 'http://') === 0 || strpos($domainWithPort, 'https://') === 0) {
+			$port = parse_url($domainWithPort, PHP_URL_PORT);
+			$domainWithPort = parse_url($domainWithPort, PHP_URL_HOST) . ($port ? ':' . $port : '');
+		}
+
+		if ($this->appConfig->isTrustedDomainAllowedForFederation() && $this->trustedServers !== null && $this->trustedServers->isTrustedServer($domainWithPort)) {
+			return true;
+		}
+
+		$domain = $this->getDomainWithoutPort($domainWithPort);
+
+		$trustedList = array_merge($this->appConfig->getGlobalScaleTrustedHosts(), [$this->request->getServerHost()]);
+		if (!is_array($trustedList)) {
+			return false;
+		}
+
+		foreach ($trustedList as $trusted) {
+			if (!is_string($trusted)) {
+				break;
+			}
+			$regex = '/^' . implode('[-\.a-zA-Z0-9]*', array_map(function ($v) {
+				return preg_quote($v, '/');
+			}, explode('*', $trusted))) . '$/i';
+			if (preg_match($regex, $domain) || preg_match($regex, $domainWithPort)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function getDomainWithoutPort($host) {
+		$pos = strrpos($host, ':');
+		if ($pos !== false) {
+			$port = substr($host, $pos + 1);
+			if (is_numeric($port)) {
+				$host = substr($host, 0, $pos);
+			}
+		}
+		return $host;
 	}
 }
