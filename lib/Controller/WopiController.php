@@ -56,7 +56,6 @@ use OCP\Files\Node;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
@@ -64,6 +63,7 @@ use OCP\Lock\LockedException;
 use OCP\PreConditionNotMetException;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
+use Psr\Log\LoggerInterface;
 
 class WopiController extends Controller {
 	/** @var IRootFolder */
@@ -80,7 +80,7 @@ class WopiController extends Controller {
 	private $userManager;
 	/** @var WopiMapper */
 	private $wopiMapper;
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 	/** @var TemplateManager */
 	private $templateManager;
@@ -118,7 +118,7 @@ class WopiController extends Controller {
 	 * @param TokenManager $tokenManager
 	 * @param IUserManager $userManager
 	 * @param WopiMapper $wopiMapper
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 * @param TemplateManager $templateManager
 	 * @param IManager $shareManager
 	 * @param UserScopeService $userScopeService
@@ -136,7 +136,7 @@ class WopiController extends Controller {
 		TokenManager $tokenManager,
 		IUserManager $userManager,
 		WopiMapper $wopiMapper,
-		ILogger $logger,
+		LoggerInterface $logger,
 		TemplateManager $templateManager,
 		IManager $shareManager,
 		UserScopeService $userScopeService,
@@ -200,7 +200,7 @@ class WopiController extends Controller {
 			$this->logger->debug($e->getMessage(), ['app' => 'officeonline', '']);
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		} catch (Exception $e) {
-			$this->logger->logException($e, ['app' => 'officeonline']);
+			$this->logger->error($e->getMessage(), ['app' => 'officeonline', 'exception' => $e]);
 			return new JSONResponse([], Http::STATUS_NOT_FOUND);
 		}
 
@@ -329,7 +329,7 @@ class WopiController extends Controller {
 			$response->addHeader('Content-Type', 'application/octet-stream');
 			return $response;
 		} catch (Exception $e) {
-			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getFile failed']);
+			$this->logger->error('getFile failed', ['exception' => $e, 'app' => 'officeonline']);
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 	}
@@ -457,7 +457,7 @@ class WopiController extends Controller {
 			$response->setStatus(Http::STATUS_CONFLICT);
 			return $response;
 		} catch (Exception $e) {
-			$this->logger->logException($e);
+			$this->logger->error($e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -485,7 +485,7 @@ class WopiController extends Controller {
 		} catch (NoLockProviderException|PreConditionNotMetException $e) {
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		} catch (Exception $e) {
-			$this->logger->logException($e);
+			$this->logger->error($e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -509,7 +509,7 @@ class WopiController extends Controller {
 			$response->setStatus(Http::STATUS_CONFLICT);
 			return $response;
 		} catch (Exception $e) {
-			$this->logger->logException($e);
+			$this->logger->error($e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -616,7 +616,7 @@ class WopiController extends Controller {
 					});
 				});
 			} catch (LockedException $e) {
-				$this->logger->logException($e);
+				$this->logger->error($e->getMessage(), ['exception' => $e]);
 				return new JSONResponse(['message' => 'File locked'], Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
 
@@ -636,7 +636,7 @@ class WopiController extends Controller {
 			}
 			return new JSONResponse(['LastModifiedTime' => Helper::toISO8601($file->getMTime())]);
 		} catch (Exception $e) {
-			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getFile failed']);
+			$this->logger->errpr('getFile failed', ['app' => 'officeonline', 'exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -839,7 +839,7 @@ class WopiController extends Controller {
 
 			return new JSONResponse([ 'Name' => $file->getName(), 'Url' => $url ], Http::STATUS_OK);
 		} catch (Exception $e) {
-			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'putRelativeFile failed']);
+			$this->logger->error('putRelativeFile failed', ['app' => 'officeonline', 'exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -928,7 +928,7 @@ class WopiController extends Controller {
 			$response->addHeader('Content-Type', 'application/octet-stream');
 			return $response;
 		} catch (Exception $e) {
-			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'officeonline', 'message' => 'getTemplate failed']);
+			$this->logger->error('getTemplate failed', ['app' => 'officeonline', 'exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}

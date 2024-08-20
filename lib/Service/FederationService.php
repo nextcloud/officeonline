@@ -33,7 +33,7 @@ use OCP\Files\NotFoundException;
 use OCP\Http\Client\IClientService;
 use OCP\ICache;
 use OCP\ICacheFactory;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class FederationService {
 
@@ -41,14 +41,14 @@ class FederationService {
 	private $cache;
 	/** @var IClientService */
 	private $clientService;
-	/** @var ILogger  */
+	/** @var LoggerInterface  */
 	private $logger;
 	/** @var TrustedServers */
 	private $trustedServers;
 	/** @var TokenManager */
 	private $tokenManager;
 
-	public function __construct(ICacheFactory $cacheFactory, IClientService $clientService, ILogger $logger, TokenManager $tokenManager) {
+	public function __construct(ICacheFactory $cacheFactory, IClientService $clientService, LoggerInterface $logger, TokenManager $tokenManager) {
 		$this->cache = $cacheFactory->createLocal('officeonline_remote/');
 		$this->clientService = $clientService;
 		$this->logger = $logger;

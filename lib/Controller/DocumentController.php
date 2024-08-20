@@ -18,7 +18,6 @@ use \OCP\AppFramework\Http\ContentSecurityPolicy;
 use \OCP\AppFramework\Http\TemplateResponse;
 use \OCP\IConfig;
 use \OCP\IL10N;
-use \OCP\ILogger;
 use \OCP\IRequest;
 use OC\Files\Type\TemplateManager;
 use OCA\Officeonline\Service\FederationService;
@@ -37,6 +36,7 @@ use OCP\Files\NotPermittedException;
 use OCP\ISession;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
+use Psr\Log\LoggerInterface;
 
 class DocumentController extends Controller {
 	/** @var string */
@@ -47,7 +47,7 @@ class DocumentController extends Controller {
 	private $settings;
 	/** @var AppConfig */
 	private $appConfig;
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 	/** @var IManager */
 	private $shareManager;
@@ -77,7 +77,7 @@ class DocumentController extends Controller {
 	 * @param IRootFolder $rootFolder
 	 * @param ISession $session
 	 * @param string $UserId
-	 * @param ILogger $logger
+	 * @param LoggerInterface $logger
 	 */
 	public function __construct(
 		$appName,
@@ -90,7 +90,7 @@ class DocumentController extends Controller {
 		IRootFolder $rootFolder,
 		ISession $session,
 		$UserId,
-		ILogger $logger,
+		LoggerInterface $logger,
 		\OCA\Officeonline\TemplateManager $templateManager,
 		FederationService $federationService,
 		Helper $helper
@@ -145,7 +145,7 @@ class DocumentController extends Controller {
 						'token' => $token
 					];
 				} catch (\Exception $e) {
-					$this->logger->logException($e, ['app' => 'officeonline']);
+					$this->logger->error($e->getMessage(), ['app' => 'officeonline', 'exception' => $e]);
 				}
 			}
 		}
@@ -199,7 +199,7 @@ class DocumentController extends Controller {
 				$this->logger->warning('Failed to connect to remote collabora instance for ' . $fileId);
 			}
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app' => 'officeonline']);
+			$this->logger->error($e->getMessage(), ['app' => 'officeonline', 'exception' => $e]);
 			$params = [
 				'errors' => [['error' => $e->getMessage()]]
 			];
@@ -274,7 +274,7 @@ class DocumentController extends Controller {
 			$response->addHeader('Pragma', 'no-cache');
 			return $response;
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app' => 'officeonline']);
+			$this->logger->error($e->getMessage(), ['app' => 'officeonline', 'exception' => $e]);
 			return $this->renderErrorPage('Failed to open the requested file.');
 		}
 
@@ -396,7 +396,7 @@ class DocumentController extends Controller {
 				return $response;
 			}
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app' => 'officeonline']);
+			$this->logger->error($e->getMessage(), ['app' => 'officeonline', 'exception' => $e]);
 		}
 
 		return $this->renderErrorPage('Failed to open the requested file.');
@@ -467,7 +467,7 @@ class DocumentController extends Controller {
 		} catch (ShareNotFound $e) {
 			return new TemplateResponse('core', '404', [], 'guest');
 		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app' => 'officeonline']);
+			$this->logger->error($e->getMessage(), ['app' => 'officeonline', 'exception' => $e]);
 			return $this->renderErrorPage('Failed to open the requested file.');
 		}
 

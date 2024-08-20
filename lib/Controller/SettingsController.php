@@ -20,7 +20,7 @@ use OCA\Officeonline\WOPI\DiscoveryManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 class SettingsController extends Controller {
 
@@ -30,7 +30,7 @@ class SettingsController extends Controller {
 	private $appConfig;
 	/** @var DiscoveryManager  */
 	private $discoveryManager;
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	public function __construct($appName,
@@ -38,7 +38,7 @@ class SettingsController extends Controller {
 		IL10N $l10n,
 		AppConfig $appConfig,
 		DiscoveryManager $discoveryManager,
-		ILogger $logger
+		LoggerInterface $logger
 	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
@@ -55,7 +55,7 @@ class SettingsController extends Controller {
 		try {
 			$response = $this->discoveryManager->fetchFromRemote();
 		} catch (Exception $e) {
-			$this->logger->logException($e, ['app' => 'officeonline']);
+			$this->logger->error('Could not fetch discovery details', ['app' => 'officeonline', 'exception' => $e]);
 			return new DataResponse([
 				'status' => $e->getCode(),
 				'message' => 'Could not fetch discovery details'

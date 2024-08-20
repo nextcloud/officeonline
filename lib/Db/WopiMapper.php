@@ -26,8 +26,8 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
-use OCP\ILogger;
 use OCP\Security\ISecureRandom;
+use Psr\Log\LoggerInterface;
 
 class WopiMapper extends QBMapper {
 	// Tokens expire after this many seconds (not defined by WOPI specs).
@@ -36,7 +36,7 @@ class WopiMapper extends QBMapper {
 	/** @var ISecureRandom */
 	private $random;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
 	/** @var ITimeFactory */
@@ -44,7 +44,7 @@ class WopiMapper extends QBMapper {
 
 	public function __construct(IDBConnection $db,
 		ISecureRandom $random,
-		ILogger $logger,
+		LoggerInterface $logger,
 		ITimeFactory $timeFactory) {
 		parent::__construct($db, 'officeonline_wopi', Wopi::class);
 
