@@ -22,33 +22,34 @@
 namespace OCA\Officeonline\Controller;
 
 use Exception;
-use OCP\Files\Lock\LockContext;
-use OCP\Files\Lock\ILock;
+use OC\Files\View;
+use OCA\Officeonline\AppConfig;
 use OCA\Officeonline\AppInfo\Application;
 
-use OC\Files\View;
 use OCA\Officeonline\Db\Wopi;
-use OCA\Officeonline\AppConfig;
 use OCA\Officeonline\Db\WopiLock;
 use OCA\Officeonline\Db\WopiLockMapper;
 use OCA\Officeonline\Db\WopiMapper;
+use OCA\Officeonline\Helper;
 use OCA\Officeonline\Hooks\WopiLockHooks;
 use OCA\Officeonline\Service\UserScopeService;
 use OCA\Officeonline\TemplateManager;
 use OCA\Officeonline\TokenManager;
-use OCA\Officeonline\Helper;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\StreamResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
+use OCP\Files\Lock\ILock;
 use OCP\Files\Lock\ILockManager;
+use OCP\Files\Lock\LockContext;
 use OCP\Files\Lock\NoLockProviderException;
 use OCP\Files\Lock\OwnerLockedException;
 use OCP\Files\Node;
@@ -58,7 +59,6 @@ use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\AppFramework\Http\StreamResponse;
 use OCP\IUserManager;
 use OCP\Lock\LockedException;
 use OCP\PreConditionNotMetException;
@@ -288,7 +288,7 @@ class WopiController extends Controller {
 	 * @throws NotPermittedException
 	 */
 	public function getFile($fileId,
-							$access_token) {
+		$access_token) {
 		[$fileId, , $version] = Helper::parseFileId($fileId);
 
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
@@ -538,7 +538,7 @@ class WopiController extends Controller {
 	 * @return JSONResponse
 	 */
 	public function putFile($fileId,
-							$access_token) {
+		$access_token) {
 		[$fileId, ,] = Helper::parseFileId($fileId);
 		$isPutRelative = ($this->request->getHeader('X-WOPI-Override') === 'PUT_RELATIVE');
 		$isRenameFile = ($this->request->getHeader('X-WOPI-Override') === 'RENAME_FILE');

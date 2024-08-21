@@ -25,6 +25,7 @@ declare(strict_types = 1);
 
 namespace OCA\Officeonline;
 
+use OC\Files\AppData\Factory;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\IAppData;
@@ -34,7 +35,6 @@ use OCP\Files\NotFoundException;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-use OC\Files\AppData\Factory;
 
 class TemplateManager {
 
@@ -117,12 +117,12 @@ class TemplateManager {
 	 * @throws \OCP\Files\NotPermittedException
 	 */
 	public function __construct($appName,
-								$userId,
-								IConfig $config,
-								IAppData $appData,
-								IURLGenerator $urlGenerator,
-								IRootFolder $rootFolder,
-								IL10N $l) {
+		$userId,
+		IConfig $config,
+		IAppData $appData,
+		IURLGenerator $urlGenerator,
+		IRootFolder $rootFolder,
+		IL10N $l) {
 		$this->appName = $appName;
 		$this->userId = $userId;
 		$this->config = $config;

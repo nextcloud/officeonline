@@ -43,9 +43,9 @@ class WopiMapper extends QBMapper {
 	private $timeFactory;
 
 	public function __construct(IDBConnection $db,
-								ISecureRandom $random,
-								ILogger $logger,
-								ITimeFactory $timeFactory) {
+		ISecureRandom $random,
+		ILogger $logger,
+		ITimeFactory $timeFactory) {
 		parent::__construct($db, 'officeonline_wopi', Wopi::class);
 
 		$this->random = $random;

@@ -2,9 +2,9 @@
 
 namespace OCA\Officeonline\Hooks;
 
+use OCA\Officeonline\Db\WopiLockMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
-use OCA\Officeonline\Db\WopiLockMapper;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;

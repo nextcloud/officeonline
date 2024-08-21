@@ -49,10 +49,10 @@ class DiscoveryManager {
 	 * @param ITimeFactory $timeFactory
 	 */
 	public function __construct(IClientService $clientService,
-								IAppData $appData,
-								IConfig $config,
-								IL10N $l10n,
-								ITimeFactory $timeFactory) {
+		IAppData $appData,
+		IConfig $config,
+		IL10N $l10n,
+		ITimeFactory $timeFactory) {
 		$this->clientService = $clientService;
 		try {
 			$this->appData = $appData->getFolder('officeonline');
