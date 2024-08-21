@@ -9,9 +9,9 @@ use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\Files\NotFoundException;
-use OCP\ILogger;
 use OCP\Lock\ILockingProvider;
 use OCP\Lock\LockedException;
+use Psr\Log\LoggerInterface;
 
 class WopiLockHooks {
 	private $rootFolder;
@@ -29,11 +29,11 @@ class WopiLockHooks {
 	 */
 	private $lockBypass;
 	/**
-	 * @var ILogger
+	 * @var LoggerInterface
 	 */
 	private $logger;
 
-	public function __construct(IRootFolder $rootFolder, ITimeFactory $timeFactory, ILogger $logger, WopiLockMapper $lockMapper) {
+	public function __construct(IRootFolder $rootFolder, ITimeFactory $timeFactory, LoggerInterface $logger, WopiLockMapper $lockMapper) {
 		$this->rootFolder = $rootFolder;
 		$this->lockMapper = $lockMapper;
 		$this->timeFactory = $timeFactory;
@@ -59,11 +59,11 @@ class WopiLockHooks {
 					$node->lock(ILockingProvider::LOCK_SHARED);
 				}
 			} catch (InvalidPathException $e) {
-				$this->logger->logException($e);
+				$this->logger->error('Invalid path', ['exception' => $e]);
 			} catch (NotFoundException $e) {
-				$this->logger->debug('not a file');
+				$this->logger->debug('not a file', ['exception' => $e]);
 			} catch (LockedException $e) {
-				$this->logger->logException($e);
+				$this->logger->error('Node already locked', ['exception' => $e]);
 			}
 		}
 	}

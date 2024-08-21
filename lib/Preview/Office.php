@@ -25,8 +25,8 @@ use OC\Preview\Provider;
 use OCA\Officeonline\Capabilities;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
-use OCP\ILogger;
 use OCP\Image;
+use Psr\Log\LoggerInterface;
 
 abstract class Office extends Provider {
 
@@ -39,10 +39,10 @@ abstract class Office extends Provider {
 	/** @var array */
 	private $capabilitites;
 
-	/** @var ILogger */
+	/** @var LoggerInterface */
 	private $logger;
 
-	public function __construct(IClientService $clientService, IConfig $config, Capabilities $capabilities, ILogger $logger) {
+	public function __construct(IClientService $clientService, IConfig $config, Capabilities $capabilities, LoggerInterface $logger) {
 		$this->clientService = $clientService;
 		$this->config = $config;
 		$this->capabilitites = $capabilities->getCapabilities()['officeonline'];
@@ -89,9 +89,8 @@ abstract class Office extends Provider {
 		try {
 			$response = $client->post($this->getWopiURL(). '/lool/convert-to/png', $options);
 		} catch (\Exception $e) {
-			$this->logger->logException($e, [
-				'message' => 'Failed to convert file to preview',
-				'level' => ILogger::INFO,
+			$this->logger->info('Failed to convert file to preview', [
+				'exception' => $e,
 				'app' => 'officeonline',
 			]);
 			return false;
