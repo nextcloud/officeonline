@@ -11,16 +11,16 @@
 
 namespace OCA\Officeonline\Controller;
 
-use Exception;
-use OCA\Officeonline\WOPI\DiscoveryManager;
 use \OCP\AppFramework\Controller;
+use \OCP\IL10N;
+use \OCP\IRequest;
+use Exception;
+use OCA\Officeonline\AppConfig;
+use OCA\Officeonline\WOPI\DiscoveryManager;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\ILogger;
-use \OCP\IRequest;
-use \OCP\IL10N;
-use OCA\Officeonline\AppConfig;
 
 class SettingsController extends Controller {
 
@@ -80,12 +80,12 @@ class SettingsController extends Controller {
 	}
 
 	public function setSettings($wopi_url,
-								$disable_certificate_verification,
-								$edit_groups,
-								$use_groups,
-								$doc_format,
-								$external_apps,
-								$canonical_webroot): JSONResponse {
+		$disable_certificate_verification,
+		$edit_groups,
+		$use_groups,
+		$doc_format,
+		$external_apps,
+		$canonical_webroot): JSONResponse {
 		$message = $this->l10n->t('Saved');
 
 		if ($wopi_url !== null) {

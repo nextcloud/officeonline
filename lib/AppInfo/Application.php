@@ -30,8 +30,8 @@ use OCA\Federation\TrustedServers;
 use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCA\Officeonline\Capabilities;
 use OCA\Officeonline\Hooks\WopiLockHooks;
-use OCA\Officeonline\Listener\SharingLoadAdditionalScriptsListener;
 use OCA\Officeonline\Listener\LoadViewerListener;
+use OCA\Officeonline\Listener\SharingLoadAdditionalScriptsListener;
 use OCA\Officeonline\Middleware\WOPIMiddleware;
 use OCA\Officeonline\PermissionManager;
 use OCA\Officeonline\Preview\MSExcel;
@@ -47,10 +47,10 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Files\Template\ITemplateManager;
 use OCP\Files\Template\TemplateFileCreator;
+use OCP\IConfig;
+use OCP\IL10N;
 use OCP\IPreview;
 use Psr\Log\LoggerInterface;
-use OCP\IL10N;
-use OCP\IConfig;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'officeonline';

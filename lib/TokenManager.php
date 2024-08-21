@@ -21,18 +21,18 @@
 
 namespace OCA\Officeonline;
 
-use OCA\Officeonline\Db\WopiMapper;
 use OCA\Officeonline\Db\Wopi;
+use OCA\Officeonline\Db\WopiMapper;
 use OCA\Officeonline\Service\CapabilitiesService;
 use OCA\Officeonline\WOPI\Parser;
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\IGroupManager;
+use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\Share\IManager;
-use OCP\IL10N;
 use OCP\Util;
 
 class TokenManager {

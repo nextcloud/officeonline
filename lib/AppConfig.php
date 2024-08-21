@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace OCA\Officeonline;
 
-use OCA\Officeonline\AppInfo\Application;
 use \OCP\IConfig;
+use OCA\Officeonline\AppInfo\Application;
 
 class AppConfig {
 	private $defaults = [

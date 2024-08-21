@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Officeonline\Controller;
 
+use OC\Files\Filesystem;
 use OCA\Officeonline\TemplateManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -38,7 +39,6 @@ use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\IL10N;
 use OCP\IPreview;
 use OCP\IRequest;
-use OC\Files\Filesystem;
 
 class TemplatesController extends Controller {
 	/** @var IL10N */
@@ -63,10 +63,10 @@ class TemplatesController extends Controller {
 	 * @param IPreview $preview
 	 */
 	public function __construct($appName,
-								IRequest $request,
-								IL10N $l10n,
-								TemplateManager $manager,
-								IPreview $preview) {
+		IRequest $request,
+		IL10N $l10n,
+		TemplateManager $manager,
+		IPreview $preview) {
 		parent::__construct($appName, $request);
 
 		$this->appName = $appName;

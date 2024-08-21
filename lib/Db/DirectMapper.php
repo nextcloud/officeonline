@@ -41,8 +41,8 @@ class DirectMapper extends QBMapper {
 	protected $timeFactory;
 
 	public function __construct(IDBConnection $db,
-								ISecureRandom $random,
-								ITimeFactory $timeFactory) {
+		ISecureRandom $random,
+		ITimeFactory $timeFactory) {
 		parent::__construct($db, 'officeonline_direct', Direct::class);
 
 		$this->random = $random;
