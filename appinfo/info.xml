@@ -3,7 +3,12 @@
 	<id>officeonline</id>
 	<name>Office Online integration</name>
 	<summary>Edit office documents directly in your browser.</summary>
-	<description>This application can connect to an Office Online server with Nextcloud.</description>
+	<description><![CDATA[This application can connect to an on-premise/self-hosted Microsoft Office Online Server which has added Nextcloud as a WOPI host.
+
+	**Note: The cloud-based Office 365 is not supported.**
+		
+	Microsoft Official Documentation: [Deploying Office Online Server](https://docs.microsoft.com/en-us/officeonlineserver/deploy-office-online-server)]]>
+	</description>
 
 	<version>3.0.0-dev.0</version>
 	<licence>agpl</licence>
