@@ -188,7 +188,7 @@ class Parser {
 		}
 
 		$actions = [
-			$edit && $file->getSize() === 0 ? self::ACTION_EDITNEW : null,
+			$edit && ($file->getSize() === 0 || $file->getSize() === 1) ? self::ACTION_EDITNEW : null,
 			$edit ? self::ACTION_EDIT : null,
 			self::ACTION_VIEW,
 		];
