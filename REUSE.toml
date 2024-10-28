@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+version = 1
+SPDX-PackageName = "officeonline"
+SPDX-PackageSupplier = "Nextcloud <info@nextcloud.com>"
+SPDX-PackageDownloadLocation = "https://github.com/nextcloud/officeonline"
+
+[[annotations]]
+path = ["l10n/**.js", "l10n/**.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2013-2016 ownCloud, Inc., 2016-2024 Nextcloud translators"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["tests/phpunit.xml"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2014-2016 ownCloud, Inc., 2020 Nextcloud translators"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ".tx/config"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2018 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["tests/composer.json", "tests/composer.lock", ".babelrc", "composer.json", "composer.lock", "package.json", "package-lock.json", "tsconfig.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2019 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["screenshot.png"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2020 Nextcloud GmbH and Nextcloud contributors"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = ["assets/*"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2016-2024 Nextcloud GmbH and Collabora Limited"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["img/app-dark.svg", "img/app.png", "img/app.svg", "img/x-office-document.svg", "img/x-office-presentation.svg", "img/x-office-spreadsheet.svg"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2018-2024 Google LLC"
+SPDX-License-Identifier = "Apache-2.0"

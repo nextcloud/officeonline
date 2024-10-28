@@ -1,12 +1,8 @@
 #!/bin/bash
 #
-# ownCloud
-#
-# @author Thomas Müller
-# @copyright 2014 Thomas Müller thomas.mueller@tmit.eu
-#
-
-# TODO: move this out of the repo to make it usable in other apps
+# SPDX-FileCopyrightText: 2014 Thomas Müller <thomas.mueller@tmit.eu>
+# SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
 
 set -e
 

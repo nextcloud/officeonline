@@ -1,3 +1,8 @@
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 import Types from './helpers/types'
 import axios from '@nextcloud/axios'
 import { getCapabilities } from '@nextcloud/capabilities'

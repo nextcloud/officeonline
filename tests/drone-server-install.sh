@@ -1,5 +1,7 @@
 #!/bin/bash
-# TODO: move this out of the repo to make it usable in other apps
+#
+# SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
 
 set -e
 
