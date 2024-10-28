@@ -1,6 +1,7 @@
 <?php
 /**
  * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-FileCopyrightText: 2014 ownCloud, Inc., Victor Dubiniuk <victor.dubiniuk@gmail.com>
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
