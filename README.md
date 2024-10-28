@@ -5,6 +5,8 @@
 -->
 # Office Online integration
 
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/officeonline)](https://api.reuse.software/info/github.com/nextcloud/officeonline)
+
 ![](./screenshot.png)
 
 ## Branches
