@@ -10,7 +10,7 @@
 	Microsoft Official Documentation: [Deploying Office Online Server](https://docs.microsoft.com/en-us/officeonlineserver/deploy-office-online-server)]]>
 	</description>
 
-	<version>3.0.0-dev.0</version>
+	<version>2.3.0</version>
 	<licence>agpl</licence>
 
 	<author>Julius Härtl</author>

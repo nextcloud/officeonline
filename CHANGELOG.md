@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.3.0
+
+### Added
+
+- Add support for Nextcloud 30
+- fix: add clarifying use case details to appstore @joshtrichards [#590](https://github.com/nextcloud/officeonline/pull/590)
+
+### Fixed
+
+- fix: Properly create new files on public share links @juliusknorr [#593](https://github.com/nextcloud/officeonline/pull/593)
+
+### Other
+
+- chore: Align dependencies (and PHP version) with current lowest supported Nextcloud version @susnux [#580](https://github.com/nextcloud/officeonline/pull/580)
+- refactor: Migrate away from deprecated `ILogger` to PSR-3 @susnux [#579](https://github.com/nextcloud/officeonline/pull/579)
+
 ## 2.2.1
 
 ### Fixed
