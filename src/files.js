@@ -1,6 +1,7 @@
 import Types from './helpers/types'
 import axios from '@nextcloud/axios'
 import { getCapabilities } from '@nextcloud/capabilities'
+import { generateUrl } from '@nextcloud/router'
 import './viewer.js'
 import Vue from 'vue'
 import Office from './view/Office'
@@ -77,7 +78,7 @@ const NewFilePlugin = {
 			})
 		}
 
-		axios.post(OC.generateUrl('apps/officeonline/ajax/documents/create'), { mimetype, filename, dir }).then(({ data }) => {
+		axios.post(generateUrl('apps/officeonline/ajax/documents/create'), { mimetype, filename, dir }).then(({ data }) => {
 			console.debug(data)
 			if (data && data.status === 'success') {
 				window.FileList.add(data.data, { animate: true, scrollTo: true })
