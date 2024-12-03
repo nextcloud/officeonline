@@ -182,8 +182,8 @@ class Parser {
 			'internal-' . $fallbackProtocol,
 		];
 
-		$userAgent = $_SERVER["HTTP_USER_AGENT"];
-		if (preg_match("/(android|mobile)/i", $userAgent)) {
+		$userAgent = $_SERVER['HTTP_USER_AGENT'];
+		if (preg_match('/(android|mobile)/i', $userAgent)) {
 			$edit = false;
 		}
 

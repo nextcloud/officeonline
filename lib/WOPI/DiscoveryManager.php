@@ -68,7 +68,7 @@ class DiscoveryManager {
 		try {
 			$file = $this->appData->getFile('discovery.xml');
 			$decodedFile = json_decode($file->getContent(), true);
-			if ($decodedFile['timestamp'] + 3600 > $this->timeFactory->getTime()) {
+			if ($this->timeFactory->getTime() < $decodedFile['timestamp'] + 3600) {
 				return $decodedFile['data'];
 			}
 		} catch (NotFoundException $e) {

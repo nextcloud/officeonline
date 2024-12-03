@@ -11,20 +11,17 @@
 
 namespace OCA\Officeonline\Controller;
 
-use \OCA\Officeonline\AppConfig;
-use \OCA\Officeonline\Helper;
-use \OCP\AppFramework\Controller;
-use \OCP\AppFramework\Http\ContentSecurityPolicy;
-use \OCP\AppFramework\Http\TemplateResponse;
-use \OCP\IConfig;
-use \OCP\IL10N;
-use \OCP\IRequest;
 use OC\Files\Type\TemplateManager;
+use OCA\Officeonline\AppConfig;
+use OCA\Officeonline\Helper;
 use OCA\Officeonline\Service\FederationService;
 use OCA\Officeonline\TokenManager;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Constants;
 use OCP\Files\File;
 use OCP\Files\Folder;
@@ -33,6 +30,9 @@ use OCP\Files\IRootFolder;
 use OCP\Files\Node;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\IConfig;
+use OCP\IL10N;
+use OCP\IRequest;
 use OCP\ISession;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
@@ -255,7 +255,7 @@ class DocumentController extends Controller {
 			if ($encryptionManager->isEnabled()) {
 				// Update the current file to be accessible with system public shared key
 				$owner = $item->getOwner()->getUID();
-				$absPath = '/' . $owner . '/' .  $item->getInternalPath();
+				$absPath = '/' . $owner . '/' . $item->getInternalPath();
 				$accessList = \OC::$server->getEncryptionFilesHelper()->getAccessList($absPath);
 				$accessList['public'] = true;
 				$encryptionManager->getEncryptionModule()->update($absPath, $owner, $accessList);

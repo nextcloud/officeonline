@@ -37,7 +37,7 @@ class DirectMapper extends QBMapper {
 	/** @var ISecureRandom */
 	protected $random;
 
-	/**@var ITimeFactory */
+	/** @var ITimeFactory */
 	protected $timeFactory;
 
 	public function __construct(IDBConnection $db,

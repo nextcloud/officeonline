@@ -114,7 +114,7 @@ class WOPIMiddleware extends Middleware {
 	 * @copyright (IPv6) MW. https://stackoverflow.com/questions/7951061/matching-ipv6-address-to-a-cidr-subnet via
 	 */
 	private function matchCidr(string $ip, string $range): bool {
-		list($subnet, $bits) = array_pad(explode('/', $range), 2, null);
+		[$subnet, $bits] = array_pad(explode('/', $range), 2, null);
 		if ($bits === null) {
 			$bits = 32;
 		}
@@ -133,23 +133,23 @@ class WOPIMiddleware extends Middleware {
 			$subnet = inet_pton($subnet);
 			$ip = inet_pton($ip);
 
-			$binMask = str_repeat("f", $bits / 4);
+			$binMask = str_repeat('f', $bits / 4);
 			switch ($bits % 4) {
 				case 0:
 					break;
 				case 1:
-					$binMask .= "8";
+					$binMask .= '8';
 					break;
 				case 2:
-					$binMask .= "c";
+					$binMask .= 'c';
 					break;
 				case 3:
-					$binMask .= "e";
+					$binMask .= 'e';
 					break;
 			}
 
 			$binMask = str_pad($binMask, 32, '0');
-			$binMask = pack("H*", $binMask);
+			$binMask = pack('H*', $binMask);
 
 			if (($ip & $binMask) === $subnet) {
 				return true;

@@ -349,12 +349,12 @@ class WopiController extends Controller {
 		}
 		$lck = $this->request->getHeader('X-WOPI-Lock');
 		$wover = $this->request->getHeader('X-WOPI-Override');
-		if (strlen($lck) === 0 && $wover !== "GET_LOCK" && strpos($wover, "LOCK") !== false) {
+		if (strlen($lck) === 0 && $wover !== 'GET_LOCK' && strpos($wover, 'LOCK') !== false) {
 			return new DataResponse([], Http::STATUS_BAD_REQUEST);
 		}
 		$result = new DataResponse([], Http::STATUS_NOT_IMPLEMENTED);
 		switch ($wover) {
-			case "LOCK":
+			case 'LOCK':
 				$oldLck = $this->request->getHeader('X-WOPI-OldLock');
 				if (strlen($oldLck) > 0) {
 					$fLock = $this->lockMapper->find($fileId);
@@ -392,12 +392,12 @@ class WopiController extends Controller {
 					$result->setStatus(Http::STATUS_OK);
 				}
 				break;
-			case "GET_LOCK":
+			case 'GET_LOCK':
 				$fLock = $this->lockMapper->find($fileId);
 				$result->setStatus(Http::STATUS_OK);
 				$result->addHeader('X-WOPI-Lock', empty($fLock) ? '' : $fLock->getValue());
 				break;
-			case "REFRESH_LOCK":
+			case 'REFRESH_LOCK':
 				$fLock = $this->lockMapper->find($fileId);
 				if (!empty($fLock)) {
 					if ($fLock->getValue() !== $lck) {
@@ -414,7 +414,7 @@ class WopiController extends Controller {
 					$result->addHeader('X-WOPI-Lock', '');
 				}
 				break;
-			case "UNLOCK":
+			case 'UNLOCK':
 				$fLock = $this->lockMapper->find($fileId);
 				if (!empty($fLock)) {
 					if ($fLock->getValue() !== $lck) {
@@ -664,7 +664,7 @@ class WopiController extends Controller {
 			return new JSONResponse([], Http::STATUS_UNAUTHORIZED);
 		}
 
-		if ((int) $fileId !== $wopi->getFileid()) {
+		if ((int)$fileId !== $wopi->getFileid()) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 

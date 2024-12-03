@@ -11,8 +11,8 @@
 
 namespace OCA\Officeonline;
 
-use \DateTime;
-use \DateTimeZone;
+use DateTime;
+use DateTimeZone;
 use OCP\Files\Folder;
 
 class Helper {
