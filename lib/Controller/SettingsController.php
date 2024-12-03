@@ -11,15 +11,15 @@
 
 namespace OCA\Officeonline\Controller;
 
-use \OCP\AppFramework\Controller;
-use \OCP\IL10N;
-use \OCP\IRequest;
 use Exception;
 use OCA\Officeonline\AppConfig;
 use OCA\Officeonline\WOPI\DiscoveryManager;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IL10N;
+use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
 class SettingsController extends Controller {
@@ -28,7 +28,7 @@ class SettingsController extends Controller {
 	private $l10n;
 	/** @var AppConfig */
 	private $appConfig;
-	/** @var DiscoveryManager  */
+	/** @var DiscoveryManager */
 	private $discoveryManager;
 	/** @var LoggerInterface */
 	private $logger;

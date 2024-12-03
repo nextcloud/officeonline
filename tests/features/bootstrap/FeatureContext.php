@@ -42,7 +42,7 @@ class FeatureContext implements Context {
 		preg_match_all($re, $contents, $matches, PREG_SET_ORDER, 0);
 		$result = [];
 		foreach ($matches as $match) {
-			$result[$match[1]] = str_replace("'", "", $match[2]);
+			$result[$match[1]] = str_replace("'", '', $match[2]);
 		}
 
 		$this->fileId = $result['fileId'];
@@ -69,7 +69,7 @@ class FeatureContext implements Context {
 		preg_match_all($re, $contents, $matches, PREG_SET_ORDER, 0);
 		$result = [];
 		foreach ($matches as $match) {
-			$result[$match[1]] = str_replace("'", "", $match[2]);
+			$result[$match[1]] = str_replace("'", '', $match[2]);
 		}
 
 		$this->fileId = $result['fileId'];
@@ -101,7 +101,7 @@ class FeatureContext implements Context {
 		preg_match_all($re, $contents, $matches, PREG_SET_ORDER, 0);
 		$result = [];
 		foreach ($matches as $match) {
-			$result[$match[1]] = str_replace("'", "", $match[2]);
+			$result[$match[1]] = str_replace("'", '', $match[2]);
 		}
 
 		$this->fileId = $result['fileId'];

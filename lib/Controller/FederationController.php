@@ -22,11 +22,11 @@
  */
 namespace OCA\Officeonline\Controller;
 
-use \OCP\AppFramework\OCSController;
 use OCA\Officeonline\Db\WopiMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\OCSController;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\Share\IManager;

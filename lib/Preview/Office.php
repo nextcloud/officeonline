@@ -87,7 +87,7 @@ abstract class Office extends Provider {
 		$options['multipart'] = [['name' => $path, 'contents' => $stream]];
 
 		try {
-			$response = $client->post($this->getWopiURL(). '/lool/convert-to/png', $options);
+			$response = $client->post($this->getWopiURL() . '/lool/convert-to/png', $options);
 		} catch (\Exception $e) {
 			$this->logger->info('Failed to convert file to preview', [
 				'exception' => $e,
