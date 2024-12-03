@@ -1,0 +1,99 @@
+<!--
+  - SPDX-FileCopyrightText: 2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+# Authors
+
+- aaukt <aaukt@users.noreply.github.com>
+- Aditya Bhatt <aditya@bhatts.org>
+- Andras Timar <andras.timar@collabora.com>
+- Andrea Xheli <axheli@axtsolutions.com>
+- Andreas Böhler <dev@aboehler.at>
+- Andreas Gruhler <andreas.gruhler@adfinis-sygroup.ch>
+- Andrej Lajovic <andrej.lajovic@ad-vega.si>
+- Andy Scherzinger <info@andy-scherzinger.de>
+- Andy Xheli <axheli@axtsolutions.com>
+- Arthur Schiwon <blizzz@arthur-schiwon.de>
+- Ashod Nakashian <ashod.nakashian@collabora.co.uk>
+- Azul <azul@riseup.net>
+- Bernhard Posselt <dev@bernhard-posselt.com>
+- Christoph Wurst <christoph@winzerhof-wurst.at>
+- Côme Chilliet <come.chilliet@nextcloud.com>
+- daniel <git@danger-it.de>
+- Daniel Hansson <daniel@techandme.se>
+- Daniel Kesselberg <mail@danielkesselberg.de>
+- David Prévot <david@tilapin.org>
+- Dennis1993 <Dennis1993@users.noreply.github.com>
+- Deutscher Bundesjugendring <digital@dbjr.de>
+- Elizabeth Danzberger <lizzy7128@tutanota.de>
+- Faruk Uzun <farukuzun@collabora.com>
+- Ferdinand Thiessen <opensource@fthiessen.de>
+- Frank Karlitschek <frank@nextcloud.com>
+- Friedrich W. H. Kossebau <friedrich@kogmbh.com>
+- Georg Ehrke <developer@georgehrke.com>
+- gokaysatir <gokaysatir@gmail.com>
+- Gábor Udvari <gabor.udvari@gmail.com>
+- Henry Castro <hcastro@collabora.com>
+- hopleus <hopleus@gmail.com>
+- Iván Sánchez Ortega <ivan@sanchezortega.es>
+- Jan Holesovsky <kendy@collabora.com>
+- Jan-Christoph Borchardt <hey@jancborchardt.net>
+- jknockaert <jasper@knockaert.nl>
+- Joas Schilling <coding@schilljs.com>
+- Johannes Weberhofer <jweberhofer@weberhofer.at>
+- John Molakvoæ <skjnldsv@protonmail.com>
+- Jonas <jonas@freesources.org>
+- Jonas Cosandey <jonascosandey@hotmail.com>
+- Josh <josh.t.richards@gmail.com>
+- josh4trunks <joshruehlig@gmail.com>
+- Julius Knorr <jus@bitgrid.net>
+- Jörn Friedrich Dreyer <jfd@butonic.de>
+- Lukas Reschke <lukas@statuscode.ch>
+- Marino Faggiana <m.faggiana@twsweb.it>
+- Marius Blüm <marius@lineone.io>
+- max-nextcloud <max@nextcloud.com>
+- Melroy van den Berg <webmaster@web-share.nl>
+- Mert Tumer <mert.tumer@collabora.com>
+- merttumer <mert.tumer@collabora.com>
+- michag86 <michag86@users.noreply.github.com>
+- Mihai Varga <mihai.mv13@gmail.com>
+- Miklos Vajna <vmiklos@collabora.co.uk>
+- Morris Jobke <hey@morrisjobke.de>
+- Muhammet Kara <muhammet.kara@collabora.com>
+- nhirokinet <nhirokinet@nhiroki.net>
+- nithom <nithom@online.de>
+- Olivier Paroz <oparoz@users.noreply.github.com>
+- Pascal de Bruijn <pmjdebruijn@pcode.nl>
+- Patrik Kernstock <info@pkern.at>
+- Pavel Krasikov <klonishe@gmail.com>
+- Pedro Pinto Silva <pedro.silva@collabora.com>
+- Pranav Kant <pranavk@collabora.com>
+- Péter Tóth <13013768+totpet@users.noreply.github.com>
+- Rainer Jung <rainer.jung@kippdata.de>
+- rakekniven <mark.ziegler@rakekniven.de>
+- RealRancor <Fisch.666@gmx.de>
+- Robin Appelman <robin@icewind.nl>
+- Roeland Jago Douma <roeland@famdouma.nl>
+- root <root@ubtu>
+- RuudschMaHinda <RuudschMaHinda@users.noreply.github.com>
+- Samuel Mehrbrodt <Samuel.Mehrbrodt@cib.de>
+- Sean Lee <leejoneshane@gmail.com>
+- siavash119 <siavash119@noreply.github.com>
+- Szymon Kłos <szymon.klos@collabora.com>
+- Tamás Zolnai <tamas.zolnai@collabora.com>
+- thebearon <baron@caesar.elte.hu>
+- Thomas Müller <thomas.mueller@tmit.eu>
+- Tobias Hintze <th@kogmbh.com>
+- Tobias Speicher <rootcommander@gmail.com>
+- Tobias Kaminsky <tobias@kaminsky.me>
+- Tor Lillqvist <tml@collabora.com>
+- Torge Kummerow <CySlider@users.noreply.github.com>
+- Valdnet <47037905+Valdnet@users.noreply.github.com>
+- Victor Dubiniuk <victor.dubiniuk@gmail.com>
+- Vidar Tysse <vidaren@users.noreply.github.com>
+- Vincent Petry <PVince81@yahoo.fr>
+- Volkan Gezer <volkangezer@gmail.com>
+- Wikinaut <mail@tgries.de>
+- Collabora Productivity
+- Nextcloud GmbH
+- ownCloud, Inc.

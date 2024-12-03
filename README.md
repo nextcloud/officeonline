@@ -1,4 +1,11 @@
+<!--
+  - SPDX-FileCopyrightText: 2016-2024 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-FileCopyrightText: 2013-2016 ownCloud, Inc.
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 # Office Online integration
+
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/officeonline)](https://api.reuse.software/info/github.com/nextcloud/officeonline)
 
 ![](./screenshot.png)
 
