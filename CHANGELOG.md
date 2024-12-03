@@ -4,6 +4,17 @@
 -->
 # Changelog
 
+## 2.3.1
+
+### Fixed
+
+- fix: Proper default value for to make mode parameter optional @juliusknorr [#604](https://github.com/nextcloud/officeonline/pull/604)
+
+### Other
+
+- Add reuse compliance @AndyScherzinger [#602](https://github.com/nextcloud/officeonline/pull/602)
+- style: Fix php-cs issues @juliusknorr [#605](https://github.com/nextcloud/officeonline/pull/605)
+
 ## 2.3.0
 
 ### Added
