@@ -199,7 +199,7 @@ class TemplatesController extends Controller {
 		$y,
 		$a = false,
 		$forceIcon = true,
-		string $mode): Http\Response {
+		string $mode = 'fill'): Http\Response {
 		if (!($node instanceof Node) || (!$forceIcon && !$this->preview->isAvailable($node))) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}
