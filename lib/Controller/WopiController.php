@@ -309,8 +309,7 @@ class WopiController extends Controller {
 
 		try {
 			/** @var File $file */
-			$userFolder = $this->rootFolder->getUserFolder($wopi->getOwnerUid());
-			$file = $userFolder->getById($fileId)[0];
+			$file = $this->getFileForWopiToken($wopi);
 			\OC_User::setIncognitoMode(true);
 			if ($version !== '0') {
 				$view = new View('/' . $wopi->getOwnerUid() . '/files');
