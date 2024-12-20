@@ -199,6 +199,7 @@ class Parser {
 	}
 
 	private function getUrlSrcByExtension(string $netZoneName, string $actionExt, $actionName): ?string {
+		$actionExt = strtolower($actionExt);
 		$result = $this->getParsed()->xpath(sprintf(
 			'/wopi-discovery/net-zone[@name=\'%s\']/app/action[@ext=\'%s\' and @name=\'%s\']',
 			$netZoneName, $actionExt, $actionName
