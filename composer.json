@@ -9,7 +9,7 @@
 	"config": {
 		"sort-packages": true,
 		"platform": {
-			"php": "7.4"
+			"php": "8.0"
 		}
 	},
 	"require": {
@@ -24,7 +24,7 @@
 		"test:unit": "phpunit -c tests/phpunit.xml"
 	},
 	"require-dev": {
-		"nextcloud/ocp": "dev-stable24",
+		"nextcloud/ocp": "dev-stable26",
 		"nextcloud/coding-standard": "^1.0.0",
 		"phpunit/phpunit": "^9",
 		"roave/security-advisories": "dev-latest"

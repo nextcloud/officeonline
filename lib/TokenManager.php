@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -68,7 +69,7 @@ class TokenManager {
 		IL10N $trans,
 		IUserManager $userManager,
 		IGroupManager $groupManager,
-		Helper $helper
+		Helper $helper,
 	) {
 		$this->rootFolder = $rootFolder;
 		$this->shareManager = $shareManager;

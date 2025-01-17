@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -30,7 +31,7 @@ class FederationController extends OCSController {
 		IRequest $request,
 		IConfig $config,
 		WopiMapper $wopiMapper,
-		IManager $shareManager
+		IManager $shareManager,
 	) {
 		parent::__construct($appName, $request);
 		$this->config = $config;
