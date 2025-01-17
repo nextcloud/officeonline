@@ -129,7 +129,7 @@ class WopiController extends Controller {
 		WopiLockMapper $lockMapper,
 		ITimeFactory $timeFactory,
 		WopiLockHooks $lockHooks,
-		ILockManager $lockManager
+		ILockManager $lockManager,
 	) {
 		parent::__construct($appName, $request);
 		$this->rootFolder = $rootFolder;

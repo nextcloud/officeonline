@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2014 ownCloud, Inc., Victor Dubiniuk <victor.dubiniuk@gmail.com>
@@ -89,7 +90,7 @@ class DocumentController extends Controller {
 		LoggerInterface $logger,
 		\OCA\Officeonline\TemplateManager $templateManager,
 		FederationService $federationService,
-		Helper $helper
+		Helper $helper,
 	) {
 		parent::__construct($appName, $request);
 		$this->uid = $UserId;

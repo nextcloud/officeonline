@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2018 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -55,7 +56,7 @@ class OCSController extends \OCP\AppFramework\OCSController {
 		DirectMapper $directMapper,
 		IURLGenerator $urlGenerator,
 		TemplateManager $manager,
-		FederationService $federationService
+		FederationService $federationService,
 	) {
 		parent::__construct($appName, $request);
 

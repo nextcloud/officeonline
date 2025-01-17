@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2016 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -33,7 +34,7 @@ class SettingsController extends Controller {
 		IL10N $l10n,
 		AppConfig $appConfig,
 		DiscoveryManager $discoveryManager,
-		LoggerInterface $logger
+		LoggerInterface $logger,
 	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
