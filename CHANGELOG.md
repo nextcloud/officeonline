@@ -4,6 +4,13 @@
 -->
 # Changelog
 
+## 2.3.2
+
+### Fixed
+
+- chore: Switch to new API to set volatile user to prevent persisting it in any case @juliusknorr [#606](https://github.com/nextcloud/officeonline/pull/606)
+- fix: Always lookup lower case file extensions @juliusknorr [#607](https://github.com/nextcloud/officeonline/pull/607)
+
 ## 2.3.1
 
 ### Fixed
