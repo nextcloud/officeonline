@@ -15,7 +15,7 @@
 	Microsoft Official Documentation: [Deploying Office Online Server](https://docs.microsoft.com/en-us/officeonlineserver/deploy-office-online-server)]]>
 	</description>
 
-	<version>3.0.0</version>
+	<version>3.1.0-dev.0</version>
 	<licence>agpl</licence>
 
 	<author>Julius Härtl</author>
@@ -38,7 +38,7 @@
 	<screenshot>https://github.com/nextcloud/officeonline/raw/main/screenshot.png</screenshot>
 
 	<dependencies>
-		<nextcloud min-version="26" max-version="31"/>
+		<nextcloud min-version="26" max-version="32"/>
 	</dependencies>
 
 	<settings>
