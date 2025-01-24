@@ -31,21 +31,21 @@ class WopiLock extends Entity {
 		$this->addType('id', 'string');
 	}
 
-	public function columnToProperty($column) {
-		if ($column === 'token_id') {
+	public function columnToProperty($columnName): string {
+		if ($columnName === 'token_id') {
 			return 'tokenId';
-		} elseif ($column === 'user_id') {
+		} elseif ($columnName === 'user_id') {
 			return 'userId';
-		} elseif ($column === 'file_id') {
+		} elseif ($columnName === 'file_id') {
 			return 'fileId';
-		} elseif ($column === 'valid_by') {
+		} elseif ($columnName === 'valid_by') {
 			return 'validBy';
 		} else {
-			return parent::columnToProperty($column);
+			return parent::columnToProperty($columnName);
 		}
 	}
 
-	public function propertyToColumn($property) {
+	public function propertyToColumn($property): string {
 		if ($property === 'tokenId') {
 			return 'token_id';
 		} elseif ($property === 'userId') {
