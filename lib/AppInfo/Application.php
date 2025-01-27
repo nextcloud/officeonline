@@ -8,11 +8,10 @@
 namespace OCA\Officeonline\AppInfo;
 
 use OC\Files\Type\Detection;
-use OC\Security\CSP\ContentSecurityPolicy;
-use OCA\Federation\TrustedServers;
 use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCA\Officeonline\Capabilities;
 use OCA\Officeonline\Hooks\WopiLockHooks;
+use OCA\Officeonline\Listener\AddContentSecurityPolicyListener;
 use OCA\Officeonline\Listener\LoadViewerListener;
 use OCA\Officeonline\Listener\SharingLoadAdditionalScriptsListener;
 use OCA\Officeonline\Middleware\WOPIMiddleware;
@@ -22,7 +21,6 @@ use OCA\Officeonline\Preview\MSWord;
 use OCA\Officeonline\Preview\OOXML;
 use OCA\Officeonline\Preview\OpenDocument;
 use OCA\Officeonline\Preview\Pdf;
-use OCA\Officeonline\Service\FederationService;
 use OCA\Viewer\Event\LoadViewer;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -33,7 +31,7 @@ use OCP\Files\Template\TemplateFileCreator;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IPreview;
-use Psr\Log\LoggerInterface;
+use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'officeonline';
@@ -45,6 +43,7 @@ class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		$context->registerCapability(Capabilities::class);
 		$context->registerMiddleWare(WOPIMiddleware::class);
+		$context->registerEventListener(AddContentSecurityPolicyEvent::class, AddContentSecurityPolicyListener::class);
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, SharingLoadAdditionalScriptsListener::class);
 		$context->registerEventListener(LoadViewer::class, LoadViewerListener::class);
 	}
@@ -55,7 +54,6 @@ class Application extends App implements IBootstrap {
 		}
 
 		$this->registerProvider();
-		$this->updateCSP();
 		$this->registerNewFileCreators($context);
 	}
 
@@ -107,58 +105,6 @@ class Application extends App implements IBootstrap {
 		});
 
 		$container->query(WopiLockHooks::class)->register();
-	}
-
-	public function updateCSP() {
-		if (\OC::$CLI) {
-			return;
-		}
-
-		$container = $this->getContainer();
-
-		$publicWopiUrl = \OC::$server->getConfig()->getAppValue('officeonline', 'wopi_url');
-		$publicWopiUrl = $publicWopiUrl === '' ? \OC::$server->getConfig()->getAppValue('officeonline', 'wopi_url') : $publicWopiUrl;
-		$cspManager = $container->getServer()->getContentSecurityPolicyManager();
-		$policy = new ContentSecurityPolicy();
-		if ($publicWopiUrl !== '') {
-			$policy->addAllowedFrameDomain('\'self\'');
-			$policy->addAllowedFrameDomain($this->domainOnly($publicWopiUrl));
-			if (method_exists($policy, 'addAllowedFormActionDomain')) {
-				$policy->addAllowedFormActionDomain($this->domainOnly($publicWopiUrl));
-			}
-			if (method_exists($policy, 'allowInlineScript')) {
-				$policy->allowInlineScript(true);
-			}
-		}
-
-		/**
-		 * Dynamically add CSP for federated editing
-		 */
-		$path = '';
-		try {
-			$path = $container->getServer()->getRequest()->getPathInfo();
-
-			if (strpos($path, '/apps/files') === 0 && $container->getServer()->getAppManager()->isEnabledForUser('federation')) {
-				/** @var TrustedServers $trustedServers */
-				$trustedServers = $container->query(TrustedServers::class);
-				/** @var FederationService $federationService */
-				$federationService = $container->query(FederationService::class);
-				$remoteAccess = $container->getServer()->getRequest()->getParam('officeonline_remote_access');
-
-				if ($remoteAccess && $trustedServers->isTrustedServer($remoteAccess)) {
-					$remoteCollabora = $federationService->getRemoteCollaboraURL($remoteAccess);
-					$policy->addAllowedFrameDomain($remoteAccess);
-					$policy->addAllowedFrameDomain($remoteCollabora);
-				}
-			}
-		} catch (\Throwable $e) {
-			\OC::$server->query(LoggerInterface::class)->warning('Failed to gather federation hosts for CSP', [
-				'exception' => $e,
-				'app' => 'officeonline'
-			]);
-		}
-
-		$cspManager->addDefaultPolicy($policy);
 	}
 
 	/**
