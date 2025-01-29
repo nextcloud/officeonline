@@ -4,6 +4,17 @@
 -->
 # Changelog
 
+## 3.1.0
+
+### Added
+
+- Support NC 31, drop 24,25 and with it PHP <8.0 support @blizzz [#610](https://github.com/nextcloud/officeonline/pull/610)
+
+### Fix
+
+- fix(GS): consolidate and extend CSP management @blizzz [#559](https://github.com/nextcloud/officeonline/pull/559)
+- fix: WopiLock is not 31 compatible @blizzz [#611](https://github.com/nextcloud/officeonline/pull/611)
+
 ## 2.3.2
 
 ### Fixed
