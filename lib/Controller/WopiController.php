@@ -538,8 +538,10 @@ class WopiController extends Controller {
 		}
 
 		// Set the user to register the change under his name
-		$this->userScopeService->setUserScope($wopi->getEditorUid());
-		$this->userScopeService->setFilesystemScope($wopi->getUserForFileAccess());
+		if (empty($wopi->getRemoteServer())) {
+			$this->userScopeService->setUserScope($wopi->getEditorUid());
+			$this->userScopeService->setFilesystemScope($wopi->getUserForFileAccess());
+		}
 
 		try {
 			if ($isPutRelative) {
@@ -587,7 +589,9 @@ class WopiController extends Controller {
 			$content = fopen('php://input', 'rb');
 
 			// Set the user to register the change under his name
-			$this->userScopeService->setUserScope($wopi->getEditorUid());
+			if (empty($wopi->getRemoteServer())) {
+				$this->userScopeService->setUserScope($wopi->getEditorUid());
+			}
 			$this->lockHooks->setLockBypass(true);
 
 			try {
@@ -803,8 +807,10 @@ class WopiController extends Controller {
 
 			$content = fopen('php://input', 'rb');
 			// Set the user to register the change under his name
-			$this->userScopeService->setUserScope($wopi->getEditorUid());
-			$this->userScopeService->setFilesystemScope($wopi->getEditorUid());
+			if (empty($wopi->getRemoteServer())) {
+				$this->userScopeService->setUserScope($wopi->getEditorUid());
+				$this->userScopeService->setFilesystemScope($wopi->getEditorUid());
+			}
 
 			$this->lockHooks->setLockBypass(true);
 			try {
