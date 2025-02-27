@@ -4,6 +4,13 @@
 -->
 # Changelog
 
+## 3.0.1
+
+### Fixed
+
+- fix: Avoid failures with share tokens used as user ids for remote instances @juliusknorr [#619](https://github.com/nextcloud/officeonline/pull/619)
+- fix(Db): Allow guest displaynames with a length of up to 255 chars @blizzz [#615](https://github.com/nextcloud/officeonline/pull/615)
+
 ## 3.0.0
 
 ### Added
