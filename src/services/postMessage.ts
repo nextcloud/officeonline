@@ -16,12 +16,13 @@ export interface WopiPostValues {
 interface WindowCallbackHandler { (): Window}
 
 export default class PostMessageService {
-	private readonly targets: {[name: string]: (Window|WindowCallbackHandler)};
-	private postMessageHandlers: Function[] = [];
+	protected targets: {[name: string]: (Window|WindowCallbackHandler)};
+	protected postMessageHandlers: Array<(data: { data: any, parsed: { msgId: string, args: WopiPostValues, deprecated: boolean } }) => void>;
 
 	constructor(targets: {[name: string]: (Window|WindowCallbackHandler)}) {
-		this.targets = targets
-		window.addEventListener('message', (event: {source: MessageEventSource, data: any, origin: string}) => {
+		this.targets = targets;
+		this.postMessageHandlers = [];
+		window.addEventListener('message', (event: MessageEvent) => {
 			this.handlePostMessage(event.data)
 		}, false)
 	}
@@ -37,7 +38,6 @@ export default class PostMessageService {
 		console.debug('PostMessageService.sendPostMessage', target, message)
 	}
 
-
 	sendWOPIPostMessage(target: string, msgId: string, values: any = {}) {
 		const msg = {
 			MessageId: msgId,
@@ -49,9 +49,9 @@ export default class PostMessageService {
 	}
 
 	private static parsePostMessage(data: any) {
-		let msgId: string,
-			args: WopiPostValues,
-			deprecated: boolean
+		let msgId: string = '';
+		let args: WopiPostValues = {};
+		let deprecated: boolean = false;
 
 		try {
 			const msg: WopiPost = JSON.parse(data)
@@ -64,11 +64,11 @@ export default class PostMessageService {
 		return { msgId, args, deprecated }
 	}
 
-	registerPostMessageHandler(callback: Function) {
+	registerPostMessageHandler(callback: (data: { data: any, parsed: { msgId: string, args: WopiPostValues, deprecated: boolean } }) => void) {
 		this.postMessageHandlers.push(callback)
 	}
 
-	unregisterPostMessageHandler(callback: Function) {
+	unregisterPostMessageHandler(callback: (data: { data: any, parsed: { msgId: string, args: WopiPostValues, deprecated: boolean } }) => void) {
 		const handlerIndex = this.postMessageHandlers.findIndex(cb => cb === callback)
 		delete this.postMessageHandlers[handlerIndex]
 	}
@@ -89,5 +89,4 @@ export default class PostMessageService {
 			})
 		})
 	}
-
 }

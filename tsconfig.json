@@ -1,15 +1,16 @@
 {
+	"include": ["src/**/*.ts", "src/**/*.vue", "src/env.d.ts"],
+	"exclude": ["node_modules", "vendor"],
 	"compilerOptions": {
-		"outDir": "./dist/",
-		"sourceMap": true,
-		"noImplicitAny": true,
-		"module": "es6",
-		"target": "es6",
-		"jsx": "react",
-		"allowJs": true
+		"outDir": "./js",
+		"allowJs": true,
+		"checkJs": false,
+		"noEmit": false,
+		"strictNullChecks": true,
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"types": [],
 	},
-	"exclude": [
-		"node_modules",
-		"vendor"
-	]
+	"vueCompilerOptions": {
+		"target": 2.7,
+	}
 }

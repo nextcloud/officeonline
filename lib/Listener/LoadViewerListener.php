@@ -15,6 +15,6 @@ use OCP\Util;
 
 class LoadViewerListener implements IEventListener {
 	public function handle(Event $event): void {
-		Util::addScript('officeonline', 'viewer', 'viewer');
+		Util::addScript('officeonline', 'officeonline-viewer', 'viewer');
 	}
 }

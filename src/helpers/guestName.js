@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import Config from './../services/config'
+import Config from './../services/config.ts'
 import { getCurrentUser } from '@nextcloud/auth'
 import { isDirectEditing } from './mobile'
 

@@ -5,9 +5,9 @@
 
 import { getRootUrl } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
-import Config from './services/config'
+import Config from './services/config.ts'
 import { setGuestNameCookie, shouldAskForGuestName } from './helpers/guestName'
-import PostMessageService from './services/postMessage'
+import PostMessageService from './services/postMessage.ts'
 import {
 	callMobileMessage,
 	isDirectEditing,
