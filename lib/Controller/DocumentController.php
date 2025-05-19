@@ -237,7 +237,11 @@ class DocumentController extends Controller {
 			[$urlSrc, $token] = $this->tokenManager->getToken($item->getId());
 			$params = [
 				'permissions' => $item->getPermissions(),
-				'title' => $item->getName(),
+
+				// The file name needs to be URL encoded else special characters
+				// cause problems when the server parses/validates the URL
+				'title' => urlencode($item->getName()),
+
 				'fileId' => $item->getId() . '_' . $this->settings->getSystemValue('instanceid'),
 				'token' => $token,
 				'urlsrc' => $urlSrc,
