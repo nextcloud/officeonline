@@ -4,7 +4,7 @@
  */
 
 import Vue from 'vue'
-import AdminSettings from './components/AdminSettings'
+import AdminSettings from './components/AdminSettings.vue'
 import '../css/admin.scss'
 
 // CSP config for webpack dynamic chunk loading

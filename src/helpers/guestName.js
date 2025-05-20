@@ -5,7 +5,7 @@
 
 import Config from './../services/config.ts'
 import { getCurrentUser } from '@nextcloud/auth'
-import { isDirectEditing } from './mobile'
+import { isDirectEditing } from './mobile.js'
 
 const getGuestNameCookie = function() {
 	const name = 'guestUser='

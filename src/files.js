@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import Types from './helpers/types'
-import axios from '@nextcloud/axios'
-import { getCapabilities } from '@nextcloud/capabilities'
 import './viewer.js'
 import Vue from 'vue'
-import Office from './view/Office'
+import Office from './view/Office.vue'
+import types from './helpers/types.js'
+import axios from '@nextcloud/axios'
+import { getCapabilities } from '@nextcloud/capabilities'
 
 import './css/icons.css'
 
@@ -24,11 +24,11 @@ Vue.prototype.OC = window.OC
 Vue.prototype.OCA = window.OCA
 
 const NewFilePlugin = {
-	attach: function(newFileMenu) {
+	attach(newFileMenu) {
 		const self = this
-		const document = Types.getFileType('document')
-		const spreadsheet = Types.getFileType('spreadsheet')
-		const presentation = Types.getFileType('presentation')
+		const document = types.getFileType('document')
+		const spreadsheet = types.getFileType('spreadsheet')
+		const presentation = types.getFileType('presentation')
 
 		newFileMenu.addMenuEntry({
 			id: 'add-' + document.extension,
@@ -36,7 +36,7 @@ const NewFilePlugin = {
 			templateName: t('officeonline', 'New Document') + '.' + document.extension,
 			iconClass: 'icon-filetype-document',
 			fileType: 'x-office-document',
-			actionHandler: function(filename) {
+			actionHandler(filename) {
 				self._createDocument(document.mime, filename)
 			},
 		})
@@ -47,7 +47,7 @@ const NewFilePlugin = {
 			templateName: t('officeonline', 'New Spreadsheet') + '.' + spreadsheet.extension,
 			iconClass: 'icon-filetype-spreadsheet',
 			fileType: 'x-office-spreadsheet',
-			actionHandler: function(filename) {
+			actionHandler(filename) {
 				self._createDocument(spreadsheet.mime, filename)
 			},
 		})
@@ -58,13 +58,13 @@ const NewFilePlugin = {
 			templateName: t('officeonline', 'New Presentation') + '.' + presentation.extension,
 			iconClass: 'icon-filetype-presentation',
 			fileType: 'x-office-presentation',
-			actionHandler: function(filename) {
+			actionHandler(filename) {
 				self._createDocument(presentation.mime, filename)
 			},
 		})
 	},
 
-	_createDocument: function(mimetype, filename) {
+	_createDocument(mimetype, filename) {
 		const dir = document.getElementById('dir') ? document.getElementById('dir').value : window.FileList.getCurrentDirectory()
 		try {
 			OCA.Files.Files.isFileNameValid(filename)

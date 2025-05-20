@@ -111,7 +111,7 @@ export default {
 	data() {
 		return {
 			serverMode: '',
-			serverError: Object.values(getCapabilities()['officeonline'].discovery).length > 0 ? SERVER_STATE_OK : SERVER_STATE_CONNECTION_ERROR,
+			serverError: Object.values(getCapabilities().officeonline.discovery).length > 0 ? SERVER_STATE_OK : SERVER_STATE_CONNECTION_ERROR,
 			updating: false,
 			groups: [],
 			tags: [],
@@ -160,7 +160,7 @@ export default {
 				continue
 			}
 
-			const [ parent, setting ] = key.split('_')
+			const [parent, setting] = key.split('_')
 			if (parent === 'watermark') {
 				Vue.set(this.settings[parent], setting, this.initial.settings[key])
 			} else {
@@ -274,7 +274,7 @@ export default {
 			try {
 				const result = await axios.post(
 					OC.filePath('officeonline', 'ajax', 'admin.php'),
-					data
+					data,
 				)
 				this.updating = false
 				return result

@@ -5,7 +5,7 @@
 
 import '../css/filetypes.scss'
 
-import Office from './view/Office'
+import Office from './view/Office.vue'
 import { getCapabilities } from '@nextcloud/capabilities'
 
 const supportedMimes = getCapabilities().officeonline.mimetypes
