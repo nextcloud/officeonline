@@ -16,9 +16,9 @@ const languageToBCP47 = () => {
 	// special case where setting the bc47 region depending on the locale setting makes sense
 	const whitelist = {
 		de: {
-			'de_CH': 'de-CH',
-			'gsw': 'de-CH',
-			'gsw_CH': 'de-CH',
+			de_CH: 'de-CH',
+			gsw: 'de-CH',
+			gsw_CH: 'de-CH',
 		},
 	}
 	const matchingWhitelist = whitelist[language]

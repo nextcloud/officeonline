@@ -4,7 +4,7 @@
 -->
 
 <template>
-	<Multiselect v-model="inputValObjects"
+	<NcSelect v-model="inputValObjects"
 		:options="groupsArray"
 		:options-limit="5"
 		:placeholder="label"
@@ -18,18 +18,18 @@
 		@input="update"
 		@search-change="asyncFindGroup">
 		<span slot="noResult">{{ t('settings', 'No results') }}</span>
-	</Multiselect>
+	</NcSelect>
 </template>
 
 <script>
 import axios from '@nextcloud/axios'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 
 let uuid = 0
 export default {
 	name: 'SettingsSelectGroup',
 	components: {
-		Multiselect,
+		NcSelect,
 	},
 	props: {
 		label: {
@@ -68,7 +68,7 @@ export default {
 			this.inputValObjects = this.getValueObject()
 		},
 	},
-	created: function() {
+	created() {
 		this.uuid = uuid.toString()
 		uuid += 1
 		this.asyncFindGroup('').then((result) => {
@@ -81,12 +81,12 @@ export default {
 				(id) => {
 					if (typeof this.groups[id] === 'undefined') {
 						return {
-							id: id,
+							id,
 							displayname: id,
 						}
 					}
 					return this.groups[id]
-				}
+				},
 			)
 		},
 		update() {

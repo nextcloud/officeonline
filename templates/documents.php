@@ -19,7 +19,7 @@
 </script>
 
 <?php
-script('officeonline', 'document');
+script('officeonline', 'officeonline-document');
 ?>
 <div id="loadingContainer"></div>
 <div id="proxyLoadingContainer">

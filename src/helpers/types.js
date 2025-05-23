@@ -1,10 +1,9 @@
-
 /**
  * SPDX-FileCopyrightText: 2019 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-const ooxml = OC.getCapabilities()['officeonline']['config']['doc_format'] === 'ooxml'
+const ooxml = OC.getCapabilities().officeonline.config.doc_format === 'ooxml'
 
 const getFileTypes = () => {
 	if (ooxml) {

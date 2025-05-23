@@ -19,6 +19,6 @@ class SharingLoadAdditionalScriptsListener implements IEventListener {
 		if (!$event instanceof BeforeTemplateRenderedEvent) {
 			return;
 		}
-		\OCP\Util::addScript('officeonline', 'files');
+		\OCP\Util::addScript('officeonline', 'officeonline-files');
 	}
 }

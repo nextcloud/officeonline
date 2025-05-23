@@ -12,6 +12,6 @@ use OCP\EventDispatcher\IEventListener;
 
 class FilesScriptListener implements IEventListener {
 	public function handle(Event $event): void {
-		\OCP\Util::addScript('officeonline', 'files', 'viewer');
+		\OCP\Util::addScript('officeonline', 'officeonline-files', 'viewer');
 	}
 }

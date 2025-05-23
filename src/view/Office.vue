@@ -12,10 +12,11 @@
 </template>
 
 <script>
+import { getSharingToken } from '@nextcloud/sharing/public'
 import { getCurrentDirectory } from './../helpers/index.js'
 
-import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url'
-import PostMessageService from '../services/postMessage'
+import { getDocumentUrlForFile, getDocumentUrlForPublicFile } from '../helpers/url.js'
+import PostMessageService from '../services/postMessage.ts'
 
 const PostMessages = new PostMessageService({
 	FRAME_DOCUMENT: () => document.getElementById('officeonlineframe').contentWindow,
@@ -71,12 +72,9 @@ export default {
 	},
 	methods: {
 		async load() {
-			const sharingToken = document.getElementById('sharingToken')
-			const dir = getCurrentDirectory()
+			const sharingToken = getSharingToken()
 			let documentUrl = ''
-			if (sharingToken && dir === '') {
-				documentUrl = getDocumentUrlForPublicFile(this.filename)
-			} else if (sharingToken) {
+			if (sharingToken) {
 				documentUrl = getDocumentUrlForPublicFile(this.filename, this.fileid) + '&path=' + encodeURIComponent(this.filename)
 			} else {
 				documentUrl = getDocumentUrlForFile(this.filename, this.fileid) + '&path=' + encodeURIComponent(this.filename)

@@ -5,15 +5,15 @@
 
 import { getRootUrl } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
-import Config from './services/config'
-import { setGuestNameCookie, shouldAskForGuestName } from './helpers/guestName'
-import PostMessageService from './services/postMessage'
+import Config from './services/config.ts'
+import { setGuestNameCookie, shouldAskForGuestName } from './helpers/guestName.js'
+import PostMessageService from './services/postMessage.ts'
 import {
 	callMobileMessage,
 	isDirectEditing,
 	isMobileInterfaceAvailable,
-} from './helpers/mobile'
-import { getWopiUrl, getSearchParam } from './helpers/url'
+} from './helpers/mobile.js'
+import { getWopiUrl, getSearchParam } from './helpers/url.js'
 
 import '../css/document.scss'
 
@@ -90,7 +90,7 @@ const hideLoadingIndicator = () => {
 showLoadingIndicator()
 
 $.widget('oc.guestNamePicker', {
-	_create: function() {
+	_create() {
 		hideLoadingIndicator()
 
 		const text = document.createElement('div')
@@ -123,13 +123,13 @@ $.widget('oc.guestNamePicker', {
 /**
  * Type definitions for WOPI Post message objects
  *
- * @typedef {Object} View
- * @property {Number} ViewId
+ * @typedef {object} View
+ * @property {number} ViewId
  * @property {string} UserName
  * @property {string} UserId
- * @property {Number} Color
- * @property {Boolean} ReadOnly
- * @property {Boolean} IsCurrentView
+ * @property {number} Color
+ * @property {boolean} ReadOnly
+ * @property {boolean} IsCurrentView
  */
 
 const documentsMain = {
@@ -146,7 +146,7 @@ const documentsMain = {
 	wopiClientFeatures: null,
 
 	// generates docKey for given fileId
-	_generateDocKey: function(wopiFileId) {
+	_generateDocKey(wopiFileId) {
 		let canonicalWebroot = Config.get('canonical_webroot')
 		let ocurl = getRootUrl() + '/index.php/apps/officeonline/wopi/files/' + wopiFileId
 		if (canonicalWebroot) {
@@ -169,7 +169,7 @@ const documentsMain = {
 						+ '<div id="revViewer"></div>'
 						+ '</div>',
 
-		showViewer: function(fileId, title) {
+		showViewer(fileId, title) {
 			// remove previous viewer, if open, and set a new one
 			if (documentsMain.isViewerMode) {
 				$('#revViewer').remove()
@@ -201,7 +201,7 @@ const documentsMain = {
 			})
 		},
 
-		loadRevViewerContainer: function() {
+		loadRevViewerContainer() {
 			if (!$('revViewerContainer').length) {
 				$(document.body).prepend(documentsMain.UI.viewContainer)
 				const closeButton = $('<button class="icon-close closeButton" title="' + t('officeonline', 'Close version preview') + '"/>')
@@ -209,7 +209,7 @@ const documentsMain = {
 			}
 		},
 
-		showEditor: function(title, fileId, action) {
+		showEditor(title, fileId, action) {
 			if (!documentsMain.renderComplete) {
 				setTimeout(function() { documentsMain.UI.showEditor(title, fileId, action) }, 10)
 				console.debug('Waiting for page to render…')
@@ -282,7 +282,7 @@ const documentsMain = {
 				// In case of editor inactivity
 				setTimeout(function() {
 					if (!documentsMain.isFrameReady) {
-						const message = { 'MessageId': 'App_LoadingStatus', 'Values': { 'Status': 'Timeout' } }
+						const message = { MessageId: 'App_LoadingStatus', Values: { Status: 'Timeout' } }
 						editorInitListener({ data: JSON.stringify(message), parsed: message })
 					}
 				}, 45000)
@@ -315,7 +315,7 @@ const documentsMain = {
 									title += `_${version}`
 								}
 								documentsMain.UI.showViewer(
-									fileId, title
+									fileId, title,
 								)
 							}
 							break
@@ -380,7 +380,7 @@ const documentsMain = {
 					case 'rev-history':
 						documentsMain.UI.loadRevViewerContainer()
 						documentsMain.UI.showViewer(
-							documentsMain.fileId, documentsMain.title
+							documentsMain.fileId, documentsMain.title,
 						)
 						break
 					case 'RD_Version_Restored':
@@ -397,12 +397,12 @@ const documentsMain = {
 							t('officeonline', 'Save As'),
 							function(result, value) {
 								if (result === true && value) {
-									PostMessages.sendWOPIPostMessage('loolframe', 'Action_SaveAs', { 'Filename': value })
+									PostMessages.sendWOPIPostMessage('loolframe', 'Action_SaveAs', { Filename: value })
 								}
 							},
 							true,
 							t('officeonline', 'New filename'),
-							false
+							false,
 						).then(function() {
 							const $dialog = $('.oc-dialog:visible')
 							const $buttons = $dialog.find('button')
@@ -426,7 +426,7 @@ const documentsMain = {
 			$('#loleafletform').submit()
 		},
 
-		hideEditor: function() {
+		hideEditor() {
 			// Fade out editor
 			$('#mainContainer').fadeOut('fast', function() {
 				$('#mainContainer').remove()
@@ -436,7 +436,7 @@ const documentsMain = {
 		},
 	},
 
-	onStartup: function() {
+	onStartup() {
 		// Does anything indicate that we need to autostart a session?
 		const fileId = (getSearchParam('fileId') || '').replace(/^\W*/, '')
 
@@ -448,7 +448,7 @@ const documentsMain = {
 		documentsMain.ready = true
 	},
 
-	initSession: function() {
+	initSession() {
 		documentsMain.urlsrc = Config.get('urlsrc')
 		documentsMain.fullPath = Config.get('path')
 		documentsMain.token = Config.get('token')
@@ -464,11 +464,11 @@ const documentsMain = {
 		})
 	},
 
-	loadDocument: function(title, fileId) {
+	loadDocument(title, fileId) {
 		documentsMain.UI.showEditor(title, fileId, 'write')
 	},
 
-	onEditorShutdown: function(message) {
+	onEditorShutdown(message) {
 		OC.Notification.show(message)
 
 		$(window).off('beforeunload')
@@ -483,7 +483,7 @@ const documentsMain = {
 		$('footer,nav').show()
 	},
 
-	onClose: function() {
+	onClose() {
 		documentsMain.isEditorMode = false
 		$(window).off('beforeunload')
 		$(window).off('unload')
@@ -494,7 +494,7 @@ const documentsMain = {
 		PostMessages.sendPostMessage('parent', 'close', '*')
 	},
 
-	onCloseViewer: function() {
+	onCloseViewer() {
 		$('#revisionsContainer *').off()
 
 		$('#revPanelContainer').remove()
@@ -504,14 +504,14 @@ const documentsMain = {
 		$('#loleafletframe').focus()
 	},
 
-	postAsset: function(filename, url) {
+	postAsset(filename, url) {
 		PostMessages.sendWOPIPostMessage('loolframe', 'Action_InsertGraphic', {
-			filename: filename,
-			url: url,
+			filename,
+			url,
 		})
 	},
 
-	postGrabFocus: function() {
+	postGrabFocus() {
 		PostMessages.sendWOPIPostMessage('loolframe', 'Grab_Focus')
 	},
 }
