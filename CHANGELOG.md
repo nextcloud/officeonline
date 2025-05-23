@@ -4,6 +4,13 @@
 -->
 # Changelog
 
+## 3.1.0
+
+### Fixed
+
+- Fix public share links for 31 @juliusknorr [#633](https://github.com/nextcloud/officeonline/pull/633)
+- fix: url encode file name @elzody [#634](https://github.com/nextcloud/officeonline/pull/634)
+
 ## 3.0.1
 
 ### Fixed
