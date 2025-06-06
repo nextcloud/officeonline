@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-FileCopyrightText: 2014-2015 ownCloud, Inc.
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+use OCP\App\IAppManager;
+use OCP\Server;
+
 if (!defined('PHPUNIT_RUN')) {
 	define('PHPUNIT_RUN', 1);
 }
 
-require_once __DIR__ . '/../../../lib/base.php';
+require_once __DIR__ . '/../../../tests/autoload.php';
 
-if (!class_exists('\PHPUnit\Framework\TestCase')) {
-	require_once('PHPUnit/Autoload.php');
-}
-\OC_App::loadApp('officeonline');
-OC_Hook::clear();
+Server::get(IAppManager::class)->loadApp('officeonline');
