@@ -51,7 +51,7 @@
     "@nextcloud/stylelint-config": "^3.0.1",
     "@nextcloud/webpack-vue-config": "^6.3.0",
     "@vue/test-utils": "^2.4.6",
-    "acorn": "^8.8.0",
+    "acorn": "^8.15.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^29.7.0",
