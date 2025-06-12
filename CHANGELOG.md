@@ -4,6 +4,12 @@
 -->
 # Changelog
 
+## 3.0.2
+
+### Fixed
+
+- fix: url encode file name @elzody [#634](https://github.com/nextcloud/officeonline/pull/634)
+
 ## 3.0.1
 
 ### Fixed
