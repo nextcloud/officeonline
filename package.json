@@ -59,7 +59,7 @@
     "browserslist-config-nextcloud": "0.1.0",
     "css-loader": "^7.1.2",
     "file-loader": "^6.2.0",
-    "jest": "^30.0.2",
+    "jest": "^30.0.3",
     "jest-environment-jsdom-fourteen": "^1.0.1",
     "jest-serializer-vue": "^3.1.0",
     "prettier-eslint": "^16.4.2",
