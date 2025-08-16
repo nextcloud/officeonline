@@ -334,6 +334,10 @@ class WopiController extends Controller {
 		}
 		$lck = $this->request->getHeader('X-WOPI-Lock');
 		$wover = $this->request->getHeader('X-WOPI-Override');
+		$oldLck = $this->request->getHeader('X-WOPI-OldLock');
+
+		$this->logger->debug('Fallback lock operation: ' . $wover . ' for file ' . $fileId . ' with lock ' . $lck . ' and old lock ' . $oldLck);
+
 		if (strlen($lck) === 0 && $wover !== 'GET_LOCK' && strpos($wover, 'LOCK') !== false) {
 			return new DataResponse([], Http::STATUS_BAD_REQUEST);
 		}
@@ -418,12 +422,14 @@ class WopiController extends Controller {
 		if ($result->getStatus() !== Http::STATUS_NOT_IMPLEMENTED) {
 			$result->addHeader('X-WOPI-ItemVersion', $file->getMTime());
 		}
+		$this->logger->debug('Fallback lock operation result: ' . $result->getStatus(), ['headers' => $result->getHeaders()]);
 		return $result;
 	}
 
 
 	private function lock(Wopi $wopi): JSONResponse {
 		$wopiLock = $this->request->getHeader('X-WOPI-Lock');
+		$this->logger->debug('Lock file ' . $wopiLock . ' request');
 
 		try {
 			$response = new JSONResponse();
@@ -435,8 +441,10 @@ class WopiController extends Controller {
 			$this->logger->debug('Lock file ' . $lock->getToken() . ' request: ' . $wopiLock);
 			return $response;
 		} catch (NoLockProviderException|PreConditionNotMetException $e) {
+			$this->logger->warning('Failed to lock file ' . $wopiLock . ' request: ' . $e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		} catch (OwnerLockedException $e) {
+			$this->logger->debug('File already locked by ' . $e->getLock()->getOwner());
 			$response = new JSONResponse();
 			$response->setHeaders(['X-WOPI-Lock' => $e->getLock()->getToken()]);
 			$response->setStatus(Http::STATUS_CONFLICT);
@@ -450,10 +458,12 @@ class WopiController extends Controller {
 	private function unlock(Wopi $wopi): JSONResponse {
 		try {
 			$wopiLock = $this->request->getHeader('X-WOPI-Lock');
+			$this->logger->debug('Unlock file ' . $wopiLock . ' request');
 
 			// OOS sends UNLOCK with GetCurrentLock-00000000-0000-0000-0000-000000000000
 			// instead of GET_LOCK it seems, so we cannot always unlock
 			$fLock = $this->lockMapper->find($wopi->getFileid());
+			$this->logger->debug('Existing lock: ' . $fLock->getValue());
 			if ($fLock->getValue() !== $wopiLock) {
 				return new JSONResponse();
 			}
@@ -468,15 +478,17 @@ class WopiController extends Controller {
 			$response->setHeaders(['X-WOPI-Lock' => $wopiLock]);
 			return $response;
 		} catch (NoLockProviderException|PreConditionNotMetException $e) {
+			$this->logger->warning('Failed to unlock file ' . $wopiLock . ' request: ' . $e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		} catch (Exception $e) {
-			$this->logger->error($e->getMessage(), ['exception' => $e]);
+			$this->logger->error('Failed to unlock file ' . $wopiLock . ' request: ' . $e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	private function refreshLock(Wopi $wopi): JSONResponse {
 		$wopiLock = $this->request->getHeader('X-WOPI-Lock');
+		$this->logger->debug('Refresh lock file ' . $wopiLock . ' request');
 		$response = new JSONResponse();
 		try {
 			$this->lockManager->lock(new LockContext(
@@ -487,14 +499,16 @@ class WopiController extends Controller {
 			$response->addHeader('X-WOPI-Lock', $wopiLock);
 			return new JSONResponse();
 		} catch (NoLockProviderException|PreConditionNotMetException $e) {
+			$this->logger->warning('Failed to refresh lock file ' . $wopiLock . ' request: ' . $e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_BAD_REQUEST);
 		} catch (OwnerLockedException $e) {
+			$this->logger->debug('File already locked by ' . $e->getLock()->getOwner());
 			$response = new JSONResponse();
 			$response->setHeaders(['X-WOPI-Lock' => $e->getLock()->getToken()]);
 			$response->setStatus(Http::STATUS_CONFLICT);
 			return $response;
 		} catch (Exception $e) {
-			$this->logger->error($e->getMessage(), ['exception' => $e]);
+			$this->logger->error('Failed to refresh lock file ' . $wopiLock . ' request: ' . $e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -504,9 +518,11 @@ class WopiController extends Controller {
 			$response = new JSONResponse();
 			$locks = $this->lockManager->getLocks($wopi->getFileid());
 			$existingLock = array_shift($locks);
+			$this->logger->debug('Get lock file ' . $wopiLock . ' request: ' . $existingLock->getToken());
 			$response->addHeader('X-WOPI-Lock', $existingLock->getToken());
 			return $response;
 		} catch (NoLockProviderException|PreConditionNotMetException $e) {
+			$this->logger->warning('Failed to get lock file ' . $wopiLock . ' request: ' . $e->getMessage(), ['exception' => $e]);
 			return new JSONResponse([], Http::STATUS_NOT_IMPLEMENTED);
 		}
 	}
@@ -664,6 +680,7 @@ class WopiController extends Controller {
 			$existingLock = array_shift($locks);
 			$outsideLocked = $existingLock && $existingLock->getOwner() !== 'officeonline';
 			if ($outsideLocked) {
+				$this->logger->debug('File already locked by ' . $existingLock->getOwner());
 				$result = new JSONResponse();
 				$result->setStatus(Http::STATUS_CONFLICT);
 				$result->addHeader('X-WOPI-Lock', $existingLock->getToken());
@@ -672,6 +689,7 @@ class WopiController extends Controller {
 			}
 			// Currently we do not use the return value of those methods,
 			// as we perform actual WOPI lock token handling through the apps own lock table
+			$this->logger->debug('Continue with wopi lock operation: ' . $wopiOverride);
 			switch ($wopiOverride) {
 				case 'LOCK':
 					$this->lock($wopi);
@@ -695,6 +713,7 @@ class WopiController extends Controller {
 			case 'UNLOCK':
 			case 'REFRESH_LOCK':
 			case 'GET_LOCK':
+				$this->logger->debug('Continue with fallbackLock: ' . $wopiOverride);
 				return $this->fallbackLock($fileId, $access_token);
 		}
 
