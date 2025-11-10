@@ -25,7 +25,7 @@
   "dependencies": {
     "@nextcloud/auth": "^2.5.3",
     "@nextcloud/axios": "^2.5.2",
-    "@nextcloud/capabilities": "^1.0.4",
+    "@nextcloud/capabilities": "^1.2.1",
     "@nextcloud/l10n": "^3.4.1",
     "@nextcloud/router": "^3.0.1",
     "@nextcloud/sharing": "^0.3.0",
