@@ -4,6 +4,19 @@
 -->
 # Changelog
 
+## 3.1.1
+
+### Fixed
+
+- fix: Properly handle authenticated links being an array @juliusknorr [#712](https://github.com/nextcloud/officeonline/pull/712)
+- fix: Fix missing properties for DI @juliusknorr [#709](https://github.com/nextcloud/officeonline/pull/709)
+- fix: Prefer en_US as a language if en is used @juliusknorr [#650](https://github.com/nextcloud/officeonline/pull/650)
+
+### Other
+
+- tests: Fix phpunit bootstrap @juliusknorr [#638](https://github.com/nextcloud/officeonline/pull/638)
+- feat(deps): Add Nextcloud 33 support @nickvergessen [#665](https://github.com/nextcloud/officeonline/pull/665)
+
 ## 3.1.0
 
 ### Fixed
