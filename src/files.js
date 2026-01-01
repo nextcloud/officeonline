@@ -8,15 +8,17 @@ import Vue from 'vue'
 import Office from './view/Office.vue'
 import types from './helpers/types.js'
 import axios from '@nextcloud/axios'
+import { getRequestToken } from '@nextcloud/auth'
 import { getCapabilities } from '@nextcloud/capabilities'
+import { generateUrl, linkTo } from '@nextcloud/router'
 
 import './css/icons.css'
 
 // eslint-disable-next-line
-__webpack_nonce__ = btoa(window.OC.requestToken)
+__webpack_nonce__ = btoa(getRequestToken())
 
 // eslint-disable-next-line
-__webpack_public_path__ = window.OC.linkTo('officeonline', 'js/')
+__webpack_public_path__ = linkTo('officeonline', 'js/')
 
 Vue.prototype.t = window.t
 Vue.prototype.n = window.n
@@ -82,7 +84,7 @@ const NewFilePlugin = {
 			})
 		}
 
-		axios.post(OC.generateUrl('apps/officeonline/ajax/documents/create'), { mimetype, filename, dir }).then(({ data }) => {
+		axios.post(generateUrl('apps/officeonline/ajax/documents/create'), { mimetype, filename, dir }).then(({ data }) => {
 			console.debug(data)
 			if (data && data.status === 'success') {
 				window.FileList.add(data.data, { animate: true, scrollTo: true })
