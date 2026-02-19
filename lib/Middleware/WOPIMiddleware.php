@@ -56,8 +56,13 @@ class WOPIMiddleware extends Middleware {
 			$accessToken = $this->request->getParam('access_token');
 			[$fileId, ,] = Helper::parseFileId($fileId);
 			$wopi = $this->wopiMapper->getWopiForToken($accessToken);
+
+			if ($wopi === null) {
+				throw new NotPermittedException('Unable to find a valid wopi for the given access token.');
+			}
+
 			if ((int)$fileId !== $wopi->getFileid()) {
-				throw new NotPermittedException();
+				throw new NotPermittedException("Wopi token doesn't match the expected file id");
 			}
 		} catch (\Exception $e) {
 			$this->logger->error('Failed to validate WOPI access', [ 'exception' => $e ]);

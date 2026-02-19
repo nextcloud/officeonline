@@ -61,7 +61,7 @@ class DirectMapper extends QBMapper {
 			->from('officeonline_direct')
 			->where($qb->expr()->eq('token', $qb->createNamedParameter($token)));
 
-		$cursor = $qb->execute();
+		$cursor = $qb->executeQuery();
 		$row = $cursor->fetch();
 		$cursor->closeCursor();
 

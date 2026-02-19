@@ -79,18 +79,15 @@ class WopiMapper extends QBMapper {
 	 * Given a token, validates it and
 	 * constructs and validates the path.
 	 * Returns the path, if valid, else false.
-	 *
-	 * @param string $token
-	 * @return Wopi
 	 */
-	public function getWopiForToken($token) {
+	public function getWopiForToken(string $token): ?Wopi {
 		$qb = $this->db->getQueryBuilder();
 		$qb->select('*')
 			->from('officeonline_wopi')
 			->where(
 				$qb->expr()->eq('token', $qb->createNamedParameter($token))
 			);
-		$result = $qb->execute();
+		$result = $qb->executeQuery();
 		$row = $result->fetch();
 		$result->closeCursor();
 
@@ -108,7 +105,7 @@ class WopiMapper extends QBMapper {
 		if ($wopi->getExpiry() < $this->timeFactory->getTime()) {
 			$qb = $this->db->getQueryBuilder();
 			$qb->delete('officeonline_wopi')->where($qb->expr()->lt('expiry',
-				$qb->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT)))->execute();
+				$qb->createNamedParameter($this->timeFactory->getTime(), IQueryBuilder::PARAM_INT)))->executeStatement();
 			return null;
 		}
 
