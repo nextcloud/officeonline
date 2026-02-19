@@ -7,8 +7,8 @@
 namespace OCA\Officeonline\Controller;
 
 use OCA\Officeonline\Db\DirectMapper;
-use OCA\Officeonline\Service\FederationService;
 use OCA\Officeonline\TemplateManager;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
@@ -19,74 +19,33 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 
 class OCSController extends \OCP\AppFramework\OCSController {
-
-	/** @var IRootFolder */
-	private $rootFolder;
-
-	/** @var string */
-	private $userId;
-
-	/** @var DirectMapper */
-	private $directMapper;
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
-
-	/** @var TemplateManager */
-	private $manager;
-
-	/** @var FederationService */
-	private $federationService;
-
-	/**
-	 * OCS controller
-	 *
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param IRootFolder $rootFolder
-	 * @param string $userId
-	 * @param DirectMapper $directMapper
-	 * @param IURLGenerator $urlGenerator
-	 * @param TemplateManager $manager
-	 */
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		IRootFolder $rootFolder,
-		$userId,
-		DirectMapper $directMapper,
-		IURLGenerator $urlGenerator,
-		TemplateManager $manager,
-		FederationService $federationService,
+		private IRootFolder $rootFolder,
+		private string $userId,
+		private DirectMapper $directMapper,
+		private IURLGenerator $urlGenerator,
+		private TemplateManager $manager,
 	) {
 		parent::__construct($appName, $request);
-
-		$this->rootFolder = $rootFolder;
-		$this->userId = $userId;
-		$this->directMapper = $directMapper;
-		$this->urlGenerator = $urlGenerator;
-		$this->manager = $manager;
-		$this->federationService = $federationService;
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * Init an editing session
 	 *
-	 * @param int $fileId
-	 * @return DataResponse
 	 * @throws OCSNotFoundException|OCSBadRequestException
 	 */
-	public function create($fileId) {
+	#[NoAdminRequired]
+	public function create(int $fileId): DataResponse {
 		try {
 			$userFolder = $this->rootFolder->getUserFolder($this->userId);
-			$nodes = $userFolder->getById($fileId);
+			$node = $userFolder->getFirstNodeById($fileId);
 
-			if ($nodes === []) {
+			if ($node === null) {
 				throw new OCSNotFoundException();
 			}
 
-			$node = $nodes[0];
 			if ($node instanceof Folder) {
 				throw new OCSBadRequestException('Cannot view folder');
 			}
@@ -104,13 +63,11 @@ class OCSController extends \OCP\AppFramework\OCSController {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
 	 * @param string $type The template type
-	 * @return DataResponse
 	 * @throws OCSBadRequestException
 	 */
-	public function getTemplates($type) {
+	#[NoAdminRequired]
+	public function getTemplates(string $type): DataResponse {
 		if (array_key_exists($type, TemplateManager::$tplTypes)) {
 			$templates = $this->manager->getAllFormatted($type);
 			return new DataResponse($templates);
@@ -119,12 +76,11 @@ class OCSController extends \OCP\AppFramework\OCSController {
 	}
 
 	/**
-	 * @NoAdminRequired
-	 *
-	 * @param string $path Where to create the document
-	 * @param int $template The template id
+	 * @param ?string $path Where to create the document
+	 * @param ?int $template The template id
 	 */
-	public function createFromTemplate($path, $template) {
+	#[NoAdminRequired]
+	public function createFromTemplate(?string $path, ?int $template): DataResponse {
 		if ($path === null || $template === null) {
 			throw new OCSBadRequestException('path and template must be set');
 		}
@@ -153,7 +109,7 @@ class OCSController extends \OCP\AppFramework\OCSController {
 		}
 	}
 
-	private function mb_pathinfo($filepath) {
+	private function mb_pathinfo(string $filepath): array {
 		$result = [];
 		preg_match('%^(.*?)[\\\\/]*(([^/\\\\]*?)(\.([^\.\\\\/]+?)|))[\\\\/\.]*$%im', ltrim('/' . $filepath), $matches);
 		if ($matches[1]) {
