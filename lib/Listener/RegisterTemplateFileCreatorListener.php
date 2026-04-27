@@ -16,14 +16,16 @@ use OCP\Files\Template\RegisterTemplateCreatorEvent;
 use OCP\Files\Template\TemplateFileCreator;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IUserSession;
 
 /** @template-implements IEventListener<Event|RegisterTemplateCreatorEvent> */
 class RegisterTemplateFileCreatorListener implements IEventListener {
 	public function __construct(
 		private IL10N $l10n,
 		private IConfig $config,
-    private IAppManager $appManager,
+		private IAppManager $appManager,
 		private PermissionManager $permissionManager,
+		private IUserSession $userSession,
 	) {
 	}
 
@@ -32,7 +34,7 @@ class RegisterTemplateFileCreatorListener implements IEventListener {
 			return;
 		}
 
-		$user = \OC::$server->getUserSession()->getUser();
+		$user = $this->userSession->getUser();
 		if ($user !== null && !$this->permissionManager->isEnabledForUser($user)) {
 			return;
 		}
