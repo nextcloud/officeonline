@@ -51,20 +51,15 @@ class Capabilities implements ICapability {
 		'application/pdf',
 	];
 
-	/** @var IL10N */
-	private $l10n;
-	/** @var AppConfig */
-	private $config;
-	/** @var Parser */
-	private $parser;
-
-	public function __construct(IL10N $l10n, AppConfig $config, Parser $parser) {
-		$this->l10n = $l10n;
-		$this->config = $config;
-		$this->parser = $parser;
+	public function __construct(
+		private IL10N $l10n,
+		private AppConfig $config,
+		private Parser $parser,
+	) {
 	}
 
 	public function getCapabilities(): array {
+		// @todo: limit capabilities to users enabled for office or guests (where it depends on the share owner if they have access)
 		$discoveryResponse = false;
 		try {
 			$discoveryResponse = $this->parser->getParsed();
@@ -74,6 +69,7 @@ class Capabilities implements ICapability {
 			'officeonline' => [
 				'discovery' => $discoveryResponse,
 				'mimetypes' => self::MIMETYPES,
+				// @todo: consider making `application/pdf` conditional (i.e. on presence of `files_pdfviewer`)
 				'mimetypesNoDefaultOpen' => self::MIMETYPES_OPTIONAL,
 				'templates' => false,
 				'productName' => $this->l10n->t('Office Online'),
