@@ -152,20 +152,6 @@ class DocumentController extends Controller {
 	}
 
 	/**
-	 * Strips the path and query parameters from the URL.
-	 *
-	 * @param string $url
-	 * @return string
-	 */
-	private function domainOnly($url) {
-		$parsed_url = parse_url($url);
-		$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-		$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-		$port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-		return "$scheme$host$port";
-	}
-
-	/**
 	 * Redirect to the files app with proper CSP headers set for federated editing
 	 * This is a workaround since we cannot set a nonce for allowing dynamic URLs in the richdocument iframe
 	 *
