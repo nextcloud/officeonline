@@ -107,20 +107,6 @@ class Application extends App implements IBootstrap {
 		$container->query(WopiLockHooks::class)->register();
 	}
 
-	/**
-	 * Strips the path and query parameters from the URL.
-	 *
-	 * @param string $url
-	 * @return string
-	 */
-	private function domainOnly(string $url): string {
-		$parsed_url = parse_url(trim($url));
-		$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-		$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-		$port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-		return "$scheme$host$port";
-	}
-
 	private function registerNewFileCreators($context) {
 		$context->injectFn(function (ITemplateManager $templateManager, IL10N $l10n, IConfig $config) {
 			if (!$this->isEnabled()) {
