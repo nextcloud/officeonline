@@ -53,7 +53,9 @@ class Application extends App implements IBootstrap {
 			return;
 		}
 
-		$this->registerProvider();
+		$this->registerMimeTypes();
+		$this->registerPreviewProviders();
+		$this->registerLegacyHooks();
 		$this->registerNewFileCreators($context);
 	}
 
@@ -70,16 +72,17 @@ class Application extends App implements IBootstrap {
 		return true;
 	}
 
-	public function registerProvider() {
-		$container = $this->getContainer();
-
-		// Register mimetypes
+	private function registerMimeTypes(): void {
 		/** @var Detection $detector */
-		$detector = $container->query(\OCP\Files\IMimeTypeDetector::class);
+		$detector = $this->getContainer()->query(\OCP\Files\IMimeTypeDetector::class);
 		$detector->getAllMappings();
 		$detector->registerType('ott', 'application/vnd.oasis.opendocument.text-template');
 		$detector->registerType('ots', 'application/vnd.oasis.opendocument.spreadsheet-template');
 		$detector->registerType('otp', 'application/vnd.oasis.opendocument.presentation-template');
+	}
+
+	private function registerPreviewProviders(): void {
+		$container = $this->getContainer();
 
 		/** @var IPreview $previewManager */
 		$previewManager = $container->query(IPreview::class);
@@ -103,8 +106,10 @@ class Application extends App implements IBootstrap {
 		$previewManager->registerProvider('/application\/pdf/', function () use ($container) {
 			return $container->query(Pdf::class);
 		});
+	}
 
-		$container->query(WopiLockHooks::class)->register();
+	private function registerLegacyHooks(): void {
+		$this->getContainer()->query(WopiLockHooks::class)->register();
 	}
 
 	private function registerNewFileCreators($context) {
