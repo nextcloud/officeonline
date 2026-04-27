@@ -58,7 +58,6 @@ class Application extends App implements IBootstrap {
 			return;
 		}
 
-		$this->registerMimeTypes();
 		$this->registerLegacyHooks();
 	}
 
@@ -73,15 +72,6 @@ class Application extends App implements IBootstrap {
 		}
 
 		return true;
-	}
-
-	private function registerMimeTypes(): void {
-		/** @var Detection $detector */
-		$detector = $this->getContainer()->query(\OCP\Files\IMimeTypeDetector::class);
-		$detector->getAllMappings();
-		$detector->registerType('ott', 'application/vnd.oasis.opendocument.text-template');
-		$detector->registerType('ots', 'application/vnd.oasis.opendocument.spreadsheet-template');
-		$detector->registerType('otp', 'application/vnd.oasis.opendocument.presentation-template');
 	}
 
 	private function registerLegacyHooks(): void {
