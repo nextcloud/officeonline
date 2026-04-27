@@ -30,7 +30,6 @@ use OCP\Files\Template\ITemplateManager;
 use OCP\Files\Template\TemplateFileCreator;
 use OCP\IConfig;
 use OCP\IL10N;
-use OCP\IPreview;
 use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 
 class Application extends App implements IBootstrap {
@@ -43,9 +42,16 @@ class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		$context->registerCapability(Capabilities::class);
 		$context->registerMiddleWare(WOPIMiddleware::class);
+
 		$context->registerEventListener(AddContentSecurityPolicyEvent::class, AddContentSecurityPolicyListener::class);
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, SharingLoadAdditionalScriptsListener::class);
 		$context->registerEventListener(LoadViewer::class, LoadViewerListener::class);
+
+		$context->registerPreviewProvider('/application\/vnd.ms-excel/', MSExcel::class);
+		$context->registerPreviewProvider('/application\/msword/', MSWord::class);
+		$context->registerPreviewProvider('/application\/vnd.openxmlformats-officedocument.*/', OOXML::class);
+		$context->registerPreviewProvider('/application\/vnd.oasis.opendocument.*/', OpenDocument::class);
+		$context->registerPreviewProvider('/application\/pdf/', Pdf::class);
 	}
 
 	public function boot(IBootContext $context): void {
@@ -54,7 +60,6 @@ class Application extends App implements IBootstrap {
 		}
 
 		$this->registerMimeTypes();
-		$this->registerPreviewProviders();
 		$this->registerLegacyHooks();
 		$this->registerNewFileCreators($context);
 	}
@@ -79,33 +84,6 @@ class Application extends App implements IBootstrap {
 		$detector->registerType('ott', 'application/vnd.oasis.opendocument.text-template');
 		$detector->registerType('ots', 'application/vnd.oasis.opendocument.spreadsheet-template');
 		$detector->registerType('otp', 'application/vnd.oasis.opendocument.presentation-template');
-	}
-
-	private function registerPreviewProviders(): void {
-		$container = $this->getContainer();
-
-		/** @var IPreview $previewManager */
-		$previewManager = $container->query(IPreview::class);
-
-		$previewManager->registerProvider('/application\/vnd.ms-excel/', function () use ($container) {
-			return $container->query(MSExcel::class);
-		});
-
-		$previewManager->registerProvider('/application\/msword/', function () use ($container) {
-			return $container->query(MSWord::class);
-		});
-
-		$previewManager->registerProvider('/application\/vnd.openxmlformats-officedocument.*/', function () use ($container) {
-			return $container->query(OOXML::class);
-		});
-
-		$previewManager->registerProvider('/application\/vnd.oasis.opendocument.*/', function () use ($container) {
-			return $container->query(OpenDocument::class);
-		});
-
-		$previewManager->registerProvider('/application\/pdf/', function () use ($container) {
-			return $container->query(Pdf::class);
-		});
 	}
 
 	private function registerLegacyHooks(): void {
