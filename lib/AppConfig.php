@@ -95,11 +95,11 @@ class AppConfig {
 	}
 
 	public function getCollaboraUrlPublic(): string {
-		return $this->config->getAppValue(Application::APP_ID, 'public_wopi_url', $this->getCollaboraUrlInternal());
+		return rtrim($this->config->getAppValue(Application::APP_ID, 'public_wopi_url', $this->getCollaboraUrlInternal()), '/');
 	}
 
 	public function getCollaboraUrlInternal(): string {
-		return $this->config->getAppValue(Application::APP_ID, 'wopi_url', '');
+		return rtrim($this->config->getAppValue(Application::APP_ID, 'wopi_url', ''), '/');
 	}
 
 	private function getFederationDomains(): array {
