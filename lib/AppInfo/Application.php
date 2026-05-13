@@ -22,6 +22,7 @@ use OCA\Officeonline\Preview\OOXML;
 use OCA\Officeonline\Preview\OpenDocument;
 use OCA\Officeonline\Preview\Pdf;
 use OCA\Viewer\Event\LoadViewer;
+use OCP\App\IAppManager;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -127,7 +128,8 @@ class Application extends App implements IBootstrap {
 				return;
 			}
 			$ooxml = $config->getAppValue(self::APP_ID, 'doc_format', '') === 'ooxml';
-			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+			$appPath = \OCP\Server::get(IAppManager::class)->getAppPath(self::APP_ID);
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml, $appPath) {
 				$odtType = new TemplateFileCreator('richdocuments', $l10n->t('New Document'), ($ooxml ? '.docx' : '.odt'));
 				if ($ooxml) {
 					$odtType->addMimetype('application/msword');
@@ -137,10 +139,11 @@ class Application extends App implements IBootstrap {
 					$odtType->addMimetype('application/vnd.oasis.opendocument.text-template');
 				}
 				$odtType->setIconClass('icon-filetype-document');
+				$odtType->setIconSvgInline(file_get_contents($appPath . '/img/x-office-document.svg'));
 				$odtType->setRatio(21 / 29.7);
 				return $odtType;
 			});
-			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml, $appPath) {
 				$odsType = new TemplateFileCreator('richdocuments', $l10n->t('New Spreadsheet'), ($ooxml ? '.xlsx' : '.ods'));
 				if ($ooxml) {
 					$odsType->addMimetype('application/vnd.ms-excel');
@@ -150,10 +153,11 @@ class Application extends App implements IBootstrap {
 					$odsType->addMimetype('application/vnd.oasis.opendocument.spreadsheet-template');
 				}
 				$odsType->setIconClass('icon-filetype-spreadsheet');
+				$odsType->setIconSvgInline(file_get_contents($appPath . '/img/x-office-spreadsheet.svg'));
 				$odsType->setRatio(16 / 9);
 				return $odsType;
 			});
-			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml, $appPath) {
 				$odpType = new TemplateFileCreator('richdocuments', $l10n->t('New Presentation'), ($ooxml ? '.pptx' : '.odp'));
 				if ($ooxml) {
 					$odpType->addMimetype('application/vnd.ms-powerpoint');
@@ -163,6 +167,7 @@ class Application extends App implements IBootstrap {
 					$odpType->addMimetype('application/vnd.oasis.opendocument.presentation-template');
 				}
 				$odpType->setIconClass('icon-filetype-presentation');
+				$odpType->setIconSvgInline(file_get_contents($appPath . '/img/x-office-presentation.svg'));
 				$odpType->setRatio(16 / 9);
 				return $odpType;
 			});
