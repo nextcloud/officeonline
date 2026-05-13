@@ -10,6 +10,13 @@ import types from './helpers/types.js'
 import axios from '@nextcloud/axios'
 import { getCapabilities } from '@nextcloud/capabilities'
 
+// eslint-disable-next-line import/no-unresolved
+import iconDocumentSvg from '../img/x-office-document.svg?raw'
+// eslint-disable-next-line import/no-unresolved
+import iconSpreadsheetSvg from '../img/x-office-spreadsheet.svg?raw'
+// eslint-disable-next-line import/no-unresolved
+import iconPresentationSvg from '../img/x-office-presentation.svg?raw'
+
 import './css/icons.css'
 
 // eslint-disable-next-line
@@ -35,6 +42,7 @@ const NewFilePlugin = {
 			displayName: t('officeonline', 'New Document'),
 			templateName: t('officeonline', 'New Document') + '.' + document.extension,
 			iconClass: 'icon-filetype-document',
+			iconSvgInline: iconDocumentSvg,
 			fileType: 'x-office-document',
 			actionHandler(filename) {
 				self._createDocument(document.mime, filename)
@@ -46,6 +54,7 @@ const NewFilePlugin = {
 			displayName: t('officeonline', 'New Spreadsheet'),
 			templateName: t('officeonline', 'New Spreadsheet') + '.' + spreadsheet.extension,
 			iconClass: 'icon-filetype-spreadsheet',
+			iconSvgInline: iconSpreadsheetSvg,
 			fileType: 'x-office-spreadsheet',
 			actionHandler(filename) {
 				self._createDocument(spreadsheet.mime, filename)
@@ -57,6 +66,7 @@ const NewFilePlugin = {
 			displayName: t('officeonline', 'New Presentation'),
 			templateName: t('officeonline', 'New Presentation') + '.' + presentation.extension,
 			iconClass: 'icon-filetype-presentation',
+			iconSvgInline: iconPresentationSvg,
 			fileType: 'x-office-presentation',
 			actionHandler(filename) {
 				self._createDocument(presentation.mime, filename)
