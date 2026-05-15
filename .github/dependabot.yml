@@ -6,7 +6,11 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 10
   - package-ecosystem: composer
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 10
