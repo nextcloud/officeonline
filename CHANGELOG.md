@@ -4,6 +4,19 @@
 -->
 # Changelog
 
+## 3.2.0
+
+### Fixed
+
+- Adapt to files app changes for Nextcloud 33 @juliusknorr [#756](https://github.com/nextcloud/officeonline/pull/756)
+
+### Other
+
+- feat(deps): Add Nextcloud 34 support @nickvergessen [#729](https://github.com/nextcloud/officeonline/pull/729)
+- refactor: Improve wopi mapper @CarlSchwan [#735](https://github.com/nextcloud/officeonline/pull/735)
+
+## 3.2.0
+
 ## 3.1.1
 
 ### Fixed
