@@ -257,7 +257,7 @@ class DocumentController extends Controller {
 				// Update the current file to be accessible with system public shared key
 				$owner = $item->getOwner()->getUID();
 				$absPath = '/' . $owner . '/' . $item->getInternalPath();
-				$accessList =  \OCP\Server::get(IFile::class)->getAccessList($absPath);
+				$accessList = \OCP\Server::get(IFile::class)->getAccessList($absPath);
 				$accessList['public'] = true;
 				$encryptionManager->getEncryptionModule()->update($absPath, $owner, $accessList);
 			}
