@@ -28,6 +28,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\StreamResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\Federation\ICloudIdManager;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
@@ -47,6 +48,7 @@ use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\Lock\LockedException;
 use OCP\PreConditionNotMetException;
+use OCP\Security\ISecureRandom;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
 use Psr\Log\LoggerInterface;
@@ -191,7 +193,7 @@ class WopiController extends Controller {
 		}
 
 		$isPublic = empty($wopi->getEditorUid());
-		$guestUserId = 'Guest-' . \OC::$server->getSecureRandom()->generate(8);
+		$guestUserId = 'Guest-' . \OCP\Server::get(ISecureRandom::class)->generate(8);
 		$user = $this->userManager->get($wopi->getEditorUid());
 		$userDisplayName = $user !== null && !$isPublic ? $user->getDisplayName() : $wopi->getGuestDisplayname();
 		if ($version === '0') {
@@ -205,7 +207,7 @@ class WopiController extends Controller {
 			'OwnerId' => $wopi->getOwnerUid(),
 			'UserFriendlyName' => $userDisplayName,
 			'UserCanWrite' => $wopi->getCanwrite(),
-			'UserCanNotWriteRelative' => \OC::$server->getEncryptionManager()->isEnabled() || $isPublic,
+			'UserCanNotWriteRelative' => \OCP\Server::get(\OCP\Encryption\IManager::class)->isEnabled() || $isPublic,
 			'PostMessageOrigin' => $wopi->getServerHost(),
 			'LastModifiedTime' => Helper::toISO8601($file->getMTime()),
 			'SupportsRename' => true,
@@ -241,11 +243,11 @@ class WopiController extends Controller {
 
 	private function setFederationFileInfo($wopi, $response) {
 		$remoteUserId = $wopi->getGuestDisplayname();
-		$cloudID = \OC::$server->getCloudIdManager()->resolveCloudId($remoteUserId);
+		$cloudID = \OCP\Server::get(ICloudIdManager::class)->resolveCloudId($remoteUserId);
 		$response['UserFriendlyName'] = $cloudID->getDisplayId();
 		$response['UserExtraInfo']['avatar'] = $this->urlGenerator->linkToRouteAbsolute('core.avatar.getAvatar', ['userId' => explode('@', $remoteUserId)[0], 'size' => 32]);
 		$cleanCloudId = str_replace(['http://', 'https://'], '', $cloudID->getId());
-		$addressBookEntries = \OC::$server->getContactsManager()->search($cleanCloudId, ['CLOUD']);
+		$addressBookEntries = \OCP\Server::get(\OCP\Contacts\IManager::class)->search($cleanCloudId, ['CLOUD']);
 		foreach ($addressBookEntries as $entry) {
 			if (isset($entry['CLOUD'])) {
 				foreach ($entry['CLOUD'] as $cloudID) {

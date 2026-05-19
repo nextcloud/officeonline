@@ -31,6 +31,7 @@ use OCP\Files\Template\ITemplateManager;
 use OCP\Files\Template\TemplateFileCreator;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\IUserSession;
 use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 
 class Application extends App implements IBootstrap {
@@ -64,10 +65,10 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function isEnabled(): bool {
-		$currentUser = \OC::$server->getUserSession()->getUser();
+		$currentUser = \OCP\Server::get(IUserSession::class)->getUser();
 		if ($currentUser !== null) {
 			/** @var PermissionManager $permissionManager */
-			$permissionManager = \OC::$server->query(PermissionManager::class);
+			$permissionManager = \OCP\Server::get(PermissionManager::class);
 			if (!$permissionManager->isEnabledForUser($currentUser)) {
 				return false;
 			}
