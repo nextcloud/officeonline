@@ -20,6 +20,7 @@ use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\Share\IManager;
 use OCP\Util;
+use function OCP\Log\logger;
 
 class TokenManager {
 	/** @var IRootFolder */
@@ -142,7 +143,7 @@ class TokenManager {
 			// no active user login while generating the token
 			// this is required during WopiPutRelativeFile
 			if (is_null($editoruid)) {
-				\OC::$server->getLogger()->warning('Generating token for SaveAs without editoruid');
+				logger('officeonline')->warning('Generating token for SaveAs without editoruid');
 				$updatable = true;
 			} else {
 				// Make sure we use the user folder if available since fetching all files by id from the root might be expensive

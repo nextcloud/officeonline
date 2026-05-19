@@ -19,6 +19,7 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Constants;
+use OCP\Encryption\IFile;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
@@ -251,12 +252,12 @@ class DocumentController extends Controller {
 				'userId' => $this->uid
 			];
 
-			$encryptionManager = \OC::$server->getEncryptionManager();
+			$encryptionManager = \OCP\Server::get(\OCP\Encryption\IManager::class);
 			if ($encryptionManager->isEnabled()) {
 				// Update the current file to be accessible with system public shared key
 				$owner = $item->getOwner()->getUID();
 				$absPath = '/' . $owner . '/' . $item->getInternalPath();
-				$accessList = \OC::$server->getEncryptionFilesHelper()->getAccessList($absPath);
+				$accessList =  \OCP\Server::get(IFile::class)->getAccessList($absPath);
 				$accessList['public'] = true;
 				$encryptionManager->getEncryptionModule()->update($absPath, $owner, $accessList);
 			}
