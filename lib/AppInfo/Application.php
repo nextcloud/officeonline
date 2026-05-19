@@ -22,6 +22,7 @@ use OCA\Officeonline\Preview\OOXML;
 use OCA\Officeonline\Preview\OpenDocument;
 use OCA\Officeonline\Preview\Pdf;
 use OCA\Viewer\Event\LoadViewer;
+use OCP\App\IAppManager;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -30,7 +31,6 @@ use OCP\Files\Template\ITemplateManager;
 use OCP\Files\Template\TemplateFileCreator;
 use OCP\IConfig;
 use OCP\IL10N;
-use OCP\IPreview;
 use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 
 class Application extends App implements IBootstrap {
@@ -46,6 +46,12 @@ class Application extends App implements IBootstrap {
 		$context->registerEventListener(AddContentSecurityPolicyEvent::class, AddContentSecurityPolicyListener::class);
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, SharingLoadAdditionalScriptsListener::class);
 		$context->registerEventListener(LoadViewer::class, LoadViewerListener::class);
+
+		$context->registerPreviewProvider(MSExcel::class, MSExcel::MIMETYPE_REGEX);
+		$context->registerPreviewProvider(MSWord::class, MSWord::MIMETYPE_REGEX);
+		$context->registerPreviewProvider(OOXML::class, OOXML::MIMETYPE_REGEX);
+		$context->registerPreviewProvider(OpenDocument::class, OpenDocument::MIMETYPE_REGEX);
+		$context->registerPreviewProvider(Pdf::class, Pdf::MIMETYPE_REGEX);
 	}
 
 	public function boot(IBootContext $context): void {
@@ -81,29 +87,6 @@ class Application extends App implements IBootstrap {
 		$detector->registerType('ots', 'application/vnd.oasis.opendocument.spreadsheet-template');
 		$detector->registerType('otp', 'application/vnd.oasis.opendocument.presentation-template');
 
-		/** @var IPreview $previewManager */
-		$previewManager = $container->query(IPreview::class);
-
-		$previewManager->registerProvider('/application\/vnd.ms-excel/', function () use ($container) {
-			return $container->query(MSExcel::class);
-		});
-
-		$previewManager->registerProvider('/application\/msword/', function () use ($container) {
-			return $container->query(MSWord::class);
-		});
-
-		$previewManager->registerProvider('/application\/vnd.openxmlformats-officedocument.*/', function () use ($container) {
-			return $container->query(OOXML::class);
-		});
-
-		$previewManager->registerProvider('/application\/vnd.oasis.opendocument.*/', function () use ($container) {
-			return $container->query(OpenDocument::class);
-		});
-
-		$previewManager->registerProvider('/application\/pdf/', function () use ($container) {
-			return $container->query(Pdf::class);
-		});
-
 		$container->query(WopiLockHooks::class)->register();
 	}
 
@@ -127,7 +110,8 @@ class Application extends App implements IBootstrap {
 				return;
 			}
 			$ooxml = $config->getAppValue(self::APP_ID, 'doc_format', '') === 'ooxml';
-			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+			$appPath = \OCP\Server::get(IAppManager::class)->getAppPath(self::APP_ID);
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml, $appPath) {
 				$odtType = new TemplateFileCreator('richdocuments', $l10n->t('New Document'), ($ooxml ? '.docx' : '.odt'));
 				if ($ooxml) {
 					$odtType->addMimetype('application/msword');
@@ -137,10 +121,11 @@ class Application extends App implements IBootstrap {
 					$odtType->addMimetype('application/vnd.oasis.opendocument.text-template');
 				}
 				$odtType->setIconClass('icon-filetype-document');
+				$odtType->setIconSvgInline(file_get_contents($appPath . '/img/x-office-document.svg'));
 				$odtType->setRatio(21 / 29.7);
 				return $odtType;
 			});
-			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml, $appPath) {
 				$odsType = new TemplateFileCreator('richdocuments', $l10n->t('New Spreadsheet'), ($ooxml ? '.xlsx' : '.ods'));
 				if ($ooxml) {
 					$odsType->addMimetype('application/vnd.ms-excel');
@@ -150,10 +135,11 @@ class Application extends App implements IBootstrap {
 					$odsType->addMimetype('application/vnd.oasis.opendocument.spreadsheet-template');
 				}
 				$odsType->setIconClass('icon-filetype-spreadsheet');
+				$odsType->setIconSvgInline(file_get_contents($appPath . '/img/x-office-spreadsheet.svg'));
 				$odsType->setRatio(16 / 9);
 				return $odsType;
 			});
-			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml) {
+			$templateManager->registerTemplateFileCreator(function () use ($l10n, $ooxml, $appPath) {
 				$odpType = new TemplateFileCreator('richdocuments', $l10n->t('New Presentation'), ($ooxml ? '.pptx' : '.odp'));
 				if ($ooxml) {
 					$odpType->addMimetype('application/vnd.ms-powerpoint');
@@ -163,6 +149,7 @@ class Application extends App implements IBootstrap {
 					$odpType->addMimetype('application/vnd.oasis.opendocument.presentation-template');
 				}
 				$odpType->setIconClass('icon-filetype-presentation');
+				$odpType->setIconSvgInline(file_get_contents($appPath . '/img/x-office-presentation.svg'));
 				$odpType->setRatio(16 / 9);
 				return $odpType;
 			});

@@ -17,4 +17,8 @@ const config = {
 }
 const mergedConfig = merge(webpackConfig, config)
 delete mergedConfig.entry.main
+mergedConfig.module.rules.push({
+	resourceQuery: /raw/,
+	type: 'asset/source',
+})
 module.exports = mergedConfig
