@@ -24,6 +24,9 @@ use OCA\Officeonline\TokenManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\PublicPage;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\StreamResponse;
@@ -152,17 +155,13 @@ class WopiController extends Controller {
 	/**
 	 * Returns general info about a file.
 	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 * @PublicPage
-	 *
-	 * @param string $fileId
-	 * @param string $access_token
-	 * @return JSONResponse
 	 * @throws InvalidPathException
 	 * @throws NotFoundException
 	 */
-	public function checkFileInfo($fileId, $access_token) {
+	#[PublicPage]
+	#[NoCSRFRequired]
+	#[NoAdminRequired]
+	public function checkFileInfo(string $fileId, string $access_token): JSONResponse {
 		try {
 			[$fileId, , $version] = Helper::parseFileId($fileId);
 
@@ -218,7 +217,7 @@ class WopiController extends Controller {
 
 		if ($wopi->isTemplateToken()) {
 			$userFolder = $this->rootFolder->getUserFolder($wopi->getOwnerUid());
-			$file = $userFolder->getById($wopi->getTemplateDestination())[0];
+			$file = $userFolder->getFirstNodeById($wopi->getTemplateDestination());
 			$response['TemplateSaveAs'] = $file->getName();
 		}
 
@@ -263,9 +262,6 @@ class WopiController extends Controller {
 	 * Given an access token and a fileId, returns the contents of the file.
 	 * Expects a valid token in access_token parameter.
 	 *
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 *
 	 * @param string $fileId
 	 * @param string $access_token
 	 * @return Http\Response
@@ -273,6 +269,8 @@ class WopiController extends Controller {
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
 	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function getFile($fileId,
 		$access_token) {
 		[$fileId, , $version] = Helper::parseFileId($fileId);
@@ -515,13 +513,12 @@ class WopiController extends Controller {
 	 * Given an access token and a fileId, replaces the files with the request body.
 	 * Expects a valid token in access_token parameter.
 	 *
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 *
 	 * @param string $fileId
 	 * @param string $access_token
 	 * @return JSONResponse
 	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function putFile($fileId,
 		$access_token) {
 		[$fileId, ,] = Helper::parseFileId($fileId);
@@ -638,13 +635,12 @@ class WopiController extends Controller {
 	 *
 	 * FIXME Cleanup this code as is a lot of shared logic between putFile and putRelativeFile
 	 *
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 *
 	 * @param string $fileId
 	 * @param string $access_token
 	 * @return JSONResponse|DataResponse
 	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function postFile($fileId, $access_token) {
 		[$fileId, ,] = Helper::parseFileId($fileId);
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
@@ -712,7 +708,7 @@ class WopiController extends Controller {
 
 			if ($wopi->isTemplateToken()) {
 				$this->templateManager->setUserId($wopi->getOwnerUid());
-				$file = $userFolder->getById($wopi->getTemplateDestination())[0];
+				$file = $userFolder->getFirstNodeById($wopi->getTemplateDestination());
 			} else {
 				$file = $this->getFileForWopiToken($wopi);
 				if (empty($file)) {
@@ -870,12 +866,11 @@ class WopiController extends Controller {
 				$share = $this->shareManager->getShareByToken($wopi->getEditorUid());
 				$node = $share->getNode();
 				if ($node instanceof Folder) {
-					$file = $node->getById($wopi->getFileid())[0];
+					$file = $node->getFirstNodeById($wopi->getFileid());
 				} else {
 					$file = $node;
 				}
-			} catch (ShareNotFound $e) {
-			} catch (NotFoundException $e) {
+			} catch (ShareNotFound|NotFoundException) {
 			}
 		} else {
 			// Group folders requires an active user to be set in order to apply the proper acl permissions as for anonymous requests it requires share permissions for read access
@@ -884,10 +879,8 @@ class WopiController extends Controller {
 			// Unless the editor is empty (public link) we modify the files as the current editor
 			// TODO: add related share token to the wopi table so we can obtain the
 			$userFolder = $this->rootFolder->getUserFolder($wopi->getUserForFileAccess());
-			$files = $userFolder->getById($wopi->getFileid());
-			if (isset($files[0]) && $files[0] instanceof File) {
-				$file = $files[0];
-			} else {
+			$file = $userFolder->getFirstNodeById($wopi->getFileid());
+			if (!$file instanceof File) {
 				throw new NotFoundException('No valid file found for wopi token');
 			}
 		}
@@ -897,13 +890,12 @@ class WopiController extends Controller {
 	/**
 	 * Endpoint to return the template file that is requested by collabora to create a new document
 	 *
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 *
 	 * @param $fileId
 	 * @param $access_token
 	 * @return JSONResponse|StreamResponse
 	 */
+	#[PublicPage]
+	#[NoCSRFRequired]
 	public function getTemplate($fileId, $access_token) {
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
 

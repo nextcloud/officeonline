@@ -20,79 +20,30 @@ use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\Share\IManager;
 use OCP\Util;
+use Psr\Log\LoggerInterface;
 
 class TokenManager {
-	/** @var IRootFolder */
-	private $rootFolder;
-	/** @var IManager */
-	private $shareManager;
-	/** @var IURLGenerator */
-	private $urlGenerator;
-	/** @var Parser */
-	private $wopiParser;
-	/** @var AppConfig */
-	private $appConfig;
-	/** @var string */
-	private $userId;
-	/** @var WopiMapper */
-	private $wopiMapper;
-	/** @var IL10N */
-	private $trans;
-	/** @var IUserManager */
-	private $userManager;
-	/** @var IGroupManager */
-	private $groupManager;
-	/** @var CapabilitiesService */
-	private $capabilitiesService;
-	/** @var Helper */
-	private $helper;
-
-	/**
-	 * @param IRootFolder $rootFolder
-	 * @param IManager $shareManager
-	 * @param IURLGenerator $urlGenerator
-	 * @param Parser $wopiParser
-	 * @param AppConfig $appConfig
-	 * @param string $UserId
-	 * @param WopiMapper $wopiMapper
-	 * @param IL10N $trans
-	 */
 	public function __construct(
-		IRootFolder $rootFolder,
-		IManager $shareManager,
-		IURLGenerator $urlGenerator,
-		Parser $wopiParser,
-		CapabilitiesService $capabilitiesService,
-		AppConfig $appConfig,
-		$UserId,
-		WopiMapper $wopiMapper,
-		IL10N $trans,
-		IUserManager $userManager,
-		IGroupManager $groupManager,
-		Helper $helper,
+		private IRootFolder $rootFolder,
+		private IManager $shareManager,
+		private IURLGenerator $urlGenerator,
+		private Parser $wopiParser,
+		private CapabilitiesService $capabilitiesService,
+		private AppConfig $appConfig,
+		private ?string $userId,
+		private WopiMapper $wopiMapper,
+		private IL10N $trans,
+		private IUserManager $userManager,
+		private IGroupManager $groupManager,
+		private Helper $helper,
+		private LoggerInterface $logger,
 	) {
-		$this->rootFolder = $rootFolder;
-		$this->shareManager = $shareManager;
-		$this->urlGenerator = $urlGenerator;
-		$this->wopiParser = $wopiParser;
-		$this->capabilitiesService = $capabilitiesService;
-		$this->appConfig = $appConfig;
-		$this->trans = $trans;
-		$this->userId = $UserId;
-		$this->wopiMapper = $wopiMapper;
-		$this->userManager = $userManager;
-		$this->groupManager = $groupManager;
-		$this->helper = $helper;
 	}
 
 	/**
-	 * @param string $fileId
-	 * @param string $shareToken
-	 * @param string $editoruid
-	 * @return array
 	 * @throws \Exception
 	 */
-	public function getToken($fileId, $shareToken = null, $editoruid = null, $direct = false, $isRemoteToken = false) {
+	public function getToken(string $fileId, ?string $shareToken = null, ?string $editoruid = null, bool $direct = false, bool $isRemoteToken = false): array {
 		[$fileId, , $version] = Helper::parseFileId($fileId);
 		$owneruid = null;
 		$hideDownload = false;
@@ -107,9 +58,9 @@ class TokenManager {
 		} elseif ($this->userId !== null) {
 			try {
 				$editoruid = $this->userId;
-				$rootFolder = $this->rootFolder->getUserFolder($editoruid);
+				$userFolder = $this->rootFolder->getUserFolder($editoruid);
 
-				$files = $rootFolder->getById((int)$fileId);
+				$files = $userFolder->getById((int)$fileId);
 				$updatable = false;
 				foreach ($files as $file) {
 					if ($file->isUpdateable()) {
@@ -142,14 +93,14 @@ class TokenManager {
 			// no active user login while generating the token
 			// this is required during WopiPutRelativeFile
 			if (is_null($editoruid)) {
-				\OC::$server->getLogger()->warning('Generating token for SaveAs without editoruid');
+				$this->logger->warning('Generating token for SaveAs without editoruid');
 				$updatable = true;
 			} else {
 				// Make sure we use the user folder if available since fetching all files by id from the root might be expensive
-				$rootFolder = $this->rootFolder->getUserFolder($editoruid);
+				$userFolder = $this->rootFolder->getUserFolder($editoruid);
 
 				$updatable = false;
-				$files = $rootFolder->getById($fileId);
+				$files = $userFolder->getById($fileId);
 
 				foreach ($files as $file) {
 					if ($file->isUpdateable()) {
@@ -160,7 +111,7 @@ class TokenManager {
 			}
 		}
 		/** @var File $file */
-		$file = $rootFolder->getById($fileId)[0];
+		$file = $rootFolder->getFirstNodeById($fileId);
 		// If its a public share, use the owner from the share, otherwise check the file object
 		if (is_null($owneruid)) {
 			$owner = $file->getOwner();
@@ -216,9 +167,8 @@ class TokenManager {
 		$editoruid = $userId;
 		$rootFolder = $this->rootFolder->getUserFolder($editoruid);
 		/** @var File $targetFile */
-		$targetFile = $rootFolder->getById($targetFileId);
-		$targetFile = $targetFile[0] ?? null;
-		if (!$targetFile) {
+		$targetFile = $rootFolder->getFirstNodeById($targetFileId);
+		if ($targetFile === null) {
 			// TODO: Exception
 			return null;
 		}
@@ -255,11 +205,7 @@ class TokenManager {
 		];
 	}
 
-	/**
-	 * @param Node $node
-	 * @return Wopi
-	 */
-	public function getRemoteToken(Node $node) {
+	public function getRemoteToken(Node $node): Wopi {
 		[$urlSrc, $token, $wopi] = $this->getToken($node->getId(), null, null, false, true);
 		$wopi->setIsRemoteToken(true);
 		$wopi->setRemoteServer($node->getStorage()->getRemote());
@@ -268,11 +214,7 @@ class TokenManager {
 		return $wopi;
 	}
 
-	/**
-	 * @param Node $node
-	 * @return Wopi
-	 */
-	public function getRemoteTokenFromDirect(Node $node, $editorUid) {
+	public function getRemoteTokenFromDirect(Node $node, $editorUid): Wopi {
 		[$urlSrc, $token, $wopi] = $this->getToken($node->getId(), null, $editorUid, true, true);
 		$wopi->setIsRemoteToken(true);
 		$wopi->setRemoteServer($node->getStorage()->getRemote());

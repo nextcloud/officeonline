@@ -142,17 +142,14 @@ class TemplateManager {
 	}
 
 	/**
-	 * Get template ISimpleFile|Node
-	 *
-	 * @param int $fileId
-	 * @return File
+	 * Get template file
 	 */
-	public function get($fileId) {
+	public function get(int $fileId): File {
 		// is this a global template ?
 		$files = $this->getEmptyTemplateDir()->getDirectoryListing();
 
 		foreach ($files as $file) {
-			if ($file->getId() === $fileId) {
+			if ($file->getId() === $fileId && $file instanceof File) {
 				return $file;
 			}
 		}
@@ -161,16 +158,16 @@ class TemplateManager {
 		$files = $this->getSystemTemplateDir()->getDirectoryListing();
 
 		foreach ($files as $file) {
-			if ($file->getId() === $fileId) {
+			if ($file->getId() === $fileId && $file instanceof File) {
 				return $file;
 			}
 		}
 
 		$templateDir = $this->getUserTemplateDir();
 		// finally get the template file
-		$files = $templateDir->getById($fileId);
-		if ($files !== []) {
-			return $files[0];
+		$file = $templateDir->getFirstNodeById($fileId);
+		if ($file instanceof File) {
+			return $file;
 		}
 
 		throw new NotFoundException();

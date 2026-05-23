@@ -14,19 +14,16 @@ use OCP\Files\Folder;
 
 class Helper {
 
-	/** @var string|null */
-	private $userId;
-
-	public function __construct($userId) {
-		$this->userId = $userId;
+	public function __construct(
+		private ?string $userId,
+	) {
 	}
 
 	/**
-	 * @param string $fileId
 	 * @return array
 	 * @throws \Exception
 	 */
-	public static function parseFileId($fileId) {
+	public static function parseFileId(string $fileId): array {
 		$arr = explode('_', $fileId);
 		$templateId = null;
 		if (count($arr) === 1) {
