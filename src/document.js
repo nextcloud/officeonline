@@ -14,11 +14,10 @@ import {
 	isMobileInterfaceAvailable,
 } from './helpers/mobile.js'
 import { getWopiUrl, getSearchParam } from './helpers/url.js'
+import $ from 'jquery'
+import 'jquery-ui-bundle'
 
 import '../css/document.scss'
-
-// FIXME: Remove dependency in a next step
-const $ = window.$
 
 const PostMessages = new PostMessageService({
 	parent: window.parent,

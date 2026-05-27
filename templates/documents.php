@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 ?>
-<script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>">
+<script nonce="<?php p(\OCP\Server::get(\OC\Security\CSP\ContentSecurityPolicyNonceManager::class)->getNonce()) ?>">
 	var officeonline_permissions = '<?php p($_['permissions']) ?>';
 	var officeonline_title = '<?php p($_['title']) ?>';
 	var officeonline_fileId = '<?php p($_['fileId']) ?>';

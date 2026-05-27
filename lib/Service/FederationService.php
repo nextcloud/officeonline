@@ -49,7 +49,7 @@ class FederationService {
 		$this->logger = $logger;
 		$this->tokenManager = $tokenManager;
 		try {
-			$this->trustedServers = \OC::$server->query(\OCA\Federation\TrustedServers::class);
+			$this->trustedServers = \OCP\Server::get(\OCA\Federation\TrustedServers::class);
 		} catch (QueryException $e) {
 		}
 		$this->appConfig = $appConfig;
