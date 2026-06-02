@@ -9,8 +9,8 @@
 	var officeonline_permissions = '<?php p($_['permissions']) ?>';
 	var officeonline_title = '<?php p($_['title']) ?>';
 	var officeonline_fileId = '<?php p($_['fileId']) ?>';
-	var officeonline_token = '<?php p($_['token'] ? $_['token'] : "''") ?>';
-	var officeonline_urlsrc = '<?php p($_['urlsrc'] ? $_['urlsrc'] : "''") ?>';
+	var officeonline_token = '<?php p(isset($_['token']) ? $_['token'] : "''") ?>';
+	var officeonline_urlsrc = '<?php p(isset($_['urlsrc']) ? $_['urlsrc'] : "''") ?>';
 	var officeonline_path = '<?php p($_['path']) ?>';
 	var officeonline_userId = <?php isset($_['userId']) ? print_unescaped('\'' . \OCP\Util::sanitizeHTML($_['userId']) . '\'') : print_unescaped('null') ?>;
 	var officeonline_instanceId = '<?php p($_['instanceId']) ?>';
