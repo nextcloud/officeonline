@@ -4,6 +4,13 @@
 -->
 # Changelog
 
+## 3.2.1
+
+### Other
+
+- fix: use isset to check token and urlsrc @leftybournes [#765](https://github.com/nextcloud/officeonline/pull/765)
+- Compatibility with Nextcloud 34/35 @juliusknorr [#759](https://github.com/nextcloud/officeonline/pull/759)
+
 ## 3.2.0
 
 ### Fixed
