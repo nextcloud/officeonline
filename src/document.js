@@ -215,7 +215,7 @@ const documentsMain = {
 				return
 			}
 
-			OC.Util.History.addOnPopStateHandler(window._.bind(documentsMain.onClose))
+			OC.Util.History.addOnPopStateHandler(documentsMain.onClose)
 			OC.Util.History.pushState()
 
 			PostMessages.sendPostMessage('parent', 'loading')
