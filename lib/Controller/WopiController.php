@@ -627,7 +627,7 @@ class WopiController extends Controller {
 			}
 			return new JSONResponse(['LastModifiedTime' => Helper::toISO8601($file->getMTime())]);
 		} catch (Exception $e) {
-			$this->logger->errpr('getFile failed', ['app' => 'officeonline', 'exception' => $e]);
+			$this->logger->error('putFile failed', ['app' => 'officeonline', 'exception' => $e]);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
 	}
