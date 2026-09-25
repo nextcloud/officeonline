@@ -4,6 +4,20 @@
 -->
 # Changelog
 
+## 3.3.0
+
+### Fixed
+
+- fix: logger typo @elzody [#784](https://github.com/nextcloud/officeonline/pull/784)
+- fix: drop window underscore global @elzody [#783](https://github.com/nextcloud/officeonline/pull/783)
+
+### Other
+
+- chore(ci): sync workflows with org templates @elzody [#780](https://github.com/nextcloud/officeonline/pull/780)
+- chore(workflows): update phpunit-oci-template @elzody [#778](https://github.com/nextcloud/officeonline/pull/778)
+- chore(commands): Adapt commands to new method signature @CarlSchwan [#766](https://github.com/nextcloud/officeonline/pull/766)
+- feat(deps): Add Nextcloud 35 support @nickvergessen [#757](https://github.com/nextcloud/officeonline/pull/757)
+
 ## 3.2.1
 
 ### Other
