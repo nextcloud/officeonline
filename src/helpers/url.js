@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { getRootUrl } from '@nextcloud/router'
-import { getSharingToken } from '@nextcloud/sharing/public'
-import { languageToBCP47 } from './index.js'
-import Config from './../services/config.ts'
+import { getRequestToken } from '@nextcloud/auth'
+import { getRootUrl, generateUrl } from '@nextcloud/router'
+import { languageToBCP47 } from './index'
+import Config from './../services/config'
 
 const getSearchParam = (name) => {
 	const results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href)
@@ -37,36 +37,36 @@ const getWopiUrl = ({ fileId, title, readOnly, closeButton, revisionHistory }) =
 }
 
 const getDocumentUrlFromTemplate = (templateId, fileName, fileDir, fillWithTemplate) => {
-	return OC.generateUrl(
+	return generateUrl(
 		'apps/officeonline/indexTemplate?templateId={templateId}&fileName={fileName}&dir={dir}&requesttoken={requesttoken}',
 		{
 			templateId,
 			fileName,
 			dir: encodeURIComponent(fileDir),
-			requesttoken: OC.requestToken,
+			requesttoken: getRequestToken(),
 		},
 	)
 }
 
 const getDocumentUrlForPublicFile = (fileName, fileId) => {
-	return OC.generateUrl(
+	return generateUrl(
 		'apps/officeonline/public?shareToken={shareToken}&fileName={fileName}&requesttoken={requesttoken}&fileId={fileId}',
 		{
 			shareToken: getSharingToken(),
 			fileName: encodeURIComponent(fileName),
 			fileId,
-			requesttoken: OC.requestToken,
+			requesttoken: getRequestToken(),
 		},
 	)
 }
 
 const getDocumentUrlForFile = (fileDir, fileId) => {
-	return OC.generateUrl(
+	return generateUrl(
 		'apps/officeonline/index?fileId={fileId}&requesttoken={requesttoken}',
 		{
 			fileId,
 			dir: fileDir,
-			requesttoken: OC.requestToken,
+			requesttoken: getRequestToken(),
 		})
 }
 
